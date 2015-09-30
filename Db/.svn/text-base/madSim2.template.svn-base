@@ -1,0 +1,6 @@
+
+record(longout, "$(P)$(R)p_dump_params")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))dump_params")
+}

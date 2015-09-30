@@ -1,0 +1,1301 @@
+
+
+
+record(ai, "$(P)$(R)fccd_mpi_img_rate_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_mpi_img_rate")
+   field(PREC, "3")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longout, "$(P)$(R)fccd_is_remove_overscan")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_is_remove_overscan")
+   field(VAL,  "1")
+}
+
+
+record(longin, "$(P)$(R)fccd_is_remove_overscan_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_is_remove_overscan")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+
+
+record(longin, "$(P)$(F)NDFileIMM_is_fpga_comp_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_is_compressed_data")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longin, "$(P)$(F)NumCaptured_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_capture_count")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(F)NDFileIMM_num_fpga_pixels_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_imm_comp_pixels")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(F)NDFileIMM_NmissedTimeStamps_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_badfpgaheads")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(ai, "$(P)$(F)NDFileIMM_framePeriod_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_frameperiod")
+   field(PREC, "3")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+record(mbbo, "$(P)$(F)AutoIncrement")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_imm_autoincrement")
+   field(ZRST, "No")
+   field(ZRVL, "0")
+   field(ONST, "Yes")
+   field(ONVL, "1")
+
+
+}
+
+
+record(mbbi, "$(P)$(F)AutoIncrement_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_imm_autoincrement")
+   field(ZRST, "No")
+   field(ZRVL, "0")
+   field(ONST, "Yes")
+   field(ONVL, "1")
+
+
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+
+
+
+record(longin, "$(P)$(F)NDFileIMM_NmissedIDs_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_badfpgaheads")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(longin, "$(P)$(F)NDFileIMM_ERROR_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_imm_error")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(longin, "$(P)$(F)NDFileIMM_num_bad_fpgaheads_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_badfpgaheads")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+# Capture data
+record(busy, "$(P)$(F)Capture")
+{
+    field(DTYP, "asynInt32")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_capture")
+    field(ZNAM, "Done")
+    field(ONAM, "Capture")
+}
+
+
+
+record(bi, "$(P)$(F)Capture_RBV")
+{
+    field(DTYP, "asynInt32")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_capture")
+    field(ZNAM, "Done")
+    field(ZSV,  "NO_ALARM")
+    field(ONAM, "Capturing")
+    field(OSV,  "MINOR")
+    field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(longin, "$(P)$(F)NDFileIMM_uniqueID_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_unique_id")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(longin, "$(P)$(F)NDFileIMM_grabber_timestamp_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_grabber_timestamp")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(longin, "$(P)$(F)NDFileIMM_fileCorecoticks_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_coreco_ticks")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(ai, "$(P)$(R)NDFileIMM_fileElapsed_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_elapsed")
+   field(PREC, "3")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(F)NDFileIMM_fileSysticks_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_systicks")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(longin, "$(P)$(F)NumCaptured_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_capture_count")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+record(longout, "$(P)$(F)NumCapture")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_num_capture")
+   field(VAL,  "1")
+}
+
+
+record(longin, "$(P)$(F)NumCapture_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_num_capture")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+record(mbbo, "$(P)$(F)fccd_is_compress_imm")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_is_compress_imm")
+   field(ZRST, "NoIMM")
+   field(ZRVL, "0")
+   field(ONST, "RawIMM")
+   field(ONVL, "1")
+   field(TWST, "CompIMM")
+   field(TWVL, "2")
+
+
+}
+
+
+record(mbbi, "$(P)$(F)fccd_is_compress_imm_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_is_compress_imm")
+   field(ZRST, "NoIMM")
+   field(ZRVL, "0")
+   field(ONST, "RawIMM")
+   field(ONVL, "1")
+   field(TWST, "CompIMM")
+   field(TWVL, "2")
+
+
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+
+record(mbbo, "$(P)$(R)fccd_output_type")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_output_type")
+   field(ZRST, "NoOutput")
+   field(ZRVL, "0")
+   field(ONST, "Tiff")
+   field(ONVL, "1")
+   field(TWST, "IMM/Binary")
+   field(TWVL, "2")
+   field(THST, "Pipe")
+   field(THVL, "3")
+
+
+}
+
+
+record(mbbi, "$(P)$(R)fccd_output_type_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_output_type")
+   field(ZRST, "NoOutput")
+   field(ZRVL, "0")
+   field(ONST, "Tiff")
+   field(ONVL, "1")
+   field(TWST, "IMM/Binary")
+   field(TWVL, "2")
+   field(THST, "Pipe")
+   field(THVL, "3")
+
+
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+record(longout, "$(P)$(F)FileNumber")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_immnumber")
+   field(VAL,  "1")
+}
+
+
+record(longin, "$(P)$(F)FileNumber_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_immnumber")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+record(longout, "$(P)$(R)fccd_is_saveimm")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_is_saveimm")
+   field(VAL,  "1")
+}
+
+
+record(longin, "$(P)$(R)fccd_is_saveimm_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_is_saveimm")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+
+# These records are specific to NeXus file format
+# Template File path.
+record(waveform, "$(P)$(F)FilePath")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_filepath")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+
+
+
+# These records are specific to NeXus file format
+# Template File path.
+record(waveform, "$(P)$(F)FilePath_RBV")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_filepath")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+    field(SCAN, "I/O Intr")
+}
+
+
+
+
+# These records are specific to NeXus file format
+# Template File path.
+record(waveform, "$(P)$(F)FileName")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_immname")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+
+
+
+# These records are specific to NeXus file format
+# Template File path.
+record(waveform, "$(P)$(F)FileName_RBV")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_immname")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+    field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+# These records are specific to NeXus file format
+# Template File path.
+record(waveform, "$(P)$(F)FullFileName")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_fullimmname")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+
+
+
+# These records are specific to NeXus file format
+# Template File path.
+record(waveform, "$(P)$(F)FullFileName_RBV")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_fullimmname")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+    field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+record(longout, "$(P)$(R)fccd_is_descramble")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_is_descramble")
+   field(VAL,  "1")
+}
+
+
+record(longin, "$(P)$(R)fccd_is_descramble_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_is_descramble")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+
+
+
+record(longout, "$(P)$(R)fccd_skip_every_n")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_skip_every_n")
+   field(VAL,  "1")
+}
+
+
+
+record(longin, "$(P)$(R)fccd_skip_every_n_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_skip_every_n")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+record(longout, "$(P)$(R)fccd_offset")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_offset")
+   field(VAL,  "1")
+}
+
+
+
+record(longin, "$(P)$(R)fccd_offset_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_offset")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(longout, "$(P)$(R)fccd_frames_pedistal_calc")
+{
+   field(PINI, "YES")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_frames_pedistal_calc")
+   field(VAL,  "1")
+}
+
+
+
+record(longin, "$(P)$(R)fccd_frames_pedistal_calc_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_frames_pedistal_calc")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(longout, "$(P)$(R)fccd_connect_net")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_connect_net")
+   field(VAL,  "1")
+}
+
+
+
+record(longin, "$(P)$(R)fccd_connect_net_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_connect_net")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+record(longout, "$(P)$(R)fccd_acq_pedistals")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_acq_pedistals")
+   field(VAL,  "1")
+}
+
+
+
+record(longin, "$(P)$(R)fccd_acq_pedistals_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_acq_pedistals")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+record(longout, "$(P)$(R)fccd_sub_pedistals")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_sub_pedistals")
+   field(VAL,  "1")
+}
+
+
+
+record(longin, "$(P)$(R)fccd_sub_pedistals_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_sub_pedistals")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(ao, "$(P)$(R)fccd_exp_time")
+{
+   field(PINI, "1")
+
+    field(FLNK,"$(P)$(R)fccd_exp_timecalc PP")
+   field(PREC, "3")
+}
+
+
+
+
+record(scalcout, "$(P)$(R)fccd_exp_timecalc")
+{
+
+    field(INPA, "$(P)$(R)fccd_exp_time")
+
+
+
+    field(CALC, "A/1000.0")
+    field(OOPT, "On Change")
+
+
+    field(OUT,  "$(P)$(R)AcquireTime PP NMS")
+
+
+    field(SCAN, "Passive")
+}
+
+
+
+
+
+
+record(ao, "$(P)$(R)fccd_cycle_time")
+{
+   field(PINI, "1")
+
+    field(FLNK,"$(P)$(R)fccd_cycle_timecalc PP")
+   field(PREC, "3")
+}
+
+
+
+
+record(scalcout, "$(P)$(R)fccd_cycle_timecalc")
+{
+
+    field(INPA, "$(P)$(R)fccd_cycle_time")
+
+
+
+    field(CALC, "A/1000.0")
+    field(OOPT, "On Change")
+
+
+    field(OUT,  "$(P)$(R)AcquirePeriod PP NMS")
+
+
+    field(SCAN, "Passive")
+}
+
+
+
+
+
+
+
+record(ao, "$(P)$(R)fccd_doub_exp_time")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_doub_exp_time")
+   field(PREC, "3")
+}
+
+
+
+record(ai, "$(P)$(R)fccd_doub_exp_time_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_doub_exp_time")
+   field(PREC, "3")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(ao, "$(P)$(R)fccd_trig_to_shutter_time")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_trig_to_shutter_time")
+   field(PREC, "3")
+}
+
+
+
+record(ai, "$(P)$(R)fccd_trig_to_shutter_time_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_trig_to_shutter_time")
+   field(PREC, "3")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(ao, "$(P)$(R)fccd_shutter_time")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_shutter_time")
+   field(PREC, "3")
+}
+
+
+
+record(ai, "$(P)$(R)fccd_shutter_time_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_shutter_time")
+   field(PREC, "3")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(ao, "$(P)$(R)fccd_trig_to_exp_time")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_trig_to_exp_time")
+   field(PREC, "3")
+}
+
+
+
+record(ai, "$(P)$(R)fccd_trig_to_exp_time_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_trig_to_exp_time")
+   field(PREC, "3")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(mbbo, "$(P)$(R)fccd_shutter_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_shutter_mode")
+   field(ZRST, "Closed")
+   field(ZRVL, "0")
+   field(ONST, "Open")
+   field(ONVL, "1")
+   field(TWVL,"2")
+   field(TWST,"Normal")
+
+
+
+}
+
+
+record(mbbi, "$(P)$(R)fccd_shutter_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_shutter_mode")
+   field(ZRST, "Closed")
+   field(ZRVL, "0")
+   field(ONST, "Open")
+   field(ONVL, "1")
+   field(TWVL,"2")
+   field(TWST,"Normal")
+
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+
+
+
+
+record(mbbo, "$(P)$(R)fccd_doub_exp_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_doub_exp_mode")
+   field(ZRST, "Disabled")
+   field(ZRVL, "0")
+   field(ONST, "Even/Odd")
+   field(ONVL, "1")
+   field(TWVL,"2")
+   field(TWST,"2/2")
+   field(THST,"4/4")
+   field(FRST,"8/8")
+   field(FVST,"16/16")
+   field(SXST,"32/32")
+   field(SVST,"64/64")
+   field(EIST,"128/128")
+   field(THVL,"3")
+   field(FRVL,"4")
+   field(FVVL,"5")
+   field(SXVL,"6")
+   field(SVVL,"7")
+   field(EIVL,"8")
+
+
+}
+
+
+
+
+record(mbbi, "$(P)$(R)fccd_doub_exp_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_doub_exp_mode")
+   field(ZRST, "Disabled")
+   field(ZRVL, "0")
+   field(ONST, "Even/Odd")
+   field(ONVL, "1")
+   field(TWVL,"2")
+   field(TWST,"2/2")
+   field(THST,"4/4")
+   field(FRST,"8/8")
+   field(FVST,"16/16")
+   field(SXST,"32/32")
+   field(SVST,"64/64")
+   field(EIST,"128/128")
+   field(THVL,"3")
+   field(FRVL,"4")
+   field(FVVL,"5")
+   field(SXVL,"6")
+   field(SVVL,"7")
+   field(EIVL,"8")
+
+
+
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+record(longout, "$(P)$(R)fccd_reset_framecnt")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_reset_framecnt")
+   field(VAL,  "1")
+}
+
+
+
+record(longin, "$(P)$(R)fccd_reset_framecnt_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_reset_framecnt")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(longin, "$(P)$(R)fccd_img_in_fifo_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_img_in_fifo")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(longin, "$(P)$(R)fccd_frame_cnt_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_frame_cnt")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(longin, "$(P)$(R)fccd_cpu_time_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_cpu_time")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longin, "$(P)$(R)fccd_hw_timest_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_hw_timest")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(longin, "$(P)$(R)fccd_inpt_img_cnt_RBV")
+{
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_inpt_img_cnt")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(mbbo, "$(P)$(R)fccd_swcin")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_swcin")
+   field(ZRST, "FCCD")
+   field(ZRVL, "0")
+   field(ONST, "SW CIN")
+   field(ONVL, "1")
+
+
+}
+
+
+record(mbbi, "$(P)$(R)fccd_swcin_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_swcin")
+   field(ZRST, "Disabled")
+   field(ZRVL, "0")
+   field(ONST, "Even/Odd")
+   field(ONVL, "1")
+
+
+
+   field(SCAN, "I/O Intr")
+}
+
+
+record(mbbi, "$(P)$(R)fccd_is_lost_images_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_is_lost_images")
+   field(ZRST, "")
+   field(ZRVL, "0")
+   field(ONST, "LOST IMAGES")
+   field(ONVL, "1")
+
+
+
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(longout, "$(P)$(R)fccd_run_python")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_run_python")
+   field(VAL,  "0")
+}
+
+
+record(mbbi, "$(P)$(R)fccd_is_pyrunning_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_is_pyrunning")
+   field(ZRST, "")
+   field(ZRVL, "0")
+   field(ONST, "PYTHON RUNNING")
+   field(ONVL, "1")
+
+
+
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(mbbo, "$(P)$(R)fccd_disp_on")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_disp_on")
+   field(ZRST, "DispOff")
+   field(ZRVL, "0")
+   field(ONST, "DispOn")
+   field(ONVL, "1")
+
+
+}
+	
+
+record(longout, "$(P)$(R)fccd_fifo_size")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_fifo_size")
+   field(VAL,  "64")
+}
+
+
+
+record(mbbo, "$(P)$(R)fccd_send_which")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_send_which")
+   field(ZRST, "1")
+   field(ONST, "2")
+   field(TWST,"3")
+   field(THST,"4")
+   field(FRST,"5")
+   field(FVST,"6")
+   field(SXST,"7")
+   field(SVST,"8")
+   field(ZRVL, "0")
+   field(ONVL, "1")
+   field(TWVL,"2")
+   field(THVL,"3")
+   field(FRVL,"4")
+   field(FVVL,"5")
+   field(SXVL,"6")
+   field(SVVL,"7")
+}
+
+
+record(mbbi, "$(P)$(R)fccd_is_config_sending_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_is_config_sending")
+   field(ZRST, "")
+   field(ZRVL, "0")
+   field(ONST, "SENDING CONFIG")
+   field(ONVL, "1")
+
+
+
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(longout, "$(P)$(R)fccd_send_config")
+{
+   field(PINI, "NO")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_send_config")
+   field(VAL,  "0")
+}
+
+# These records are specific to NeXus file format
+# Template File path.
+record(waveform, "$(P)$(R)fccd_config_filename")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_config_filename")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+
+
+
+
+
+# These records are specific to NeXus file format
+# Template File path.
+record(waveform, "$(P)$(R)fccd_config_filename2")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_config_filename2")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+
+
+
+
+# These records are specific to NeXus file format
+# Template File path.
+record(waveform, "$(P)$(R)fccd_config_filename3")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_config_filename3")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+record(waveform, "$(P)$(R)fccd_config_filename4")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_config_filename4")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+record(waveform, "$(P)$(R)fccd_config_filename5")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_config_filename5")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+record(waveform, "$(P)$(R)fccd_config_filename6")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_config_filename6")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+record(waveform, "$(P)$(R)fccd_config_filename7")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_config_filename7")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+record(waveform, "$(P)$(R)fccd_config_filename8")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_config_filename8")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+
+
+
+# These records are specific to NeXus file format
+# Template File path.
+record(waveform, "$(P)$(R)fccd_py_string")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_py_string")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+record(waveform, "$(P)$(R)fccd_py_string_RBV")
+{
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_py_string")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+    field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+record(mbbo, "$(P)$(R)fccd_bias_on")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_bias_on")
+   field(ZRST, "BiasOff")
+   field(ZRVL, "0")
+   field(ONST, "BiasOn")
+   field(ONVL, "1")
+
+
+}
+
+
+
+record(mbbi, "$(P)$(R)fccd_bias_on_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_bias_on")
+   field(ZRST, "BiasOff")
+   field(ZRVL, "0")
+   field(ONST, "BiasOn")
+   field(ONVL, "1")
+
+
+
+   field(SCAN, "I/O Intr")
+}
+
+record(mbbo, "$(P)$(R)fccd_clock_on")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_clock_on")
+   field(ZRST, "ClockOff")
+   field(ZRVL, "0")
+   field(ONST, "ClockOn")
+   field(ONVL, "1")
+
+
+}
+
+
+record(mbbi, "$(P)$(R)fccd_clock_on_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_clock_on")
+   field(ZRST, "ClockOff")
+   field(ZRVL, "0")
+   field(ONST, "ClockOn")
+   field(ONVL, "1")
+
+
+
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+record(ao, "$(P)$(R)fccd_num_stds")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))fccd_num_stds")
+   field(PREC, "3")
+}
+

@@ -1,0 +1,69 @@
+
+
+
+
+record(ao, "$(P)$(R)open_waittime")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))open_waittime")
+   field(PREC, "3")
+}
+
+
+
+
+
+
+record(ao, "$(P)$(R)write_waittime")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))write_waittime")
+   field(PREC, "3")
+}
+
+
+
+
+
+record(longin, "$(P)$(R)max_buffers")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))max_buffers")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)num_buffers")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))num_buffers")
+   field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)max_memory")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))max_memory")
+   field(SCAN, "I/O Intr")
+}
+
+record(ai, "$(P)$(R)mem_size")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))mem_size")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)num_free")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))num_free")
+   field(SCAN, "I/O Intr")
+}
+

@@ -1,0 +1,12 @@
+$(P)$(R)FilePath
+$(P)$(R)FileName
+$(P)$(R)FileNumber
+$(P)$(R)AutoIncrement
+$(P)$(R)FileTemplate
+$(P)$(R)AutoSave
+$(P)$(R)FileFormat
+$(P)$(R)FileWriteMode
+$(P)$(R)NumCapture
+$(P)$(R)EnableCallbacks
+$(P)$(R)NDFileIMM_throw_images
+$(P)$(R)NDAttributesFile

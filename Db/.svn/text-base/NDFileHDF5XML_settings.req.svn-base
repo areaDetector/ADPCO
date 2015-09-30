@@ -1,0 +1,10 @@
+$(P)$(R)TemplateFilePath
+$(P)$(R)TemplateFileName
+$(P)$(R)NDAttributesFile
+$(P)$(R)EnableCallbacks
+$(P)$(R)BlockingCallbacks
+$(P)$(R)FileTemplate
+$(P)$(R)FileWriteMode
+$(P)$(R)FileName
+$(P)$(R)FilePath
+$(P)$(R)AutoSave

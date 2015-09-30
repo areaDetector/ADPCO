@@ -1,0 +1,64 @@
+# Database for the records specific to the simulated detector driver
+# tim madden
+# March 23, 2009
+
+
+
+record(longin, "$(P)$(R)cor_run_counter")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))cor_run_counter")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longin, "$(P)$(R)cor_is_grab_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))cor_is_grab")
+   field(SCAN, "I/O Intr")
+}
+record(longout, "$(P)$(R)cor_is_grab")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))cor_is_grab")
+}
+
+record(longout, "$(P)$(R)cor_is_loadccf")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))cor_is_loadccf")
+}
+
+
+
+
+record(stringout, "$(P)$(R)cor_ccf_filename")
+{
+    field(PINI, "1")
+    field(DTYP, "asynOctetWrite")
+    field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))cor_ccf_filename")
+}
+
+record(stringin, "$(P)$(R)cor_ccf_filename_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynOctetRead")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))cor_ccf_filename")
+   field(VAL,  "Unknown")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(longout, "$(P)$(R)cor_is_sleep")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))cor_is_sleep")
+}
+
+
+
+

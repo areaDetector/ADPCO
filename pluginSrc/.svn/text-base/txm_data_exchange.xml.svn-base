@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+ <implements hdfObjType="DataSet" datatype="H5T_STR_NULLTERM" when="OnFileOpen" source="CONST">exchange:measurement</implements>
+ <file_creation_datetime hdfObjType="DataSet" source_name="datetime" when="OnFileOpen" source="NDAttr"/>
+ <exchange hdfObjType="Group">
+  <data hdfObjType="DataSet" source_condition="Normal" when="OnImageType" source="Images">
+   <description hdfObjType="Attr" datatype="H5T_STR_NULLTERM" when="OnFileOpen" source="CONST">ImageData</description>
+   <units hdfObjType="Attr" datatype="H5T_STR_NULLTERM" when="OnFileOpen" source="CONST">counts</units>
+   <axes hdfObjType="Attr" datatype="H5T_STR_NULLTERM" when="OnFileOpen" source="CONST">theta:y:x</axes>
+  </data>
+  <data_white hdfObjType="DataSet" source_condition="FlatField" when="OnImageType" source="Images">
+   <description hdfObjType="Attr" datatype="H5T_STR_NULLTERM" when="OnFileOpen" source="CONST">WhiteData</description>
+   <units hdfObjType="Attr" datatype="H5T_STR_NULLTERM" when="OnFileOpen" source="CONST">counts</units>
+   <axes hdfObjType="Attr" datatype="H5T_STR_NULLTERM" when="OnFileOpen" source="CONST">theta_white:y:x</axes>
+  </data_white>
+  <data_dark hdfObjType="DataSet" source_condition="Background" when="OnImageType" source="Images">
+   <description hdfObjType="Attr" datatype="H5T_STR_NULLTERM" when="OnFileOpen" source="CONST">DarkData</description>
+   <units hdfObjType="Attr" datatype="H5T_STR_NULLTERM" when="OnFileOpen" source="CONST">counts</units>
+   <axes hdfObjType="Attr" datatype="H5T_STR_NULLTERM" when="OnFileOpen" source="CONST">theta_dark:y:x</axes>
+  </data_dark>
+ </exchange>
+ <measurement hdfObjType="Group">
+  <instrument hdfObjType="Group">
+   <detector hdfObjType="Group">
+    <manufacturer hdfObjType="DataSet" source_name="CameraManufacturer" datatype="H5T_STR_NULLTERM" when="OnFileOpen" source="NDAttr"/>
+    <model hdfObjType="DataSet" source_name="CameraManufacturer" datatype="H5T_STR_NULLTERM" when="OnFileOpen" source="NDAttr"/>
+    <x_dimension hdfObjType="DataSet" source_name="MaxSizeX" datatype="H5T_NATIVE_INT" when="OnFileOpen" source="NDAttr"/>
+    <y_dimension hdfObjType="DataSet" source_name="MaxSizeY" datatype="H5T_NATIVE_INT" when="OnFileOpen" source="NDAttr"/>
+    <x_binning hdfObjType="DataSet" source_name="BinX" datatype="H5T_NATIVE_INT" when="OnFileOpen" source="NDAttr"/>
+    <y_binning hdfObjType="DataSet" source_name="BinY" datatype="H5T_NATIVE_INT" when="OnFileOpen" source="NDAttr"/>
+    <exposure_time hdfObjType="DataSet" source_name="AcqTime" datatype="H5T_NATIVE_DOUBLE" when="OnFileOpen" source="NDAttr"/>
+    <exposure_period hdfObjType="DataSet" source_name="AcqPeriod" datatype="H5T_NATIVE_DOUBLE" when="OnFileOpen" source="NDAttr"/>
+    <gain hdfObjType="DataSet" source_name="Gain" datatype="H5T_NATIVE_DOUBLE" when="OnFileOpen" source="NDAttr"/>
+    <roi hdfObjType="Group">
+     <x1 hdfObjType="DataSet" source_name="MinX" datatype="H5T_NATIVE_INT" when="OnFileOpen" source="NDAttr"/>
+     <x2 hdfObjType="DataSet" source_name="SizeY" datatype="H5T_NATIVE_INT" when="OnFileOpen" source="NDAttr"/>
+     <y1 hdfObjType="DataSet" source_name="MinY" datatype="H5T_NATIVE_INT" when="OnFileOpen" source="NDAttr"/>
+     <y2 hdfObjType="DataSet" source_name="SizeY" datatype="H5T_NATIVE_INT" when="OnFileOpen" source="NDAttr"/>
+    </roi>
+   </detector>
+  </instrument>
+ </measurement>
+</root>

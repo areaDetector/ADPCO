@@ -1,0 +1,23 @@
+<?xml version="1.0" standalone="no" ?>
+<!-- Attributes -->
+<Attributes
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://epics.aps.anl.gov/areaDetector/attributes ../attributes.xsd"
+    >
+    <Attribute name="MaxSizeX"            type="PARAM"    source="MAX_SIZE_X"                   datatype="INT"        description="Detector X size"/>
+    <Attribute name="MaxSizeY"            type="PARAM"    source="MAX_SIZE_Y"                   datatype="INT"        description="Detector Y size"/>
+    <Attribute name="CameraModel"         type="PARAM"    source="MODEL"                        datatype="STRING"     description="Camera model"/>
+    <Attribute name="CameraManufacturer"  type="PARAM"    source="MANUFACTURER"                 datatype="STRING"     description="Camera manufacturer"/>
+    <Attribute name="FrameType"           type="PARAM"    source="FRAME_TYPE"                   datatype="INT"        description="Type of frame"/>
+    <Attribute name="BinX"                type="PARAM"    source="BIN_X"                        datatype="INT"        description="Detector X bin"/>
+    <Attribute name="BinY"                type="PARAM"    source="BIN_Y"                        datatype="INT"        description="Detector Y bin"/>
+    <Attribute name="AcqTime"             type="PARAM"    source="ACQ_TIME"                     datatype="DOUBLE"     description="Acquire Time"/>
+    <Attribute name="AcqPeriod"           type="PARAM"    source="ACQ_PERIOD"                   datatype="DOUBLE"     description="Acquire Period"/>
+    <Attribute name="Gain"                type="PARAM"    source="GAIN"                         datatype="DOUBLE"     description="Gain"/>
+    <Attribute name="MinX"                type="PARAM"    source="MIN_X"                        datatype="INT"        description="ROI Min X"/>
+    <Attribute name="MinY"                type="PARAM"    source="MIN_Y"                        datatype="INT"        description="ROI Min Y"/>
+    <Attribute name="SizeX"               type="PARAM"    source="SIZE_X"                       datatype="INT"        description="ROI Size X"/>
+    <Attribute name="SizeY"               type="PARAM"    source="SIZE_Y"                       datatype="INT"        description="ROI Size Y"/>
+</Attributes>
+    
+    

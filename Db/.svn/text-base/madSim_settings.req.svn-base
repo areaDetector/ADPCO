@@ -1,0 +1,7 @@
+$(P)$(R)is_noise
+$(P)$(R)noise_amplitude
+$(P)$(R)test_pattern_type
+$(P)$(R)test_img_inc
+$(P)$(R)is_display_img
+$(P)$(R)run_counter
+

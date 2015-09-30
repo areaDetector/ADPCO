@@ -1,0 +1,7 @@
+$(P)$(R)cor_ccf_filename
+$(P)$(R)cor_ccf_filename_RBV
+$(P)$(R)cor_fpga_filename
+$(P)$(R)cor_fpga_filename_RBV
+$(P)$(R)cor_fpga_reg_filename
+$(P)$(R)cor_fpga_reg_filename_RBV
+$(P)$(R)cor_num_coreco_buffers

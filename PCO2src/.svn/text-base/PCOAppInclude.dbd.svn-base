@@ -1,0 +1,15 @@
+include "PCOSupport.dbd"
+include "commonDriverSupport.dbd"
+include "calcSupport.dbd"
+
+include "pcoEdgePluginSupport.dbd"
+include "HDF5XMLpluginSupport.dbd"
+include "TinyTIFFpluginSupport.dbd"
+include "camLinkSerialSupport.dbd"
+
+include "simPluginSupport.dbd"
+
+
+#caputrecorder
+
+include "caputRecorder.dbd"

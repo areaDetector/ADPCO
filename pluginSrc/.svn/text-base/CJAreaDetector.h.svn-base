@@ -1,0 +1,169 @@
+#include <jni.h>
+
+#include <string.h>
+
+/*
+
+*/
+
+
+class CJAreaDetector
+{
+
+public:
+
+	enum NDDataType_t
+	{
+		NDInt8,     /**< Signed 8-bit integer */
+		NDUInt8,    /**< Unsigned 8-bit integer */
+		NDInt16,    /**< Signed 16-bit integer */
+		NDUInt16,   /**< Unsigned 16-bit integer */
+		NDInt32,    /**< Signed 32-bit integer */
+		NDUInt32,   /**< Unsigned 32-bit integer */
+		NDFloat32,  /**< 32-bit float */
+		NDFloat64   /**< 64-bit float */
+	};
+	struct int_string
+	{
+		int_string();
+
+		~int_string();
+		int param;
+		int type;
+		char *pstr;
+	};
+
+	struct intstr_list
+	{
+		intstr_list(int ml);
+		~intstr_list();
+
+		int max_len;
+		int len;
+		int_string *list;
+	};
+
+	enum gui_level
+	{
+		no_gui,
+		some_gui,
+		lotta_gui
+	};
+
+	enum ptype
+	{
+		p_undef,
+		p_int,
+		p_double,
+		p_string,
+		p_other
+	};
+	CJAreaDetector();
+
+
+	/* initialize driver, and shut driver*/
+	 virtual int init(gui_level g);
+	 virtual void shutdown(void);
+		/* set class path here... all jvm options*/
+	 virtual void setJVMOptionStr(char *js);
+
+	 virtual void setClassname(char* cs);
+
+
+	 virtual int getIntParam(int p);
+	 virtual void putIntParam(int p, int v);
+
+ 	 virtual double getDoubleParam(int p);
+	 virtual void putDoubleParam(int p, double v);
+
+ 	 virtual char* getStringParam(int p);
+	 virtual void putStringParam(int p, char* v);
+
+	 virtual void attachCurrentThread(void);
+
+	 virtual void runImageCallback(void);
+
+	 // copies c image to java, call before the imag ecallback,
+	 // include headerbytes at top of image.
+	 virtual void setC2JImage(void *ptr, int pixbits, int sizex, int sizey,int headerbytes);
+	// copies output from java image callback into c image.
+	 virtual void getJ2CImage(void *ptr, int pixbits, int sizex, int sizey);
+
+
+	// add an image attribyte- these are asso with the object, and not the image.
+	// so we clear, then add attr when we get new image. so far java cant add new attrs and pass back to C
+	virtual void addAttribute(char *pName,char *pDescription,int dataType,void *pValue);
+
+	// clear attr list
+	virtual void clearAttributes(void);
+
+	 //return len-
+	 virtual intstr_list* getParamStrings(void);
+	 virtual int findParamByString(char *str);
+	virtual void makeTestImg(int sizex, int sizey, int type, void *img);
+
+protected:
+
+
+	JNIEnv*  create_vm(JavaVM ** jvm);
+      int ret;
+	char classname[128];
+	char classpath[512];
+
+	int *imgbuffer;
+
+	/* java environment*/
+	 JNIEnv *env;
+  JavaVM * jvm;
+
+/* java class*/
+
+ jclass cls_ad;
+	intstr_list *plist;
+
+
+	jmethodID m_setImageSize;
+
+	jmethodID m_setIntImages;
+	jmethodID m_getNumParams;
+	jmethodID m_incParamCounter;
+	jmethodID m_getCurrentParamStr;
+	jmethodID m_getCurrentParamEnum;
+	jmethodID m_setIntParam;
+	jmethodID m_getIntParam;
+	jmethodID m_doImageCallback;
+
+
+
+	jmethodID m_setDoubleParam;
+	jmethodID m_getDoubleParam;
+
+	jmethodID m_getStringParam;
+	jmethodID m_setStringParam;
+
+	jmethodID m_getCurrentParamType;
+	jmethodID m_make;
+	jmethodID m_getAD;
+
+	jmethodID m_clearAttributes;
+	jmethodID m_createAttr;
+	jmethodID m_setAttrValueStr;
+	jmethodID m_setAttrValueDbl;
+	jmethodID m_setAttrValueInt;
+
+
+		jobject myAD;
+	jbyteArray javastring;
+
+
+	char scratch[512];
+
+	enum imgsizes
+	{
+		maxsizex=3000,
+		maxsizey=3000
+	};
+
+	jintArray imgC2J;
+	jintArray imgJ2C;
+};

@@ -1,0 +1,567 @@
+/*
+ * NDPluginJava.cpp
+ *
+ * Java plugin
+ * Author: MADDEN
+ *
+ * Created Feb 21, 2011
+ */
+
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
+#include <math.h>
+
+#include <epicsString.h>
+#include <epicsTime.h>
+#include <epicsThread.h>
+#include <epicsEvent.h>
+#include <epicsMutex.h>
+#include <epicsString.h>
+#include <epicsStdio.h>
+#include <epicsMutex.h>
+#include <cantProceed.h>
+
+#include <windows.h>
+
+
+#include <iocsh.h>
+#include "ADDriver.h"
+#include "asynNDArrayDriver.h"
+
+
+#include "NDArray.h"
+#include "NDPluginJava.h"
+
+#include <epicsExport.h>
+
+
+
+
+// store names of up to 64 threads
+typedef void (__cdecl *OBJMAKER)(int*, genCamController*, void*, void**);
+
+
+static char *thread_name[64];
+static epicsEventId resume_event[64];
+static volatile int thread_suspend_counters[64];
+
+static bool is_debug_mess = false;
+static char Java_name[256];
+static char Java_path[512];
+
+
+
+
+NDPluginJava* NDPluginJava::madSimPtr = 0;
+
+
+
+    /** Callback function that is called by the NDArray driver with new NDArray data.
+      * Grabs the current NDArray and applies the selected transforms to the data.  Apply the transforms in order.
+      * \param[in] pArray  The NDArray from the callback.
+      */
+    void NDPluginJava::processCallbacks(NDArray *pArray)
+    {
+        NDDimension_t dimsIn[ND_ARRAY_MAX_DIMS];
+        NDArray *transformedArray;
+        int ii;
+        int colorMode;
+        int k;
+        	NDAttribute *pAttribute;
+        	    NDAttrDataType_t attrDataType;
+			    size_t attrSize;
+			    int numAttributes, attrCount;
+
+		char scratch[512];
+
+
+
+        const char* functionName = "processCallbacks";
+
+        /* Call the base class method */
+        NDPluginDriver::processCallbacks(pArray);
+
+
+		cj->attachCurrentThread();
+		//copy image to java
+		cj->setC2JImage(pArray->pData,pArray->dataType,pArray->dims[0].size,pArray->dims[1].size,0);
+
+		//get attr. from imate and into java
+		//clear what ever was from last image
+		cj->clearAttributes();
+
+		//add any attributes
+	this->getAttributes(pArray->pAttributeList);
+
+		numAttributes = pArray->pAttributeList->count();
+
+//	printf("Num Attributes %i \n", numAttributes);
+		pAttribute = pArray->pAttributeList->next(NULL);
+
+		for (attrCount=0; attrCount<numAttributes; attrCount++)
+		{
+			pAttribute->getValueInfo(&attrDataType, &attrSize);
+			pAttribute->getValue(attrDataType, (void*)scratch, attrSize);
+			cj->addAttribute(pAttribute->pName,pAttribute->pDescription,(int)attrDataType,(void*)scratch);
+
+		    pAttribute = pArray->pAttributeList->next(pAttribute);
+
+		}
+	this->unlock();
+
+		cj->runImageCallback();
+	this->lock();
+
+	
+
+
+	       // doCallbacksGenericPointer(pArrayOut, NDArrayData,0);
+	copyParamsFromDet(0);
+
+        callParamCallbacks();
+    }
+
+
+
+
+
+    /** Called when asyn clients call pasynInt32->write().
+      * This function performs actions for some parameters, including transform type and origin.
+      * For other parameters it calls NDPluginDriver::writeInt32 to see if that method understands the parameter.
+      * For all parameters it sets the value in the parameter library and calls any registered callbacks..
+      * \param[in] pasynUser pasynUser structure that encodes the reason and address.
+      * \param[in] value Value to write. */
+
+    asynStatus NDPluginJava::writeInt32(asynUser *pasynUser, epicsInt32 value){
+        int function = pasynUser->reason;
+        asynStatus status = asynSuccess;
+        int transformIndex;
+        int enum_param;
+        int k;
+
+			NDPluginDriver::writeInt32(pasynUser,value);
+
+        status = setIntegerParam(function, value);
+
+
+
+
+		if ((*mapAsyn2Java).find(function)!= (*mapAsyn2Java).end())
+		{
+			enum_param = (*mapAsyn2Java)[function];
+
+			cj->putIntParam(enum_param,(int)value);
+		}
+
+
+
+copyParamsFromDet(0);
+        callParamCallbacks();
+        return status;
+    }
+
+
+
+
+
+
+/*********************************************************************************
+ *
+ *
+ *********************************************************************************/
+
+asynStatus NDPluginJava::writeFloat64(asynUser *pasynUser, epicsFloat64 value)
+{
+    int function = pasynUser->reason;
+    asynStatus status = asynSuccess;
+	int k;
+	int enum_param;
+
+	NDPluginDriver::writeFloat64(pasynUser,value);
+    /* Set the parameter and readback in the parameter library.  This may be overwritten when we read back the
+     * status at the end, but that's OK */
+    status = setDoubleParam(function, value);
+
+
+
+		if ((*mapAsyn2Java).find(function)!= (*mapAsyn2Java).end())
+		{
+			enum_param = (*mapAsyn2Java)[function];
+
+			cj->putDoubleParam(enum_param,(double)value);
+		}
+
+
+
+
+    /* Do callbacks so higher layers see any changes */
+		copyParamsFromDet(0);
+    callParamCallbacks(0);
+    return status;
+}
+
+
+
+asynStatus NDPluginJava::writeOctet(asynUser *pasynUser, const char *value,
+                                    size_t nChars, size_t *nActual)
+{
+    int addr=0;
+    int k;
+    int function = pasynUser->reason;
+    asynStatus status = asynSuccess;
+    const char *functionName = "writeOctet";
+	int enum_param;
+
+   // status = getAddress(pasynUser, functionName, &addr); if (status != asynSuccess) return(status);
+
+	NDPluginDriver::writeOctet(pasynUser,value,nChars, nActual);
+	    /* Set the parameter in the parameter library. */
+    status = (asynStatus)setStringParam(0, function, (char *)value);
+
+//	int enum_param = (*mapAsyn2Java)[function];
+
+		if ((*mapAsyn2Java).find(function)!= (*mapAsyn2Java).end())
+		{
+			enum_param = (*mapAsyn2Java)[function];
+
+
+			cj->putStringParam(enum_param,(char*)value);
+		}
+
+
+
+	printf("STR ctrls %i param %i val %i\n",num_controllers, function, value);
+
+
+     /* Do callbacks so higher layers see any changes */
+	copyParamsFromDet(0);
+    status = (asynStatus)callParamCallbacks(addr, addr);
+
+    *nActual = nChars;
+    return status;
+}
+
+
+
+static void trapHere(void)
+{
+	int a = 1;
+}
+
+
+
+
+/** Constructor for NDPluginJava; most parameters are simply passed to NDPluginDriver::NDPluginDriver.
+  * After calling the base class constructor this method sets reasonable default values for all of the
+  * Transform parameters.
+  * \param[in] portName The name of the asyn port driver to be created.
+  * \param[in] queueSize The number of NDArrays that the input queue for this plugin can hold when
+  *            NDPluginDriverBlockingCallbacks=0.  Larger queues can decrease the number of dropped arrays,
+  *            at the expense of more NDArray buffers being allocated from the underlying driver's NDArrayPool.
+  * \param[in] blockingCallbacks Initial setting for the NDPluginDriverBlockingCallbacks flag.
+  *            0=callbacks are queued and executed by the callback thread; 1 callbacks execute in the thread
+  *            of the driver doing the callbacks.
+  * \param[in] NDArrayPort Name of asyn port driver for initial source of NDArray callbacks.
+  * \param[in] NDArrayAddr asyn port driver address for initial source of NDArray callbacks.
+  * \param[in] maxBuffers The maximum number of NDArray buffers that the NDArrayPool for this driver is
+  *            allowed to allocate. Set this to -1 to allow an unlimited number of buffers.
+  * \param[in] maxMemory The maximum amount of memory that the NDArrayPool for this driver is
+  *            allowed to allocate. Set this to -1 to allow an unlimited amount of memory.
+  * \param[in] priority The thread priority for the asyn port driver thread if ASYN_CANBLOCK is set in asynFlags.
+  * \param[in] stackSize The stack size for the asyn port driver thread if ASYN_CANBLOCK is set in asynFlags.
+  */
+NDPluginJava::NDPluginJava(const char *portName, int queueSize, int blockingCallbacks,
+                         const char *NDArrayPort, int NDArrayAddr, int maxBuffers, size_t maxMemory,
+                         int priority, int stackSize)
+    /* Invoke the base class constructor */
+    : NDPluginDriver(portName, queueSize, blockingCallbacks,
+                   NDArrayPort, NDArrayAddr, 1, 1024, maxBuffers, maxMemory,
+                   asynInt32ArrayMask | asynFloat64ArrayMask | asynGenericPointerMask,
+                   asynInt32ArrayMask | asynFloat64ArrayMask | asynGenericPointerMask,
+                   ASYN_MULTIDEVICE, 1, priority, stackSize)
+{
+    asynStatus status;
+    const char *functionName = "NDPluginJava";
+    int ii, jj;
+
+    int dims[2];
+
+	int gg;
+	int_string *params;
+
+
+
+
+
+	// map the params from asyn assign param to the enumerated param in the Java.
+
+	mapAsyn2Java = new std::map<int,int>;
+	mapJava2Asyn = new std::map<int,int>;
+
+ dims[0] =1024;
+    dims[1] = 1024;
+    this->pRaw = this->pNDArrayPool->alloc(2, dims, NDUInt16, 0, NULL);
+
+	printf("Made NDArray, X = %i  Y = %i Type = %i \n",1024, 1024,3);
+
+	printf("Image data pointer = %i \n", (long)(pRaw->pData));
+	// open up java
+	cj = new CJAreaDetector();
+	// class we wish to run.
+	cj->setClassname("JADViewer");
+	// class path
+//	cj->setJVMOptionStr("-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:8000");
+//	cj->setJVMOptionStr("-Djava.class.path=D:\\Madden\\Eclipse\\epicsClient\\bin\\caj-1.1.7.jar;D:\\Madden\\Eclipse\\epicsClient\\bin\\jca-2.3.5.jar;D:\\Madden\\Eclipse\\epicsClient\\bin;D:\\Madden\\Eclipse\\hellow\\bin");
+	cj->setJVMOptionStr(Java_path);
+
+
+	cj->setClassname(Java_name);
+	// start JVM and load classes
+	cj->init(CJAreaDetector::no_gui);
+
+	// get parameters (like asyn params) from Java. we then map them to asyn params
+	jplist = cj->getParamStrings();
+
+
+
+
+	madSimPtr=this;
+
+	//
+	// get param lists from the Java and make all params.
+	//
+	int asyn_param;
+	int enum_param;
+	int ptype;
+	int nparam;
+
+		for (int pp=0;pp<jplist->len;pp++)
+		{
+//			if (pp==12)
+//				trapHere();
+
+			enum_param=jplist->list[pp].param;
+
+			ptype= jplist->list[pp].type;
+
+			switch(ptype)
+			{
+
+				case CJAreaDetector::p_int:
+					createParam(jplist->list[pp].pstr,asynParamInt32,&asyn_param);
+					(*mapAsyn2Java)[asyn_param] = enum_param;
+					(*mapJava2Asyn)[enum_param] = asyn_param;
+					printf("Created Param %s type %i  asyn %i enum %i\n",jplist->list[pp].pstr,ptype,asyn_param,enum_param);
+
+
+					break;
+
+				case CJAreaDetector::p_double:
+					createParam(jplist->list[pp].pstr,asynParamFloat64,&asyn_param);
+					(*mapAsyn2Java)[asyn_param] = enum_param;
+					(*mapJava2Asyn)[enum_param] = asyn_param;
+					printf("Created Param %s type %i  asyn %i enum %i\n",jplist->list[pp].pstr,ptype,asyn_param,enum_param);
+				break;
+
+				case CJAreaDetector::p_string:
+					createParam(jplist->list[pp].pstr,asynParamOctet,&asyn_param);
+					(*mapAsyn2Java)[asyn_param] = enum_param;
+					(*mapJava2Asyn)[enum_param] = asyn_param;
+					printf("Created Param %s type %i  asyn %i enum %i\n",jplist->list[pp].pstr,ptype,asyn_param,enum_param);
+				break;
+
+				case CJAreaDetector::p_other:
+//					createParam(params[pp].str,asynParamInt32,&asyn_param);
+//					(*mapAsyn2Java)[asyn_param] = params[pp].x;
+//					(*mapJava2Asyn)[params[pp].x] = asyn_param;
+
+				break;
+
+				default:
+					printf("Cannot Creat Param %s type %i  \n",jplist->list[pp].pstr,ptype);
+				break;
+
+
+			}
+		}
+
+	// copy ALL parameters from detector to this local Area Detector object
+	//so EPICS can relect what detector is doing.
+	lock();
+	copyParamsFromDet(0);
+
+	unlock();
+
+
+
+//    createParam(NDPluginJavaNameString,         asynParamOctet, &NDPluginJavaName);
+//    createParam(NDPluginJava1TypeString,        asynParamInt32, &NDPluginJava1Type);
+
+    /* Set the plugin type string */
+//    setStringParam(NDPluginDriverPluginType, "NDPluginJava");
+//    setStringParam(NDPluginJavaName, "");
+//    setIntegerParam(NDPluginJava1Type, 0);
+
+
+	NDArrayDataPub=NDArrayData;
+
+
+    /* Set the plugin type string */
+    setStringParam(NDPluginDriverPluginType, "NDPluginJava");
+
+
+    /* Try to connect to the array port */
+    status = connectToArrayPort();
+}
+
+/*********************************************************************************
+ *
+ *
+ *********************************************************************************/
+
+static void madTaskC(void *drvPvt)
+{
+    genCamController *pPvt = (genCamController *)drvPvt;
+
+    pPvt->main(0);
+}
+
+
+/*********************************************************************************
+ *
+ *
+ *********************************************************************************/
+
+/*********************************************************************************
+ *
+ *
+ *********************************************************************************/
+
+void NDPluginJava::copyParamsFromDet(int which_ones)
+{
+
+	int k;
+	int ptype;
+	int m;
+	int asyn_param;
+	int enum_param;
+	int_string *params;
+	int nparams;
+	// which ones
+	// 0 for all params
+	// 1 for changed params
+
+
+		for (k=0;k<jplist->len; k++)
+		{
+			enum_param=jplist->list[k].param;
+
+			ptype= jplist->list[k].type;
+			if (ptype != CJAreaDetector::p_undef)
+			{
+
+
+					//controllers[m]->clearChanges(k);
+					//string
+					if (ptype==CJAreaDetector::p_string)
+					{
+						asyn_param = (*mapJava2Asyn)[enum_param];
+						setStringParam(asyn_param, cj->getStringParam(enum_param));
+					}
+					else if (ptype==CJAreaDetector::p_int)
+					{
+						asyn_param = (*mapJava2Asyn)[enum_param];
+						setIntegerParam(asyn_param, cj->getIntParam(enum_param));
+					}
+					else if (ptype==CJAreaDetector::p_double )
+					{
+						asyn_param = (*mapJava2Asyn)[enum_param];
+						setDoubleParam(asyn_param,cj->getDoubleParam(enum_param));
+					}
+					else
+						{}
+
+			}//if (ptype != CJAreaDetector::p_undef)
+
+		}//for (k=0;k<jplist->len; k++)
+
+
+}
+
+
+/** Configuration command */
+extern "C" int NDJavaConfigure(const char *portName, int queueSize, int blockingCallbacks,
+                                 const char *NDArrayPort, int NDArrayAddr,
+                                 int maxBuffers, size_t maxMemory,
+                                 int priority, int stackSize)
+{
+    NDPluginJava *pPlugin =
+    new NDPluginJava(portName, queueSize, blockingCallbacks, NDArrayPort, NDArrayAddr,
+                    maxBuffers, maxMemory, priority, stackSize);
+    pPlugin = NULL;  /* This is just to eliminate compiler warning about unused variables/objects */
+    return(asynSuccess);
+}
+
+
+
+
+/* Code for iocsh registration */
+
+static const iocshArg JavaPlgJavaName = {"JavaClassName", iocshArgString};
+static const iocshArg * const JavaPlgJavaArgs[] =  {&JavaPlgJavaName};
+static const iocshFuncDef JavaNameJavaPlg = {"setJavaClassName", 1, JavaPlgJavaArgs};
+static void JavaPlgJavaNameCallFunc(const iocshArgBuf *args)
+{
+	 strcpy(Java_name,args[0].sval);
+}
+
+
+static const iocshArg JavaPlgJavaPath = {"JavaClassPath", iocshArgString};
+static const iocshArg * const JavaPlgJavaArgs2[] =  {&JavaPlgJavaPath};
+static const iocshFuncDef JavaPathJavaPlg = {"setJavaClassPath", 1, JavaPlgJavaArgs2};
+static void JavaPlgJavaPathCallFunc(const iocshArgBuf *args)
+{
+	 strcpy(Java_path,args[0].sval);
+}
+
+
+
+/* EPICS iocsh shell commands */
+static const iocshArg initArg0 = { "portName",iocshArgString};
+static const iocshArg initArg1 = { "frame queue size",iocshArgInt};
+static const iocshArg initArg2 = { "blocking callbacks",iocshArgInt};
+static const iocshArg initArg3 = { "NDArrayPort",iocshArgString};
+static const iocshArg initArg4 = { "NDArrayAddr",iocshArgInt};
+static const iocshArg initArg5 = { "maxBuffers",iocshArgInt};
+static const iocshArg initArg6 = { "maxMemory",iocshArgInt};
+static const iocshArg initArg7 = { "priority",iocshArgInt};
+static const iocshArg initArg8 = { "stackSize",iocshArgInt};
+static const iocshArg * const initArgs[] = {&initArg0,
+                                            &initArg1,
+                                            &initArg2,
+                                            &initArg3,
+                                            &initArg4,
+                                            &initArg5,
+                                            &initArg6,
+                                            &initArg7,
+                                            &initArg8};
+static const iocshFuncDef initFuncDef = {"NDJavaConfigure",9,initArgs};
+static void initCallFunc(const iocshArgBuf *args)
+{
+    NDJavaConfigure(args[0].sval, args[1].ival, args[2].ival,
+                   args[3].sval, args[4].ival, args[5].ival,
+                   args[6].ival, args[7].ival, args[8].ival);
+}
+
+extern "C" void NDJavaRegister(void)
+{
+    iocshRegister(&initFuncDef,initCallFunc);
+    iocshRegister(&JavaNameJavaPlg, JavaPlgJavaNameCallFunc);
+    iocshRegister(&JavaPathJavaPlg, JavaPlgJavaPathCallFunc);
+
+}
+
+extern "C" {
+epicsExportRegistrar(NDJavaRegister);
+}

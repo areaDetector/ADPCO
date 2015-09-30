@@ -1,0 +1,389 @@
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/detpool/!svn/ver/2766/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc
+END
+tinytiff.h
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/detpool/!svn/ver/1791/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/tinytiff.h
+END
+hdf5Visitor.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/detpool/!svn/ver/1907/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/hdf5Visitor.cpp
+END
+simPlugin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/detpool/!svn/ver/1778/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/simPlugin.cpp
+END
+IMM-README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/IMM-README.txt
+END
+MakefileFCCD
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/detpool/!svn/ver/2050/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/MakefileFCCD
+END
+NDFileTinyTIFF.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/detpool/!svn/ver/1850/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/NDFileTinyTIFF.cpp
+END
+TinyTIFFpluginSupport.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/TinyTIFFpluginSupport.dbd
+END
+imm.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/detpool/!svn/ver/2750/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/imm.cpp
+END
+NDPluginDLL.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/NDPluginDLL.dbd
+END
+NDPluginJava.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/NDPluginJava.dbd
+END
+pcoEdgePlugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/detpool/!svn/ver/2112/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/pcoEdgePlugin.h
+END
+HDF5XMLpluginSupport.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/HDF5XMLpluginSupport.dbd
+END
+Makefile
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/detpool/!svn/ver/2750/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/Makefile
+END
+immViewPluginSupport.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/detpool/!svn/ver/2750/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/immViewPluginSupport.dbd
+END
+immViewPlugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/detpool/!svn/ver/2766/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/immViewPlugin.h
+END
+drvNDFileIMMEpics.c
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/drvNDFileIMMEpics.c
+END
+drvpcoEdgePlugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/detpool/!svn/ver/1816/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/drvpcoEdgePlugin.h
+END
+simDetectorAttributes.xml
+K 25
+svn:wc:ra_dav:version-url
+V 125
+/detpool/!svn/ver/1743/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/simDetectorAttributes.xml
+END
+image_file2.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/image_file2.h
+END
+hdf5Visitor.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/detpool/!svn/ver/1887/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/hdf5Visitor.h
+END
+NDPluginDLL.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/NDPluginDLL.cpp
+END
+ccd_exception.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/ccd_exception.h
+END
+drvimmViewPlugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/detpool/!svn/ver/2750/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/drvimmViewPlugin.h
+END
+drvNDFileTinyTIFFEpics.c
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/drvNDFileTinyTIFFEpics.c
+END
+NDPluginJava.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/NDPluginJava.cpp
+END
+NDFileTinyTIFF.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/NDFileTinyTIFF.h
+END
+CJAreaDetector.h
+K 25
+svn:wc:ra_dav:version-url
+V 116
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/CJAreaDetector.h
+END
+pcoEdgePlugin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/detpool/!svn/ver/2463/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/pcoEdgePlugin.cpp
+END
+imm.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/detpool/!svn/ver/2750/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/imm.h
+END
+pcoEdgePluginSupport.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 124
+/detpool/!svn/ver/1816/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/pcoEdgePluginSupport.dbd
+END
+drvNDFileHDF5XMLEpics.c
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/drvNDFileHDF5XMLEpics.c
+END
+Makefile21
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/detpool/!svn/ver/2738/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/Makefile21
+END
+drvNDFileTinyTIFF.h
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/drvNDFileTinyTIFF.h
+END
+image_file2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/detpool/!svn/ver/1979/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/image_file2.cpp
+END
+genCamController.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/genCamController.h
+END
+NDFileIMM.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/detpool/!svn/ver/2763/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/NDFileIMM.cpp
+END
+IMMpluginSupport.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/IMMpluginSupport.dbd
+END
+MakefileWindows
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/detpool/!svn/ver/2738/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/MakefileWindows
+END
+ccd_exception.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/ccd_exception.cpp
+END
+simPluginSupport.dbd
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/detpool/!svn/ver/1747/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/simPluginSupport.dbd
+END
+genCamControllerEnums.h
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/genCamControllerEnums.h
+END
+CJAreaDetector.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/CJAreaDetector.cpp
+END
+NDPluginDLL.h
+K 25
+svn:wc:ra_dav:version-url
+V 113
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/NDPluginDLL.h
+END
+scatterPlugin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/detpool/!svn/ver/2442/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/scatterPlugin.cpp
+END
+exe.h
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/exe.h
+END
+NDPluginJava.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/NDPluginJava.h
+END
+drvSimPlugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/detpool/!svn/ver/1747/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/drvSimPlugin.h
+END
+compressed_file2.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/detpool/!svn/ver/1991/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/compressed_file2.h
+END
+drvimmViewPluginEpics.c
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/detpool/!svn/ver/2750/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/drvimmViewPluginEpics.c
+END
+tinytiff.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/detpool/!svn/ver/1791/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/tinytiff.cpp
+END
+NDFileHDF5XML.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/detpool/!svn/ver/1908/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/NDFileHDF5XML.h
+END
+imm_header.h
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/detpool/!svn/ver/2751/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/imm_header.h
+END
+putGetParameters.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/putGetParameters.h
+END
+drvSimPluginEpics.c
+K 25
+svn:wc:ra_dav:version-url
+V 119
+/detpool/!svn/ver/1747/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/drvSimPluginEpics.c
+END
+NDFileIMM.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/detpool/!svn/ver/2761/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/NDFileIMM.h
+END
+drvNDFileHDF5XML.h
+K 25
+svn:wc:ra_dav:version-url
+V 118
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/drvNDFileHDF5XML.h
+END
+simPlugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/detpool/!svn/ver/1778/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/simPlugin.h
+END
+txm_data_exchange.xml
+K 25
+svn:wc:ra_dav:version-url
+V 121
+/detpool/!svn/ver/1743/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/txm_data_exchange.xml
+END
+drvpcoEdgePluginEpics.c
+K 25
+svn:wc:ra_dav:version-url
+V 123
+/detpool/!svn/ver/1816/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/drvpcoEdgePluginEpics.c
+END
+compressed_file2.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 120
+/detpool/!svn/ver/1979/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/compressed_file2.cpp
+END
+drvNDFileIMM.h
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/detpool/!svn/ver/1724/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/drvNDFileIMM.h
+END
+scatterPlugin.h
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/detpool/!svn/ver/2442/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/scatterPlugin.h
+END
+NDFileHDF5XML.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/detpool/!svn/ver/1908/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/NDFileHDF5XML.cpp
+END
+immViewPlugin.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 117
+/detpool/!svn/ver/2766/corecoAreaDetectorSupport/trunk/ADEpics/synApps_5_5/support/ADIOCs/pluginSrc/immViewPlugin.cpp
+END

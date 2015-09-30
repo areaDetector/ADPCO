@@ -1,0 +1,551 @@
+// CJAreaDetector.cpp : Defines the entry point for the console application.
+//
+
+#include "CJAreaDetector.h"
+
+
+#include <math.h>
+#include <cstdlib>
+
+
+//JavaVM * CJAreaDetector::jvm = 0;
+
+CJAreaDetector::int_string::int_string()
+{
+	param=-1;
+	type = 0;
+	pstr = new char[80];
+}
+
+
+CJAreaDetector::int_string::~int_string()
+{
+	delete(pstr);
+}
+
+
+CJAreaDetector::intstr_list::intstr_list(int ml)
+{
+	int k;
+	max_len = ml;
+	len = 0;
+	list = new int_string[max_len];
+
+};
+CJAreaDetector::intstr_list::~intstr_list()
+{
+	int k;
+	for (k=0;k<max_len;k++)
+	{
+		delete(&(list[k]));
+	}
+}
+
+
+
+
+
+JNIEnv*  CJAreaDetector::create_vm(JavaVM ** jvm) {
+      int ret;
+
+      JNIEnv *env;
+      JavaVMInitArgs vm_args;
+      JavaVMOption options;
+
+	//  if (jvm!=0)
+	 // {
+	//		printf("JVM Prob already exist\n");
+	//		return(this->env);
+	 // }
+
+	  options.optionString = classpath; /*Path to the java source code*/
+      vm_args.version = JNI_VERSION_1_6; /*JDK version. This indicates version 1.6*/
+      vm_args.nOptions = 1;
+      vm_args.options = &options;
+      vm_args.ignoreUnrecognized = 0;
+
+      ret = JNI_CreateJavaVM(jvm, (void**)&env, &vm_args);
+
+
+
+      if(ret < 0)
+          printf("\nUnable to Launch JVM\n");
+      return env;
+  }
+
+
+CJAreaDetector::CJAreaDetector()
+{
+	strcpy(classpath, "-Djava.class.path=D:\\Madden\\Eclipse\\epicsClient\\bin\\caj-1.1.7.jar;D:\\Madden\\Eclipse\\epicsClient\\bin\\jca-2.3.5.jar;D:\\Madden\\Eclipse\\epicsClient\\bin;D:\\Madden\\Eclipse\\hellow\\bin");
+	strcpy(classname, "JAreaDetector");
+
+	plist= new intstr_list(1024);
+
+}
+
+	/* initialize driver, and shut driver*/
+int CJAreaDetector::init(gui_level g)
+{
+
+//	strcpy(classpath, "-Djava.class.path=D:\\Madden\\Eclipse\\epicsClient\\bin\\caj-1.1.7.jar;D:\\Madden\\Eclipse\\epicsClient\\bin\\jca-2.3.5.jar;D:\\Madden\\Eclipse\\epicsClient\\bin;D:\\Madden\\Eclipse\\hellow\\bin");
+	printf("Creating Java VM\n");
+
+
+	printf("Classpath\n");
+	printf("%s\n\n",classpath);
+
+	printf("ClassName\n");
+	printf("%s\n\n",classname);
+
+	env = create_vm(&jvm);
+	if (env == NULL)
+	{
+		printf("Failed to create Java Virtual Machine- check PATH\n");
+          return -1;
+	}
+	printf("Created JVM\n");
+
+	//attachCurrentThread();
+
+	cls_ad = env->FindClass(classname);
+
+	if (cls_ad==NULL)
+	{
+		printf("Could not find java class: %s. put it in classpatn\n",classname);
+		return(-1);
+	}
+	printf("Loaded AD Java class\n");
+
+	/* now make an pject and init it...*/
+	/*public static void initJEpics(int guilevel)*/
+
+	   m_make = NULL;
+
+       m_make =env-> GetStaticMethodID(cls_ad, "make", "()V");
+   	  m_getAD       = env->GetStaticMethodID(cls_ad, "getAD", "()LJAreaDetector;");
+
+	if(m_make != NULL)
+	{
+          env->CallStaticVoidMethod(cls_ad, m_make,(jint)g);
+	  }
+	 else
+	 {
+	 	printf("Could not find make methond\n");
+		return(-1);
+	 }
+
+
+
+
+	if (m_getAD!=NULL)
+         myAD = env->CallStaticObjectMethod(cls_ad, m_getAD, NULL); //Calling the main method.
+	else
+		 {
+	 	printf("Could not find getAD methond\n");
+		return(-1);
+	 }
+
+	if (myAD==NULL)
+		 {
+	 	printf("Could not construct JAreaDetector Obj\n");
+		return(-1);
+	 }
+
+
+
+
+	if (myAD!=NULL)
+	{
+		m_setIntImages = env->GetMethodID(cls_ad,"setIntImages","([I[I)V");
+		m_getNumParams = env->GetMethodID(cls_ad,"getNumParams","()I");
+		m_incParamCounter = env->GetMethodID(cls_ad,"incParamCounter","()V");
+		m_getCurrentParamStr = env->GetMethodID(cls_ad,"getCurrentParamStr","()Ljava/lang/String;");
+		m_getCurrentParamEnum = env->GetMethodID(cls_ad,"getCurrentParamEnum","()I");
+		m_setIntParam = env->GetMethodID(cls_ad,"setIntParam","(II)V");
+		m_getIntParam = env->GetMethodID(cls_ad,"getIntParam","(I)I");
+		m_doImageCallback = env->GetMethodID(cls_ad,"doImageCallback","()V");
+
+		m_setImageSize = env->GetMethodID(cls_ad,"setImageSize","(IIII)V");
+		m_getCurrentParamType=env->GetMethodID(cls_ad,"getCurrentParamType","()I");
+
+		m_setDoubleParam = env->GetMethodID(cls_ad,"setDoubleParam","(ID)V");
+		m_getDoubleParam = env->GetMethodID(cls_ad,"getDoubleParam","(I)D");
+
+
+		m_getStringParam=env->GetMethodID(cls_ad,"getBytesParam","(I)[B");
+		m_setStringParam=env->GetMethodID(cls_ad,"setStringParam","(ILjava/lang/String;)V");
+
+
+
+
+	 	m_clearAttributes=env->GetMethodID(cls_ad,"clearAttributes","()V");
+	 	m_createAttr=env->GetMethodID(cls_ad,"createAttr","(Ljava/lang/String;II)V");
+	 	m_setAttrValueStr=env->GetMethodID(cls_ad,"setAttrValue","(Ljava/lang/String;Ljava/lang/String;)V");
+	 	m_setAttrValueDbl=env->GetMethodID(cls_ad,"setAttrValue","(Ljava/lang/String;D)V");
+	 	m_setAttrValueInt=env->GetMethodID(cls_ad,"setAttrValue","(Ljava/lang/String;I)V");
+
+
+
+	}
+
+
+		imgC2J = env->NewIntArray(maxsizex*maxsizey);
+	imgJ2C = env->NewIntArray(maxsizex*maxsizey);
+
+	imgbuffer = new int[maxsizex*maxsizey];
+
+	env->CallVoidMethod(myAD,m_setIntImages,imgC2J,imgJ2C);
+	env->CallVoidMethod(myAD,m_setImageSize,maxsizex,maxsizey,0,NDUInt16);
+
+	// string for sending chars to and from java as params...
+	javastring = env->NewByteArray(512);
+
+	getParamStrings();
+
+	// testing...
+	//runImageCallback();
+
+	return(0);
+
+}
+
+
+
+
+	// add an image attribyte- these are asso with the object, and not the image.
+	// so we clear, then add attr when we get new image. so far java cant add new attrs and pass back to C
+void CJAreaDetector::addAttribute(char *pName,char *pDescription,int dataType,void *pValue)
+{
+
+	double dval;
+	int ival;
+	unsigned int uival;
+	char cval;
+	unsigned char ucval;
+	short sval;
+	unsigned short usval;
+
+	float fval;
+
+
+	attachCurrentThread();
+
+	jstring strname;
+	strname = env->NewStringUTF(pName);
+
+
+	jstring strdesc;
+	strdesc = env->NewStringUTF(pDescription);
+
+
+	env->CallVoidMethod(myAD,m_createAttr,strname,(jint)dataType,0);
+
+	switch(dataType)
+		{
+		case 0:
+
+
+			cval = (char)*((char*)pValue);
+			ival = (int)cval;
+
+			env->CallVoidMethod(myAD,m_setAttrValueInt,strname,(jint)ival);
+
+			break;
+
+		case 1:
+
+			ucval = (unsigned char)*((unsigned char*)pValue);
+			ival = (int)ucval;
+			env->CallVoidMethod(myAD,m_setAttrValueInt,strname,(jint)ival);
+
+			break;
+
+		case 2:
+
+			sval = (short)*((short*)pValue);
+			ival = (int)sval;
+			env->CallVoidMethod(myAD,m_setAttrValueInt,strname,(jint)ival);
+
+			break;
+
+		case 3:
+
+			usval = (unsigned short)*((unsigned short*)pValue);
+			ival = (int)usval;
+			env->CallVoidMethod(myAD,m_setAttrValueInt,strname,(jint)ival);
+
+			break;
+
+		case 4:
+
+			ival = (int)*((int*)pValue);
+			env->CallVoidMethod(myAD,m_setAttrValueInt,strname,(jint)ival);
+
+			break;
+
+		case 5:
+			uival = (unsigned int)*((unsigned int*)pValue);
+
+			ival = (int)(uival);
+			env->CallVoidMethod(myAD,m_setAttrValueInt,strname,(jint)ival);
+
+			break;
+
+		case 6:
+			fval = (float)*((float*)pValue);
+
+			dval = (double)(fval);
+			env->CallVoidMethod(myAD,m_setAttrValueDbl,strname,(jdouble)dval);
+		case 7:
+			dval = (double)*((double*)pValue);
+
+			env->CallVoidMethod(myAD,m_setAttrValueDbl,strname,(jdouble)dval);
+			break;
+		case 8:
+			jstring strval;
+			strval = env->NewStringUTF((char*)pValue);
+
+			 env->CallVoidMethod(myAD,m_setAttrValueStr,strname,strval);
+			 break;
+		default:
+			break;
+
+		}
+
+}
+
+	// clear attr list
+void CJAreaDetector::clearAttributes(void)
+{
+
+	env->CallVoidMethod(myAD,m_clearAttributes);
+}
+
+
+void CJAreaDetector::shutdown(void)
+{
+
+}
+/* set class path here... all jvm options*/
+void CJAreaDetector::setJVMOptionStr(char *js)
+{
+	strcpy(classpath, js);
+
+}
+
+void CJAreaDetector::setClassname(char* cs)
+{
+		strcpy(classname, (const char*)cs);
+}
+
+
+int CJAreaDetector::getIntParam(int p)
+{
+	int ival;
+	attachCurrentThread();
+
+	ival = env->CallIntMethod(myAD,m_getIntParam,(jint)p);
+
+	return(ival);
+
+}
+void CJAreaDetector::putIntParam(int p, int v)
+{
+	attachCurrentThread();
+
+	 env->CallVoidMethod(myAD,m_setIntParam,(jint)p,(jint)v);
+}
+
+double CJAreaDetector::getDoubleParam(int p)
+{
+	int dval;
+	attachCurrentThread();
+
+	dval = env->CallDoubleMethod(myAD,m_getDoubleParam,(jint)p);
+
+	return(dval);
+}
+
+void CJAreaDetector::putDoubleParam(int p, double v)
+{
+	attachCurrentThread();
+
+	 env->CallVoidMethod(myAD,m_setDoubleParam,(jint)p,(jdouble)v);
+
+}
+
+char* CJAreaDetector::getStringParam(int p)
+{
+	jbyteArray pstring;
+	attachCurrentThread();
+
+	//null the output sting
+	*scratch=0;
+	pstring = (jbyteArray)(env->CallObjectMethod(myAD,m_getStringParam,p));
+
+	if (pstring!=0)
+	{
+		env->GetByteArrayRegion(pstring,0,env->GetArrayLength(pstring),(jbyte*)scratch);
+		//add null term
+		scratch[env->GetArrayLength(pstring)]=0;
+	}
+
+
+	return(scratch);
+
+}
+void CJAreaDetector::putStringParam(int p, char* v)
+{
+	attachCurrentThread();
+
+	//	jbyteArray javastring;
+
+	// plus 1 is because we include the null term.
+	//env->SetByteArrayRegion(javastring, 0,strlen(v)+1,(jbyte*)v);
+	jstring strx;
+	strx = env->NewStringUTF(v);
+
+	 env->CallVoidMethod(myAD,m_setStringParam,(jint)p,strx);
+	// env->ReleaseByteArrayElements();
+
+}
+
+void CJAreaDetector::attachCurrentThread(void)
+{
+	jvm->AttachCurrentThread((void **)&env,NULL);
+
+}
+
+void CJAreaDetector::runImageCallback(void)
+{
+
+	attachCurrentThread();
+	m_doImageCallback = env->GetMethodID(cls_ad,"doImageCallback","()V");
+	env->CallVoidMethod(myAD,m_doImageCallback);
+}
+
+// copies c image to java, call before the imag ecallback
+void CJAreaDetector::setC2JImage(void *ptr, int imgtype, int sizex, int sizey,int headerbytes)
+{
+		attachCurrentThread();
+
+	// convert short to ing...
+	int k;
+
+/*	unsigned char *cptr= (unsigned char*)ptr;
+	for (k=0; k<headerbytes;k++)
+	{
+		imgbuffer[k] = (int)(cptr[k]);
+	}
+*/
+	if (imgtype ==NDUInt16)
+	{
+		unsigned short *sptr= (unsigned short*)ptr;
+		for (k=0; k<sizex*sizey;k++)
+		{
+	//		imgbuffer[k+headerbytes] = (int)(sptr[k]);
+			imgbuffer[k] = (int)(sptr[k]);
+		}
+	}
+	else if (imgtype == NDUInt8)
+	{
+		unsigned char *cptr= (unsigned char*)ptr;
+		for (k=0; k<sizex*sizey;k++)
+		{
+	//		imgbuffer[k+headerbytes] = (int)(sptr[k]);
+			imgbuffer[k] = (int)(cptr[k]);
+		}
+	}
+	else
+	{
+		unsigned short *sptr= (unsigned short*)ptr;
+		for (k=0; k<sizex*sizey;k++)
+		{
+	//		imgbuffer[k+headerbytes] = (int)(sptr[k]);
+			imgbuffer[k] = (int)(sptr[k]);
+		}
+	}
+	// each short pixel, is stored as an int. each of the 1024 header bytes or whatever the number is,
+	// is stored as int. so 1024bytes--> 1024 ints.
+	// java will then unpack
+	env->SetIntArrayRegion(imgC2J,0,sizex*sizey + headerbytes,(const jint*)imgbuffer);
+	env->CallVoidMethod(myAD,m_setImageSize,sizex,sizey,headerbytes,imgtype);
+
+}
+// copies output from java image callback into c image.
+void CJAreaDetector::getJ2CImage(void *ptr, int pixbits, int sizex, int sizey)
+{
+	attachCurrentThread();
+
+	//env->GetIntArrayRegion(imgJ2C,0,1024*1024,(jint*)imgx2);
+
+}
+
+
+
+//return len-
+CJAreaDetector::intstr_list* CJAreaDetector::getParamStrings(void)
+{
+
+	int num_params;
+
+	num_params = (int)env->CallIntMethod(myAD,m_getNumParams);
+
+	int px;
+	int penum;
+	char strx[256];
+	char *sxx;
+	int tt;
+	jstring p_str;
+
+	plist->len=num_params;
+
+	for (px=0;px<num_params;px++)
+	{
+		penum = (int)env->CallIntMethod(myAD,m_getCurrentParamEnum);
+		p_str = (jstring)env->CallObjectMethod(myAD,m_getCurrentParamStr);
+		tt = (int)env->CallIntMethod(myAD,m_getCurrentParamType);
+
+		sxx=(char*)env->GetStringUTFChars(p_str,NULL);
+		//create asyn param here,,, need to get type as well...
+		printf("Found Param: %i  %s, type: %i\n",penum,sxx,tt);
+
+		plist->list[px].param=penum;
+		plist->list[px].type=tt;
+		strcpy(plist->list[px].pstr,sxx);
+
+		env->CallVoidMethod(myAD,m_incParamCounter);
+	}
+	return(plist);
+}
+
+
+
+int CJAreaDetector::findParamByString(char *str)
+{
+	int k;
+
+	for (k=0; k<plist->len;k++)
+	{
+		if (strcmp(plist->list[k].pstr,str)==0)
+			return(plist->list[k].param);
+	}
+	return(-1);
+}
+
+
+void CJAreaDetector::makeTestImg(int sizex, int sizey, int type, void *img)
+{
+
+	unsigned short *imgw=(unsigned short*)img;
+
+	int k;
+	double randd;
+
+	for (k=0;k<sizex*sizey;k++)
+	{
+		randd = (double)(rand()) / ((double)RAND_MAX);
+		imgw[k] = (unsigned short)(randd*200.0) + k;
+	}
+
+}

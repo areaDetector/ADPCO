@@ -1,0 +1,48 @@
+# Database for the records specific to the simulated detector driver
+# Mark Rivers
+# March 23, 2008
+
+
+
+record(longout, "$(P)$(R)w_which_pattern")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))w_which_pattern")
+}
+
+record(longout, "$(P)$(R)w_open_com")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))w_open_com")
+}
+
+record(longout, "$(P)$(R)w_close_com")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))w_close_com")
+}
+
+record(longin, "$(P)$(R)w_is_com_open")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))w_is_com_open")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)w_run_counter")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))w_run_counter")
+   field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P)$(R)w_is_sleep")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))w_is_sleep")
+}
+
+
+
