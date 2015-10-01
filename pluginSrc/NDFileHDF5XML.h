@@ -215,7 +215,7 @@ protected:
 private:
 
 log_file lf;
-	NDArray *dummyArray;
+    NDArray *dummyArray;
    epicsMutexId configFileMutex;
    bool is_file_open;
    

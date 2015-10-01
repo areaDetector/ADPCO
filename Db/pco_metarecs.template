@@ -7,7 +7,7 @@
 
 #record(mbbo, "$(P)$(C)pco_live_view")
 #{
-#	field(FLNK,"$(P)$(R)file_liveviewmon.PROC")
+#    field(FLNK,"$(P)$(R)file_liveviewmon.PROC")
 #}
 
 
@@ -42,12 +42,12 @@ record(scalcout, "$(P)$(R)file_saveRenumberer")
     
     field(CALC, "C-B+1")
     field(OOPT, "On Change")
-	field(DOPT,"Use OCAL")
-#	field(OCAL,"(A=0)?\"NoSaving\":(A=1)?\"1 ShotPerFile\":(A=2)?\"N ShotsManyFiles\":\"AllShotsOneFile\"")
-	field(OCAL,"A")
+    field(DOPT,"Use OCAL")
+#    field(OCAL,"(A=0)?\"NoSaving\":(A=1)?\"1 ShotPerFile\":(A=2)?\"N ShotsManyFiles\":\"AllShotsOneFile\"")
+    field(OCAL,"A")
     field(OUT,  "$(P)$(R)file_savetypeint PP NMS")
   
-  	
+      
     field(SCAN, "1 second")
 }
 
@@ -134,7 +134,7 @@ record(scalcout, "$(P)$(R)file_liveviewmon")
     field(OOPT, "On Change")
 field(DOPT,"Use OCAL")
 
-	field(OCAL,"B")
+    field(OCAL,"B")
    field(OUT,  "$(P)$(R)file_savetypeint PP ")
   
    field(SCAN, "1 second")
@@ -159,8 +159,8 @@ record(scalcout, "$(P)$(R)file_CaptureDoner")
    
     field(CALC, "A")
     field(OOPT, "Transition To Zero")
-	field(DOPT,"Use OCAL")
-	field(OCAL,"B")
+    field(DOPT,"Use OCAL")
+    field(OCAL,"B")
     field(OUT,  "$(P)$(R)file_savetypeint PP NMS")
   
     field(SCAN, "Passive")
@@ -195,10 +195,10 @@ record(scalcout, "$(P)$(R)file_Blocker")
     field(INPA, "$(P)$(C)pco_which_camera_RBV")
     field(INPD, "$(P)$(R)file_savetypeint")
 
-	field(INPE, "$(P)$(R)file_shots_per_file")
-	
-	field(INPF, "$(P)$(C)pco_dump_counter_RBV")
-	field(INPG, "$(P)$(C)pco_imgs2dump_RBV")
+    field(INPE, "$(P)$(R)file_shots_per_file")
+    
+    field(INPF, "$(P)$(C)pco_dump_counter_RBV")
+    field(INPG, "$(P)$(C)pco_imgs2dump_RBV")
 
     field(CALC, "D>0?(D=1?1:(D=2?E:(A=0?(G-F+1):B))):0 ")
     field(OOPT, "Every Time")

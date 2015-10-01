@@ -1,10 +1,10 @@
 /*******************************************************************************
  *
- *	ccd_exception.h
+ *    ccd_exception.h
  *
- *	Author: Tim Madden
- *	Date:	6/17/03
- *	Project:MBC CCD Detector DAQ.
+ *    Author: Tim Madden
+ *    Date:    6/17/03
+ *    Project:MBC CCD Detector DAQ.
  *
  *
  *
@@ -25,7 +25,7 @@
  * Double incluson protection.
  */
 #ifndef _CCD_EXCEPTION_H
-	#define _CCD_EXCEPTION_H
+    #define _CCD_EXCEPTION_H
 
 
 #ifdef _WINDOWS
@@ -36,10 +36,10 @@
 #endif
 /*******************************************************************************
  *
- *	Class ccd_exception
+ *    Class ccd_exception
  *
  *
- *	contains char* error passed as exception. not using std::string because
+ *    contains char* error passed as exception. not using std::string because
  *  it has questionable thread safety.
  *
  ******************************************************************************/
@@ -49,38 +49,38 @@ namespace nd_imm_plugin {
 
 class EXPORT ccd_exception
 {
-	public:
-		enum error_code
-		{
-			ok,
-			xfer_not_starting,
-			not_implemented,
-			unknown
-		};
+    public:
+        enum error_code
+        {
+            ok,
+            xfer_not_starting,
+            not_implemented,
+            unknown
+        };
 
-		// make err message mess
-		ccd_exception(const char *mess);
-		// make default err message
-		ccd_exception(
-			error_code er,
-			const char *mess);
-		// make default err message
-		ccd_exception(error_code er);
-		// make default err message
-		ccd_exception();
-		// Return error message.
-		char* err_mess(void);
+        // make err message mess
+        ccd_exception(const char *mess);
+        // make default err message
+        ccd_exception(
+            error_code er,
+            const char *mess);
+        // make default err message
+        ccd_exception(error_code er);
+        // make default err message
+        ccd_exception();
+        // Return error message.
+        char* err_mess(void);
 
-		// Return error message.
-		error_code getErrCode(void);
+        // Return error message.
+        error_code getErrCode(void);
 
 
 
-	protected:
-	// Error message in this exception.
-		char err[256];
+    protected:
+    // Error message in this exception.
+        char err[256];
 
-		error_code code;
+        error_code code;
 
 };
 

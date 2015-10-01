@@ -1,13 +1,13 @@
 
 
 #ifndef _GEN_CAM_CONTROLLERENUM_H
-	#define _GEN_CAM_CONTROLLERENUM_H
+    #define _GEN_CAM_CONTROLLERENUM_H
 
 
 struct int_string
 {
-	int x;
-	char *str;
+    int x;
+    char *str;
 };
 
 
@@ -16,41 +16,41 @@ namespace genCamControllerEnum {
 
 // here are some enums for why we call a callback
 
-	enum callbackReasons
-	{
-		general,
-		before_image,
-		new_image,
-		thread_suspend,
-		make_new_thread,
-		thread_resume,
-		exiting,
-		task_done,
-		grab_mutex,
-		release_mutex,
-		call_error,
-		sleep,
-		wakeup_everyone,
-		add_image_attribute
+    enum callbackReasons
+    {
+        general,
+        before_image,
+        new_image,
+        thread_suspend,
+        make_new_thread,
+        thread_resume,
+        exiting,
+        task_done,
+        grab_mutex,
+        release_mutex,
+        call_error,
+        sleep,
+        wakeup_everyone,
+        add_image_attribute
 
-	};
+    };
 
-	
+    
 enum {
-	callback_ptr = 254,
-		image_mem_ptr = 255,
-		image_mem_ptr2 = 256,
-		gpu_img_sizex = 257,
-		gpu_img_sizey=258,
-		gpu_ret_new_img=259,
+    callback_ptr = 254,
+        image_mem_ptr = 255,
+        image_mem_ptr2 = 256,
+        gpu_img_sizex = 257,
+        gpu_img_sizey=258,
+        gpu_ret_new_img=259,
 
-		subclassSerial = 300,
-		subclassSerial2 = 400,
-		subclassCoreco = 512,
-		subclassExt = 768,
-		maxEnum = 1023
+        subclassSerial = 300,
+        subclassSerial2 = 400,
+        subclassCoreco = 512,
+        subclassExt = 768,
+        maxEnum = 1023
 
-	};
+    };
 
 //
 // ND Params
@@ -341,7 +341,7 @@ typedef enum
 
 static int_string ADStdDriverParamString[] = {
 
-	  {NDPortNameSelf,   "PORT_NAME_SELF"},
+      {NDPortNameSelf,   "PORT_NAME_SELF"},
     {NDArraySizeX,     "ARRAY_SIZE_X"},
     {NDArraySizeY,     "ARRAY_SIZE_Y"},
     {NDArraySizeZ,     "ARRAY_SIZE_Z"},
@@ -352,7 +352,7 @@ static int_string ADStdDriverParamString[] = {
     {NDFilePath,       "FILE_PATH"     },
     {NDFileName,       "FILE_NAME"     },
     
-	 {NDFileNumber,     "FILE_NUMBER"   },
+     {NDFileNumber,     "FILE_NUMBER"   },
     {NDFileTemplate,   "FILE_TEMPLATE" },
     {NDAutoIncrement,  "AUTO_INCREMENT"},
     {NDFullFileName,   "FULL_FILE_NAME"},
@@ -363,7 +363,7 @@ static int_string ADStdDriverParamString[] = {
     {NDFileWriteMode,  "WRITE_MODE"    },
     {NDFileNumCapture, "NUM_CAPTURE"   },
     
-	  {NDFileNumCaptured,"NUM_CAPTURED"  },
+      {NDFileNumCaptured,"NUM_CAPTURED"  },
     {NDFileCapture,    "CAPTURE"       },
     {NDAttributesFile, "ND_ATTRIBUTES_FILE"},
     {NDArrayData,      "NDARRAY_DATA"  },
@@ -374,7 +374,7 @@ static int_string ADStdDriverParamString[] = {
     {ADBinX,           "BIN_X"       },
     {ADBinY,           "BIN_Y"       },
     
-	  {ADMinX,           "MIN_X"       },
+      {ADMinX,           "MIN_X"       },
     {ADMinY,           "MIN_Y"       },
     {ADSizeX,          "SIZE_X"      },
     {ADSizeY,          "SIZE_Y"      },
@@ -385,7 +385,7 @@ static int_string ADStdDriverParamString[] = {
     {ADFrameType,      "FRAME_TYPE"  },
     {ADImageMode,      "IMAGE_MODE"  },
     
-	  {ADNumExposures,   "NEXPOSURES"  },
+      {ADNumExposures,   "NEXPOSURES"  },
     {ADNumExposuresCounter, "NEXPOSURES_COUNTER"  },
     {ADNumImages,      "NIMAGES"     },
     {ADNumImagesCounter, "NIMAGES_COUNTER"},
@@ -396,7 +396,7 @@ static int_string ADStdDriverParamString[] = {
     {ADTriggerMode,    "TRIGGER_MODE"},
     {ADAcquire,        "ACQUIRE"     },
     
-	{ADShutterControl,   "SHUTTER_CONTROL"},
+    {ADShutterControl,   "SHUTTER_CONTROL"},
     {ADShutterControlEPICS, "SHUTTER_CONTROL_EPICS"},
     {ADShutterStatus,    "SHUTTER_STATUS"},
     {ADShutterMode,      "SHUTTER_MODE"        },
@@ -407,13 +407,13 @@ static int_string ADStdDriverParamString[] = {
     {ADStatusMessage,  "STATUS_MESSAGE"     },
     {ADStringToServer, "STRING_TO_SERVER"   },
     
-	  {ADStringFromServer,"STRING_FROM_SERVER"},
-	  {callback_ptr,"callback_ptr"},
-	  {image_mem_ptr,"image_mem_ptr"},
-	  {image_mem_ptr2,"image_mem_ptr2"},
-	  {gpu_img_sizex,"gpu_img_sizex"},
-	  {gpu_img_sizey,"gpu_img_sizey"},
-	  {gpu_ret_new_img,"gpu_ret_new_img"}
+      {ADStringFromServer,"STRING_FROM_SERVER"},
+      {callback_ptr,"callback_ptr"},
+      {image_mem_ptr,"image_mem_ptr"},
+      {image_mem_ptr2,"image_mem_ptr2"},
+      {gpu_img_sizex,"gpu_img_sizex"},
+      {gpu_img_sizey,"gpu_img_sizey"},
+      {gpu_ret_new_img,"gpu_ret_new_img"}
 
 
 };

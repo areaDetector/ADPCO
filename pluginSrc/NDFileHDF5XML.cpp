@@ -334,7 +334,7 @@ asynStatus NDFileHDF5XML::openFile(const char *fileName,
    }
 
 // keep track of filenumber so if base class messes it up we are not consused...
-   //			last_filenumber = fn0;
+   //            last_filenumber = fn0;
 
    if (openMode&NDFileModeMultiple)
    {
@@ -462,7 +462,7 @@ void NDFileHDF5XML::processCallbacks(NDArray *pArray)
    // numAttributes = pArray->numAttributes();
    numAttributes = pArray->pAttributeList->count();
 
-//	printf("Num Attributes %i \n", numAttributes);
+//    printf("Num Attributes %i \n", numAttributes);
    pAttribute = pArray->pAttributeList->next(NULL);
    for (attrCount = 0; attrCount < numAttributes; attrCount++)
    {
@@ -530,28 +530,28 @@ void NDFileHDF5XML::loadTemplateFile(void)
          /* Load the HDF template file */
         //!! lock();
          loadStatus = configDoc->LoadFile(template_fullname);
-		 
-		 lf.log("Load template from file");
+         
+         lf.log("Load template from file");
        //!!  unlock();
       }
       else {
          //printf("Template contents:\n%s\n", template_file);
        //!! lock();
          configDoc->Parse(template_file, 0, TIXML_ENCODING_UTF8);
-		 lf.log("Parse xml in the pv");
+         lf.log("Parse xml in the pv");
        //!!  unlock();
          if (configDoc->Error()){
             loadStatus = false;
-			lf.log("parsing error in xml");
+            lf.log("parsing error in xml");
          }
          else {
             loadStatus = true;
-			lf.log("parsed xml correctly");
+            lf.log("parsed xml correctly");
          }
       }
       if (loadStatus != true)
       {
-	     lf.log("Cound not load xml");
+         lf.log("Cound not load xml");
          asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,
                "%s:%s: Parameter file %s is invalid\n", driverName, functionName,
                template_fullname);
@@ -569,7 +569,7 @@ void NDFileHDF5XML::loadTemplateFile(void)
       }
       else
       {
-	     lf.log("loaded xml");
+         lf.log("loaded xml");
          asynPrint(this->pasynUserSelf, ASYN_TRACE_FLOW,
                "%s:%s: Parameter file %s was successfully loaded\n", driverName,
                functionName, template_fullname);
@@ -602,18 +602,18 @@ asynStatus NDFileHDF5XML::closeFile()
    if (is_file_open)
    {
     lf.log("Close HDF file");
-	   // we can get attr. for ONCloseFile in xml file. so attr are written on file close.
-	   // we cant wrute valid img data on close, but that is life. Deal with it.
-	   //!! above comment in 2012. Now its 2013...
-	   //!! it seems that processCallbacks grabs latest pArray, then stores it in pArrays[0],
-	   //!! that is, a pointer to it. it won't release it until the next process callbacks.
-	   //!! close file is called by writefile or readfile in superclass, so pArrays[0] should
-	   //!! be valid. image data should be valid. the way it would work to write image on close
-	   //!! is that we get img from detector, send to plugins.
-	   //!! xml file tells where to write the file.. close file is called by write file, so
-	   //!! as far as AD is concerned, who cares. the file just gets written in another funciton.
-	   getAttributes(this->pArrays[0]->pAttributeList);
-	   hdf_interface->pArray = this->pArrays[0];
+       // we can get attr. for ONCloseFile in xml file. so attr are written on file close.
+       // we cant wrute valid img data on close, but that is life. Deal with it.
+       //!! above comment in 2012. Now its 2013...
+       //!! it seems that processCallbacks grabs latest pArray, then stores it in pArrays[0],
+       //!! that is, a pointer to it. it won't release it until the next process callbacks.
+       //!! close file is called by writefile or readfile in superclass, so pArrays[0] should
+       //!! be valid. image data should be valid. the way it would work to write image on close
+       //!! is that we get img from detector, send to plugins.
+       //!! xml file tells where to write the file.. close file is called by write file, so
+       //!! as far as AD is concerned, who cares. the file just gets written in another funciton.
+       getAttributes(this->pArrays[0]->pAttributeList);
+       hdf_interface->pArray = this->pArrays[0];
       configDoc->Accept(hdf5Closer);
       is_file_open = false;
    }
@@ -651,17 +651,17 @@ asynStatus NDFileHDF5XML::writeInt32(asynUser *pasynUser, epicsInt32 value)
    
    
    
-		NDPluginFile::writeInt32(pasynUser,  value);
+        NDPluginFile::writeInt32(pasynUser,  value);
 
 
-		//make sure we dont have any mutexes...
-		//releaseSerialMutex();
-		//releaseGrabberMutex();
+        //make sure we dont have any mutexes...
+        //releaseSerialMutex();
+        //releaseGrabberMutex();
 
-	callParamCallbacks();
-	
-		status=asynSuccess;
-	return(status);
+    callParamCallbacks();
+    
+        status=asynSuccess;
+    return(status);
 
 }
 
@@ -704,18 +704,18 @@ char pathstr[512];
   
     if (function == NDFilePath) {
 
-			int is_makedirs;
-			int statx;
-			
-			getStringParam(NDFilePath, sizeof(pathstr), pathstr);
-			getIntegerParam(NDFileHDF5XML_createDirs,&is_makedirs);
-			statx = recursePath(pathstr, (bool)is_makedirs);
-			printf("HDF5 Recurse path: statis = %d\n",statx);
+            int is_makedirs;
+            int statx;
+            
+            getStringParam(NDFilePath, sizeof(pathstr), pathstr);
+            getIntegerParam(NDFileHDF5XML_createDirs,&is_makedirs);
+            statx = recursePath(pathstr, (bool)is_makedirs);
+            printf("HDF5 Recurse path: statis = %d\n",statx);
 
-			if (statx==0)
-				setIntegerParam(NDFilePathExists, 1);
-			else
-				setIntegerParam(NDFilePathExists, 0);
+            if (statx==0)
+                setIntegerParam(NDFilePathExists, 1);
+            else
+                setIntegerParam(NDFilePathExists, 0);
 
 
     } 
@@ -769,8 +769,8 @@ NDFileHDF5XML::NDFileHDF5XML(const char *portName, int queueSize,
             NDArrayAddr, 1, NDFileHDF5XML::num_params, 10, -1,
             asynGenericPointerMask, asynGenericPointerMask, ASYN_CANBLOCK, 1,
             priority, stackSize), 
-			is_file_open(false),
-			lf("HDF5XMLPlug_log.txt")
+            is_file_open(false),
+            lf("HDF5XMLPlug_log.txt")
 {
    int i;
    static const char *functionName = "NDFileHDF5XML";
@@ -780,7 +780,7 @@ int dims[3];
    dims[1]=10;
 char mesg[256];
 
-	//dummyArray=pNDArrayPool->alloc(2, dims, NDInt16, 0, NULL);
+    //dummyArray=pNDArrayPool->alloc(2, dims, NDInt16, 0, NULL);
 
 /*
    paramStrings[0] = new param_type_str(&NDFileHDF5XML_threshold,
@@ -796,19 +796,19 @@ char mesg[256];
 */
 
 
-	lf.enablePrintf(true);
+    lf.enablePrintf(true);
 
-	lf.log("NDFileHDF5XML constructing");
-	sprintf(mesg,"Compile date %s, Time %s",__DATE__,__TIME__);
-	lf.log(mesg);
-	
-	
-    createParam("NDFileHDF5XML_threshold",asynParamInt32,&NDFileHDF5XML_threshold);	
-	   createParam("NDFileHDF5XML_is_recapture",asynParamInt32,&NDFileHDF5XML_is_recapture);	
-   createParam("TEMPLATE_FILE_NAME",asynParamOctet,&NDFileHDF5XML_templatefile);	
-   createParam("TEMPLATE_FILE_PATH",asynParamOctet,&NDFileHDF5XML_templatepath);	
-   createParam("TEMPLATE_FILE_VALID",asynParamInt32,&NDFileHDF5XML_TemplateValid);	
-   createParam("EZ_is_makedirs",asynParamInt32,&NDFileHDF5XML_createDirs);	
+    lf.log("NDFileHDF5XML constructing");
+    sprintf(mesg,"Compile date %s, Time %s",__DATE__,__TIME__);
+    lf.log(mesg);
+    
+    
+    createParam("NDFileHDF5XML_threshold",asynParamInt32,&NDFileHDF5XML_threshold);    
+       createParam("NDFileHDF5XML_is_recapture",asynParamInt32,&NDFileHDF5XML_is_recapture);    
+   createParam("TEMPLATE_FILE_NAME",asynParamOctet,&NDFileHDF5XML_templatefile);    
+   createParam("TEMPLATE_FILE_PATH",asynParamOctet,&NDFileHDF5XML_templatepath);    
+   createParam("TEMPLATE_FILE_VALID",asynParamInt32,&NDFileHDF5XML_TemplateValid);    
+   createParam("EZ_is_makedirs",asynParamInt32,&NDFileHDF5XML_createDirs);    
   
 
 
@@ -896,102 +896,102 @@ int NDFileHDF5XML::recursePath(char *pathstr, bool is_makedirs)
 #endif
 
 
-	struct _stat buff;
-	int status;
-	int slash_pos=0;
-	int last_slash_pos = 0;
-	int start = 0;
-	int part_number = 1;
+    struct _stat buff;
+    int status;
+    int slash_pos=0;
+    int last_slash_pos = 0;
+    int start = 0;
+    int part_number = 1;
 
-	string part_path, path_word;
+    string part_path, path_word;
 
-	if (strlen(pathstr)==0)
-		return(-1);
+    if (strlen(pathstr)==0)
+        return(-1);
 
-	string full_path(pathstr);
+    string full_path(pathstr);
 
-	// make sure last char is /
+    // make sure last char is /
 
-	
-	if (full_path[full_path.size()-1] != '/')
-		full_path.append("/",1);
+    
+    if (full_path[full_path.size()-1] != '/')
+        full_path.append("/",1);
 
-	//search thru path name part by part
-	slash_pos = full_path.find(string("/"),0);
-	while (slash_pos!=string::npos)
-	{
-		// path up to / not incl /
-		//here we are actually calling the copy constructor...of part path. The returned str from substr?
-		// prob in memory inside fullpath,,, it will go out of scope and destruct?
-		part_path = full_path.substr(start, slash_pos);
-	
+    //search thru path name part by part
+    slash_pos = full_path.find(string("/"),0);
+    while (slash_pos!=string::npos)
+    {
+        // path up to / not incl /
+        //here we are actually calling the copy constructor...of part path. The returned str from substr?
+        // prob in memory inside fullpath,,, it will go out of scope and destruct?
+        part_path = full_path.substr(start, slash_pos);
+    
 
-		// this part of path... say path is D:/aaa/bbb/ccc   then worrd is bbb for eample
-		if (full_path[last_slash_pos] == '/')
-			path_word = full_path.substr(last_slash_pos+1, (slash_pos -last_slash_pos-1));
-		else
-			path_word = full_path.substr(last_slash_pos, (slash_pos  -last_slash_pos));
-
-
-		//check if we are looking at a drive, check for : at pos 1
-		if (path_word[1] == ':')
-		{
-			//a drive
-			//somehow make sure drive exists.
-
-			// for drive need / at end.
-			part_path.append("/",1);
-			status = _stat(part_path.c_str(), &buff);
-			if (status!=0)
-				return(-64-part_number);
+        // this part of path... say path is D:/aaa/bbb/ccc   then worrd is bbb for eample
+        if (full_path[last_slash_pos] == '/')
+            path_word = full_path.substr(last_slash_pos+1, (slash_pos -last_slash_pos-1));
+        else
+            path_word = full_path.substr(last_slash_pos, (slash_pos  -last_slash_pos));
 
 
+        //check if we are looking at a drive, check for : at pos 1
+        if (path_word[1] == ':')
+        {
+            //a drive
+            //somehow make sure drive exists.
 
-			// if not exist return(-64 -part_num);
-		}
-		else
-		{
+            // for drive need / at end.
+            part_path.append("/",1);
+            status = _stat(part_path.c_str(), &buff);
+            if (status!=0)
+                return(-64-part_number);
 
-			status = _stat(part_path.c_str(), &buff);
 
-			if (!is_makedirs)
-			{
-				if (status!=0)
-					return(0-part_number);
-			}
-			else
-			{
-				if (status!=0)
-				{
-					
-#ifdef _WIN32					
-					status= _mkdir(part_path.c_str());
+
+            // if not exist return(-64 -part_num);
+        }
+        else
+        {
+
+            status = _stat(part_path.c_str(), &buff);
+
+            if (!is_makedirs)
+            {
+                if (status!=0)
+                    return(0-part_number);
+            }
+            else
+            {
+                if (status!=0)
+                {
+                    
+#ifdef _WIN32                    
+                    status= _mkdir(part_path.c_str());
 #else
-					status= mkdir(part_path.c_str(),777);
+                    status= mkdir(part_path.c_str(),777);
 
 #endif
 
-					if (status!=0)
-					{
-						printf("ERROR: Could Not Dir %s\n",part_path.c_str());
-						return(-128-part_number);
-					}
-					else
-						printf("Created Dir %s\n",part_path.c_str());
-				}
-			}
+                    if (status!=0)
+                    {
+                        printf("ERROR: Could Not Dir %s\n",part_path.c_str());
+                        return(-128-part_number);
+                    }
+                    else
+                        printf("Created Dir %s\n",part_path.c_str());
+                }
+            }
 
 
-		}
+        }
 
-		//search thru path name part by part
-		last_slash_pos = slash_pos;
-		slash_pos = full_path.find(string("/"),slash_pos+1);
-		part_number++;
+        //search thru path name part by part
+        last_slash_pos = slash_pos;
+        slash_pos = full_path.find(string("/"),slash_pos+1);
+        part_number++;
 
-	}
+    }
 
-	return(0);
+    return(0);
 
 
 }

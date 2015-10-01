@@ -37,7 +37,7 @@ public:
                  const char *NDArrayPort, int NDArrayAddr,
                  int priority, int stackSize);
 
-	virtual void processCallbacks(NDArray *pArray);
+    virtual void processCallbacks(NDArray *pArray);
     /* The methods that this class implements */
     virtual asynStatus openFile(const char *fileName, NDFileOpenMode_t openMode, NDArray *pArray);
     virtual asynStatus readFile(NDArray **pArray);
@@ -51,7 +51,7 @@ protected:
 
 
 
-	
+    
     int arrayDataId;
     int uniqueIdId;
     int timeStampId;
@@ -59,7 +59,7 @@ protected:
     int *pAttributeId;
 
 
-	NDAttribute *pAttribute;
+    NDAttribute *pAttribute;
     char name[256];
     char description[256];
     char tempString[256];
@@ -67,33 +67,33 @@ protected:
     size_t attrSize;
     int numAttributes, attrCount;
 
-	//
-	// ////////////   PARAMETERS ////////////////////
-	//
-	
-	int sim_first;
-	 #define FIRST_SIMPLUGIN_PARAM sim_first
+    //
+    // ////////////   PARAMETERS ////////////////////
+    //
+    
+    int sim_first;
+     #define FIRST_SIMPLUGIN_PARAM sim_first
 
-	 //wait in sec
-	int open_waittime;
-	//wait in sec
-	int write_waittime;
-	
-	
-	int max_buffers;
-	int num_buffers;
-	int max_memory;
-	int mem_size;
-	int num_free;
-	
-	int sim_last;
-	 #define LAST_SIMPLUGIN_PARAM sim_last
-	
-	
-	//
-	//////////////// END PARAMETERS ///////////////////
-	//
-	
+     //wait in sec
+    int open_waittime;
+    //wait in sec
+    int write_waittime;
+    
+    
+    int max_buffers;
+    int num_buffers;
+    int max_memory;
+    int mem_size;
+    int num_free;
+    
+    int sim_last;
+     #define LAST_SIMPLUGIN_PARAM sim_last
+    
+    
+    //
+    //////////////// END PARAMETERS ///////////////////
+    //
+    
 
 
 };

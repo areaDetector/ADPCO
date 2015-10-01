@@ -77,19 +77,19 @@ asynStatus NDFileTinyTIFF::writeOctet(asynUser *pasynUser, const char *value,
     if (function == NDFilePath) {
 
 
-			getStringParam(NDFilePath, sizeof(pathstr), pathstr);
-			getIntegerParam(ND_makedirs,&is_makedirs);
-			statx = recursePath(pathstr, (bool)is_makedirs);
-			printf("Recurse path: statis = %d\n",statx);
+            getStringParam(NDFilePath, sizeof(pathstr), pathstr);
+            getIntegerParam(ND_makedirs,&is_makedirs);
+            statx = recursePath(pathstr, (bool)is_makedirs);
+            printf("Recurse path: statis = %d\n",statx);
 
-			if (statx==0)
-				setIntegerParam(NDFilePathExists, 1);
-			else
-				setIntegerParam(NDFilePathExists, 0);
+            if (statx==0)
+                setIntegerParam(NDFilePathExists, 1);
+            else
+                setIntegerParam(NDFilePathExists, 0);
 
 
     }
-	
+    
 
      /* Do callbacks so higher layers see any changes */
     status = (asynStatus)callParamCallbacks(addr, addr);
@@ -115,18 +115,18 @@ asynStatus NDFileTinyTIFF::openFile(const char *fileName, NDFileOpenMode_t openM
     /* When we create TIFF variables and dimensions, we get back an
      * ID for each one. */
 /*    nc_type ncType=NC_NAT;*/
-	char str0[256];
-	char str1[256];
-	int fn0,fn1;
-	char fullfname[256];
-	int is_update;
+    char str0[256];
+    char str1[256];
+    int fn0,fn1;
+    char fullfname[256];
+    int is_update;
     static const char *functionName = "openFile";
 
 
-	//enable retrig capture strat
-	capture_trig=1;
+    //enable retrig capture strat
+    capture_trig=1;
 
-	this->openModesave = openMode;
+    this->openModesave = openMode;
 
     /* We don't support reading yet */
     if (openMode & NDFileModeRead) return(asynError);
@@ -136,64 +136,64 @@ asynStatus NDFileTinyTIFF::openFile(const char *fileName, NDFileOpenMode_t openM
 
     /* Set the next record in the file to 0 */
 
-	num_bad_fpgaheads=0;
+    num_bad_fpgaheads=0;
 
 
 
 
 
-				getStringParam(NDFileName,255,str0);
-				getStringParam(NDFilePath,255,str1);
-				getIntegerParam(NDFileNumber,&fn0);
-				getIntegerParam(NDFileNumCapture,&fn1);
+                getStringParam(NDFileName,255,str0);
+                getStringParam(NDFilePath,255,str1);
+                getIntegerParam(NDFileNumber,&fn0);
+                getIntegerParam(NDFileNumCapture,&fn1);
 
-	// this is a kludge because base class uincs the NDFileNumber for us. we are negating that so
-				// we can keep track ourselves here.
-	getIntegerParam(NDAutoIncrement,&is_update);
-	if (is_update==1 && filenum_kludge==0)
-	{
-		fn0=fn0-1;
-		setIntegerParam(NDFileNumber,fn0);
-	}
+    // this is a kludge because base class uincs the NDFileNumber for us. we are negating that so
+                // we can keep track ourselves here.
+    getIntegerParam(NDAutoIncrement,&is_update);
+    if (is_update==1 && filenum_kludge==0)
+    {
+        fn0=fn0-1;
+        setIntegerParam(NDFileNumber,fn0);
+    }
 
 // keep track of filenumber so if base class messes it up we are not consused...
-	//			last_filenumber = fn0;
+    //            last_filenumber = fn0;
 
-	this->nextRecord = 0;
-	try {
+    this->nextRecord = 0;
+    try {
 
-	if (openMode&NDFileModeMultiple)
-	{
-		f_tiff->setMultiFrames(fn1);
-		sprintf(fullfname,"%s%s_%05d_%05d.tif",str1,str0,fn0,fn1);
-	}
-	else
-	{
-		sprintf(fullfname,"%s%s_%05d.tif",str1,str0,fn0);
-		f_tiff->setMultiFrames(1);
-	}
-
-
-	// if filename is "pipe" then we are ariting to named pipe...
-	//
-	if (strcmp(str0,"pipe")==0)
-		f_tiff->is_use_pipe = true;
-	else
-		f_tiff->is_use_pipe = false;
+    if (openMode&NDFileModeMultiple)
+    {
+        f_tiff->setMultiFrames(fn1);
+        sprintf(fullfname,"%s%s_%05d_%05d.tif",str1,str0,fn0,fn1);
+    }
+    else
+    {
+        sprintf(fullfname,"%s%s_%05d.tif",str1,str0,fn0);
+        f_tiff->setMultiFrames(1);
+    }
 
 
-
-	f_tiff->open_w(fullfname);
+    // if filename is "pipe" then we are ariting to named pipe...
+    //
+    if (strcmp(str0,"pipe")==0)
+        f_tiff->is_use_pipe = true;
+    else
+        f_tiff->is_use_pipe = false;
 
 
 
-		}
-		catch (tinytiff_exception ex)
-		{
-			printf("%s\n",ex.err_mess());
-		}
+    f_tiff->open_w(fullfname);
 
-	setStringParam(NDFullFileName,f_tiff->file_name);
+
+
+        }
+        catch (tinytiff_exception ex)
+        {
+            printf("%s\n",ex.err_mess());
+        }
+
+    setStringParam(NDFullFileName,f_tiff->file_name);
 
     return(asynSuccess);
 }
@@ -202,95 +202,95 @@ asynStatus NDFileTinyTIFF::openFile(const char *fileName, NDFileOpenMode_t openM
  *  to add arrays to a single file in stream or capture mode */
 asynStatus NDFileTinyTIFF::writeFile(NDArray *pArray)
 {
-	unsigned long int stripsize;
+    unsigned long int stripsize;
     static const char *functionName = "writeFile";
-	int sizex, sizey;
-	int is_update;
-	int fnx;
-	int ii0;
-	int imgc,nimg;
+    int sizex, sizey;
+    int is_update;
+    int fnx;
+    int ii0;
+    int imgc,nimg;
 
 
-	//
-	// For splitting CAPTURE mode saving into several large files.
-	//
-	//getIntegerParam(NDFileTinyTIFF_nimages_in_file,&nimg);
-	//getIntegerParam(NDFileTinyTIFF_img_counter,&imgc);
+    //
+    // For splitting CAPTURE mode saving into several large files.
+    //
+    //getIntegerParam(NDFileTinyTIFF_nimages_in_file,&nimg);
+    //getIntegerParam(NDFileTinyTIFF_img_counter,&imgc);
 
-	//if (imgc>=nimg)
-	//{
-	//	closeFile();
-	//	openFile(0, openModesave, pArray);
+    //if (imgc>=nimg)
+    //{
+    //    closeFile();
+    //    openFile(0, openModesave, pArray);
 
-	//
-	//}
-	//imgc++;
-	//setIntegerParam(NDFileTinyTIFF_img_counter,imgc);
-
-
-		getIntegerParam(NDFileNumber,&fnx);
-
-		getIntegerParam(NDAutoIncrement,&is_update);
+    //
+    //}
+    //imgc++;
+    //setIntegerParam(NDFileTinyTIFF_img_counter,imgc);
 
 
+        getIntegerParam(NDFileNumber,&fnx);
 
-	sizex = pArray->dims[0].size;
-	sizey = pArray->dims[1].size;
+        getIntegerParam(NDAutoIncrement,&is_update);
+
+
+
+    sizex = pArray->dims[0].size;
+    sizey = pArray->dims[1].size;
 
 
 
 
 //NDFileFormat
 
-	getIntegerParam(NDFileFormat,&fileformat);
+    getIntegerParam(NDFileFormat,&fileformat);
 
 
-	//setIntegerParam(NDFileTinyTIFF_threshold,threshold);
+    //setIntegerParam(NDFileTinyTIFF_threshold,threshold);
 // need to determint what type of TinyTIFF to wrute:
 //raw data, FPGA compressed data, raw data written as compressed
 // for now just do raw...
 
-		//printf("saveFileTinyTIFFRaw\n");
-	//	cf->saveFileTinyTIFFRaw(
-	//	corecoticks,//timestamp- ise ndarray param
-	//	threshold,//thresh
-	//	sizex,
-	//	sizey,
-	//	bytesperpix,// bytes per pix-00 need to get this from NDArray... use short for now
-	//	pArray->pData,
-	//	this->nextRecord,//fiklenumber- where do we get it?
-	//	cam_type,// camtype should be a ndarray param
-	//	acq_time//acq period- do we read the param or use an ndarray param?
-	//	);
+        //printf("saveFileTinyTIFFRaw\n");
+    //    cf->saveFileTinyTIFFRaw(
+    //    corecoticks,//timestamp- ise ndarray param
+    //    threshold,//thresh
+    //    sizex,
+    //    sizey,
+    //    bytesperpix,// bytes per pix-00 need to get this from NDArray... use short for now
+    //    pArray->pData,
+    //    this->nextRecord,//fiklenumber- where do we get it?
+    //    cam_type,// camtype should be a ndarray param
+    //    acq_time//acq period- do we read the param or use an ndarray param?
+    //    );
 
-		try
-		{
+        try
+        {
 
-		f_tiff->tifWr((unsigned short*)pArray->pData,sizex,sizey);
-		}
-		catch (tinytiff_exception ex)
-		{
-			printf("%s\n",ex.err_mess());
-		}
-		this->nextRecord++;
-
-
-		if (is_update)
-			setIntegerParam(NDFileNumber,fnx+1);
+        f_tiff->tifWr((unsigned short*)pArray->pData,sizex,sizey);
+        }
+        catch (tinytiff_exception ex)
+        {
+            printf("%s\n",ex.err_mess());
+        }
+        this->nextRecord++;
 
 
+        if (is_update)
+            setIntegerParam(NDFileNumber,fnx+1);
 
-	setIntegerParam(NDFileNumCaptured,this->nextRecord);
+
+
+    setIntegerParam(NDFileNumCaptured,this->nextRecord);
     getIntegerParam(NDFileNumCapture,&ii0);
-	if (this->nextRecord >= ii0)
-	{
-		setIntegerParam(NDFileNumCaptured,ii0);
-		closeFile();
-		setIntegerParam(NDFileCapture, 0);
+    if (this->nextRecord >= ii0)
+    {
+        setIntegerParam(NDFileNumCaptured,ii0);
+        closeFile();
+        setIntegerParam(NDFileCapture, 0);
 
 
-	}
-	return(asynSuccess);
+    }
+    return(asynSuccess);
 }
 /*******************************************************************************************
  *
@@ -302,82 +302,82 @@ void NDFileTinyTIFF::processCallbacks(NDArray *pArray)
 {
 
 
-	threshold = 0;
-	is_fpga_comp = 0;
-	acq_time = 0.0;
-	corecoticks=0;
+    threshold = 0;
+    is_fpga_comp = 0;
+    acq_time = 0.0;
+    corecoticks=0;
 
 
 
 
 
 
-	// enable the automatic restarting of capture. In this way we can write tons of files with Ncapture images in each
-		int capture_forever,cap;
+    // enable the automatic restarting of capture. In this way we can write tons of files with Ncapture images in each
+        int capture_forever,cap;
 
-		getIntegerParam(NDFileTinyTIFF_is_recapture,&capture_forever);
-		getIntegerParam(NDFileCapture,&cap);
+        getIntegerParam(NDFileTinyTIFF_is_recapture,&capture_forever);
+        getIntegerParam(NDFileCapture,&cap);
 
-		if (capture_forever==0)
-			capture_trig=0;
+        if (capture_forever==0)
+            capture_trig=0;
 
-		if ( cap==0 && capture_forever>0 && capture_trig==1)
-		{
-			setIntegerParam(NDFileCapture,1);
-			setIntegerParam(NDFileNumCaptured, 0);
-					//setIntegerParam(NDWriteFile, 1);
-					filenum_kludge=1;
-					openFile(0,openModesave, pArray);
-					filenum_kludge=0;
+        if ( cap==0 && capture_forever>0 && capture_trig==1)
+        {
+            setIntegerParam(NDFileCapture,1);
+            setIntegerParam(NDFileNumCaptured, 0);
+                    //setIntegerParam(NDWriteFile, 1);
+                    filenum_kludge=1;
+                    openFile(0,openModesave, pArray);
+                    filenum_kludge=0;
 
-		}
-
-
+        }
 
 
-	// numAttributes = pArray->numAttributes();
-	numAttributes = pArray->pAttributeList->count();
 
-//	printf("Num Attributes %i \n", numAttributes);
-	pAttribute = pArray->pAttributeList->next(NULL);
-	for (attrCount=0; attrCount<numAttributes; attrCount++)
-	{
+
+    // numAttributes = pArray->numAttributes();
+    numAttributes = pArray->pAttributeList->count();
+
+//    printf("Num Attributes %i \n", numAttributes);
+    pAttribute = pArray->pAttributeList->next(NULL);
+    for (attrCount=0; attrCount<numAttributes; attrCount++)
+    {
 
         pAttribute->getValueInfo(&attrDataType, &attrSize);
         strcpy(name, pAttribute->pName);
         strcpy(description, pAttribute->pDescription);
                 // pAttribute->getDescription(description, sizeof(description));
-		//pAttribute->getValue(attrDataType, void *pValue, attrSize);
+        //pAttribute->getValue(attrDataType, void *pValue, attrSize);
 
-		// TinyTIFF_threshold
-		// TinyTIFF_fpga_compressed
-		// TinyTIFF_acq_time
-		// TinyTIFF_coreco_ticks
-
-
-	        pAttribute = pArray->pAttributeList->next(pAttribute);
-		// pAttribute = pArray->nextAttribute(pAttribute);
-
-	}
+        // TinyTIFF_threshold
+        // TinyTIFF_fpga_compressed
+        // TinyTIFF_acq_time
+        // TinyTIFF_coreco_ticks
 
 
+            pAttribute = pArray->pAttributeList->next(pAttribute);
+        // pAttribute = pArray->nextAttribute(pAttribute);
 
-
-	/*
-
-
-	*/
-
-
-	fpga_timestamp=0;
-	fpga_pixels=0;
-	fpga_comp_frames=0;
+    }
 
 
 
-	// check for bad FPGA headers, get stats etc...
-	// call base class function...
-	NDPluginFile::processCallbacks(pArray);
+
+    /*
+
+
+    */
+
+
+    fpga_timestamp=0;
+    fpga_pixels=0;
+    fpga_comp_frames=0;
+
+
+
+    // check for bad FPGA headers, get stats etc...
+    // call base class function...
+    NDPluginFile::processCallbacks(pArray);
 
 
 
@@ -396,14 +396,14 @@ asynStatus NDFileTinyTIFF::readFile(NDArray **pArray)
 asynStatus NDFileTinyTIFF::closeFile()
 {
     static const char *functionName = "closeFile";
-	int fnx;
-	int is_update;
+    int fnx;
+    int is_update;
 
    // printf("TinyTIFF closeFile\n");
-	f_tiff->close(f_tiff->file_pointer);
+    f_tiff->close(f_tiff->file_pointer);
 
 
-			return asynSuccess;
+            return asynSuccess;
 }
 
 
@@ -426,48 +426,48 @@ NDFileTinyTIFF::NDFileTinyTIFF(const char *portName, int queueSize, int blocking
                            int priority, int stackSize)
     : NDPluginFile(portName, queueSize, blockingCallbacks,
                   NDArrayPort, NDArrayAddr,
-		   1, NDFileTinyTIFF::num_params, 1, -1, asynGenericPointerMask, asynGenericPointerMask,
+           1, NDFileTinyTIFF::num_params, 1, -1, asynGenericPointerMask, asynGenericPointerMask,
                    ASYN_CANBLOCK, 1, priority, stackSize)
 {
-	int i;
+    int i;
 
 
-	paramStrings[0]=new param_type_str(&NDFileTinyTIFF_threshold,asynParamInt32,"NDFileTinyTIFF_threshold");
-	paramStrings[1]=new param_type_str(&NDFileTinyTIFF_is_recapture,asynParamInt32,"NDFileTinyTIFF_is_recapture");
-	paramStrings[2]=new param_type_str(&ND_makedirs,asynParamInt32,"EZ_is_makedirs");
+    paramStrings[0]=new param_type_str(&NDFileTinyTIFF_threshold,asynParamInt32,"NDFileTinyTIFF_threshold");
+    paramStrings[1]=new param_type_str(&NDFileTinyTIFF_is_recapture,asynParamInt32,"NDFileTinyTIFF_is_recapture");
+    paramStrings[2]=new param_type_str(&ND_makedirs,asynParamInt32,"EZ_is_makedirs");
 
-	for (i=0;i<num_params;i++)
-	{
+    for (i=0;i<num_params;i++)
+    {
 
-		  createParam(
-		    paramStrings[i]->str_ptr,
-		  	(asynParamType)(paramStrings[i]->param_type),
-		  	paramStrings[i]->int_ptr);
+          createParam(
+            paramStrings[i]->str_ptr,
+              (asynParamType)(paramStrings[i]->param_type),
+              paramStrings[i]->int_ptr);
 
-		  	 printf("Create %d Param: Str %s  , Param %d \n",
-		  	 	paramStrings[i]->param_type,
-				paramStrings[i]->str_ptr,
-		  		*(paramStrings[i]->int_ptr));
+               printf("Create %d Param: Str %s  , Param %d \n",
+                   paramStrings[i]->param_type,
+                paramStrings[i]->str_ptr,
+                  *(paramStrings[i]->int_ptr));
 
-	}
+    }
 
     this->supportsMultipleArrays = 1;
     this->pAttributeId = NULL;
 
-    	f_tiff= new tinytiff();
+        f_tiff= new tinytiff();
 
 
-		num_bad_fpgaheads=0;
-		last_filenumber=0;
-			//setIntegerParam(NDFileTinyTIFF_max_filesize,1000000);
-			//setIntegerParam(NDFileTinyTIFF_nimages_in_file,1);
-			//setIntegerParam(NDFileTinyTIFF_img_counter,0);
+        num_bad_fpgaheads=0;
+        last_filenumber=0;
+            //setIntegerParam(NDFileTinyTIFF_max_filesize,1000000);
+            //setIntegerParam(NDFileTinyTIFF_nimages_in_file,1);
+            //setIntegerParam(NDFileTinyTIFF_img_counter,0);
 
-			//hits capture START on fileclose
-			setIntegerParam(NDFileTinyTIFF_is_recapture,0);
-			capture_trig=0;
-			filenum_kludge=0;
-			setIntegerParam(ND_makedirs,0);
+            //hits capture START on fileclose
+            setIntegerParam(NDFileTinyTIFF_is_recapture,0);
+            capture_trig=0;
+            filenum_kludge=0;
+            setIntegerParam(ND_makedirs,0);
 
 
 
@@ -488,102 +488,102 @@ int NDFileTinyTIFF::recursePath(char *pathstr, bool is_makedirs)
 #endif
 
 
-	struct _stat buff;
-	int status;
-	int slash_pos=0;
-	int last_slash_pos = 0;
-	int start = 0;
-	int part_number = 1;
+    struct _stat buff;
+    int status;
+    int slash_pos=0;
+    int last_slash_pos = 0;
+    int start = 0;
+    int part_number = 1;
 
-	string part_path, path_word;
+    string part_path, path_word;
 
-	if (strlen(pathstr)==0)
-		return(-1);
+    if (strlen(pathstr)==0)
+        return(-1);
 
-	string full_path(pathstr);
+    string full_path(pathstr);
 
-	// make sure last char is /
+    // make sure last char is /
 
-	
-	if (full_path[full_path.size()-1] != '/')
-		full_path.append("/",1);
+    
+    if (full_path[full_path.size()-1] != '/')
+        full_path.append("/",1);
 
-	//search thru path name part by part
-	slash_pos = full_path.find(string("/"),0);
-	while (slash_pos!=string::npos)
-	{
-		// path up to / not incl /
-		//here we are actually calling the copy constructor...of part path. The returned str from substr?
-		// prob in memory inside fullpath,,, it will go out of scope and destruct?
-		part_path = full_path.substr(start, slash_pos);
-	
+    //search thru path name part by part
+    slash_pos = full_path.find(string("/"),0);
+    while (slash_pos!=string::npos)
+    {
+        // path up to / not incl /
+        //here we are actually calling the copy constructor...of part path. The returned str from substr?
+        // prob in memory inside fullpath,,, it will go out of scope and destruct?
+        part_path = full_path.substr(start, slash_pos);
+    
 
-		// this part of path... say path is D:/aaa/bbb/ccc   then worrd is bbb for eample
-		if (full_path[last_slash_pos] == '/')
-			path_word = full_path.substr(last_slash_pos+1, (slash_pos -last_slash_pos-1));
-		else
-			path_word = full_path.substr(last_slash_pos, (slash_pos  -last_slash_pos));
-
-
-		//check if we are looking at a drive, check for : at pos 1
-		if (path_word[1] == ':')
-		{
-			//a drive
-			//somehow make sure drive exists.
-
-			// for drive need / at end.
-			part_path.append("/",1);
-			status = _stat(part_path.c_str(), &buff);
-			if (status!=0)
-				return(-64-part_number);
+        // this part of path... say path is D:/aaa/bbb/ccc   then worrd is bbb for eample
+        if (full_path[last_slash_pos] == '/')
+            path_word = full_path.substr(last_slash_pos+1, (slash_pos -last_slash_pos-1));
+        else
+            path_word = full_path.substr(last_slash_pos, (slash_pos  -last_slash_pos));
 
 
+        //check if we are looking at a drive, check for : at pos 1
+        if (path_word[1] == ':')
+        {
+            //a drive
+            //somehow make sure drive exists.
 
-			// if not exist return(-64 -part_num);
-		}
-		else
-		{
+            // for drive need / at end.
+            part_path.append("/",1);
+            status = _stat(part_path.c_str(), &buff);
+            if (status!=0)
+                return(-64-part_number);
 
-			status = _stat(part_path.c_str(), &buff);
 
-			if (!is_makedirs)
-			{
-				if (status!=0)
-					return(0-part_number);
-			}
-			else
-			{
-				if (status!=0)
-				{
-					
-#ifdef _WIN32					
-					status= _mkdir(part_path.c_str());
+
+            // if not exist return(-64 -part_num);
+        }
+        else
+        {
+
+            status = _stat(part_path.c_str(), &buff);
+
+            if (!is_makedirs)
+            {
+                if (status!=0)
+                    return(0-part_number);
+            }
+            else
+            {
+                if (status!=0)
+                {
+                    
+#ifdef _WIN32                    
+                    status= _mkdir(part_path.c_str());
 #else
-					status= mkdir(part_path.c_str(),777);
+                    status= mkdir(part_path.c_str(),777);
 
 #endif
 
-					if (status!=0)
-					{
-						printf("ERROR: Could Not Dir %s\n",part_path.c_str());
-						return(-128-part_number);
-					}
-					else
-						printf("Created Dir %s\n",part_path.c_str());
-				}
-			}
+                    if (status!=0)
+                    {
+                        printf("ERROR: Could Not Dir %s\n",part_path.c_str());
+                        return(-128-part_number);
+                    }
+                    else
+                        printf("Created Dir %s\n",part_path.c_str());
+                }
+            }
 
 
-		}
+        }
 
-		//search thru path name part by part
-		last_slash_pos = slash_pos;
-		slash_pos = full_path.find(string("/"),slash_pos+1);
-		part_number++;
+        //search thru path name part by part
+        last_slash_pos = slash_pos;
+        slash_pos = full_path.find(string("/"),slash_pos+1);
+        part_number++;
 
-	}
+    }
 
-	return(0);
+    return(0);
 
 
 }

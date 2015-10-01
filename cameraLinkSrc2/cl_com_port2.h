@@ -1,10 +1,10 @@
 /*******************************************************************************
  *
- *	cl_com_port.h
+ *    cl_com_port.h
  *
- *	Author: Tim Madden
- *	Date:	8/01/06
- *	Project: CCD Detector DAQ.
+ *    Author: Tim Madden
+ *    Date:    8/01/06
+ *    Project: CCD Detector DAQ.
  *
  *
  ******************************************************************************/
@@ -25,57 +25,57 @@
  * Double incluson protection.
  */
 #ifndef _CL_COM_PORT_H
-	#define _CL_COM_PORT_H
+    #define _CL_COM_PORT_H
 
 /*
-		 * Class for 
-		 */
+         * Class for 
+         */
 
 class cl_com_port : public comportInterface
-		{
-		public:	
-			cl_com_port(char *name);
-			~cl_com_port();
-			/*
-			 * ports we can write to
-			 */
+        {
+        public:    
+            cl_com_port(char *name);
+            ~cl_com_port();
+            /*
+             * ports we can write to
+             */
 
-		
-			
+        
+            
 
-			virtual void open(void);
-			virtual void open(
-				int baud, 
-				int parity, 
-				int nbits, 
-				int nstop);
+            virtual void open(void);
+            virtual void open(
+                int baud, 
+                int parity, 
+                int nbits, 
+                int nstop);
 
-			
-			virtual void open(
-				int baud, 
-				int parity, 
-				int nbits, 
-				int nstop,
-				int rdtimeout);
+            
+            virtual void open(
+                int baud, 
+                int parity, 
+                int nbits, 
+                int nstop,
+                int rdtimeout);
 
-			virtual void write(unsigned char *buffer, int length);
-			virtual void read(unsigned char *buffer, int length);
-			virtual void write(unsigned char c);
-			virtual unsigned char read(void);
-			virtual void close(void);
-			virtual void flush(void);
-			virtual void clearPipe();
+            virtual void write(unsigned char *buffer, int length);
+            virtual void read(unsigned char *buffer, int length);
+            virtual void write(unsigned char c);
+            virtual unsigned char read(void);
+            virtual void close(void);
+            virtual void flush(void);
+            virtual void clearPipe();
 
-			virtual void setPortName(char *n);
+            virtual void setPortName(char *n);
 
 
-			virtual void wait(int us);
+            virtual void wait(int us);
 
-			// for timing things. call tic. toc returns time in s since last tic.
-			virtual void tic();
-			virtual double toc();
+            // for timing things. call tic. toc returns time in s since last tic.
+            virtual void tic();
+            virtual double toc();
 
-		protected:
+        protected:
 
 bool is_open;
 
@@ -98,11 +98,11 @@ bool is_open;
 
     COMMTIMEOUTS CommTimeouts;
   
-	char port_name[64];
+    char port_name[64];
 
 
-		};
+        };
 
-	
+    
 
 #endif

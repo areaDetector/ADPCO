@@ -4,7 +4,7 @@
 
 stopWatch::stopWatch()
 {
-	currenttime=0.0;
+    currenttime=0.0;
 
 }
 /**************************************************************************
@@ -14,15 +14,15 @@ stopWatch::stopWatch()
  **************************************************************************/
 void stopWatch::wait(int us)
 {
-	int t0,t1;
+    int t0,t1;
 
-	t0 = clock();
+    t0 = clock();
 
-	t1 = us*CLOCKS_PER_SEC/1000000;
+    t1 = us*CLOCKS_PER_SEC/1000000;
 
-	while ( (clock()-t0) < t1)
-	{
-	}
+    while ( (clock()-t0) < t1)
+    {
+    }
 
 
 }
@@ -37,7 +37,7 @@ void stopWatch::wait(int us)
 void stopWatch::tic()
 {
 
-	 currenttime = (double)clock()/ (double)CLOCKS_PER_SEC;
+     currenttime = (double)clock()/ (double)CLOCKS_PER_SEC;
 
 }
 
@@ -50,8 +50,8 @@ void stopWatch::tic()
  **************************************************************************/
 double stopWatch::toc()
 {
-	     	  elapsedtime =((double)clock() / (double)CLOCKS_PER_SEC) - currenttime;
-			  return(elapsedtime);
+               elapsedtime =((double)clock() / (double)CLOCKS_PER_SEC) - currenttime;
+              return(elapsedtime);
 
 
 }
@@ -59,9 +59,9 @@ double stopWatch::toc()
 
 bool stopWatch::isElapsed(double sec)
 {
-	if (toc()>sec)
-		return(true);
+    if (toc()>sec)
+        return(true);
 
-	return(false);
+    return(false);
 
 }

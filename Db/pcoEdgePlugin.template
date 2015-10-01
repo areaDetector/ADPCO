@@ -104,7 +104,7 @@ record(longout, "$(P)$(R)is_enable")
 
 
 
-	
+    
 record(longin, "$(P)$(R)edge_nd_datasize_RBV")
 {
    field(PINI, "1")
@@ -112,8 +112,8 @@ record(longin, "$(P)$(R)edge_nd_datasize_RBV")
    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_nd_datasize")
    field(SCAN, "I/O Intr")
 }
-	
-	
+    
+    
 record(longin, "$(P)$(R)edge_max_ndbuffers_RBV")
 {
    field(PINI, "1")
@@ -121,8 +121,8 @@ record(longin, "$(P)$(R)edge_max_ndbuffers_RBV")
    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_max_ndbuffers")
    field(SCAN, "I/O Intr")
 }
-	
-	
+    
+    
 record(longin, "$(P)$(R)edge_num_ndbuffers_RBV")
 {
    field(PINI, "1")
@@ -130,8 +130,8 @@ record(longin, "$(P)$(R)edge_num_ndbuffers_RBV")
    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_num_ndbuffers")
    field(SCAN, "I/O Intr")
 }
-	
-	
+    
+    
 record(longin, "$(P)$(R)edge_max_ndmemory_RBV")
 {
    field(PINI, "1")
@@ -139,8 +139,8 @@ record(longin, "$(P)$(R)edge_max_ndmemory_RBV")
    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_max_ndmemory")
    field(SCAN, "I/O Intr")
 }
-	
-	
+    
+    
 record(longin, "$(P)$(R)edge_alloc_ndmemory_RBV")
 {
    field(PINI, "1")
@@ -148,8 +148,8 @@ record(longin, "$(P)$(R)edge_alloc_ndmemory_RBV")
    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_alloc_ndmemory")
    field(SCAN, "I/O Intr")
 }
-	
-	
+    
+    
 record(longin, "$(P)$(R)edge_free_ndbuffers_RBV")
 {
    field(PINI, "1")
@@ -157,8 +157,8 @@ record(longin, "$(P)$(R)edge_free_ndbuffers_RBV")
    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_free_ndbuffers")
    field(SCAN, "I/O Intr")
 }
-	
-	
+    
+    
 record(longin, "$(P)$(R)edge_est_buffers_left_RBV")
 {
    field(PINI, "1")
@@ -166,10 +166,10 @@ record(longin, "$(P)$(R)edge_est_buffers_left_RBV")
    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_est_buffers_left")
    field(SCAN, "I/O Intr")
 }
-	
-	
-	
-	
-	
-	
-	
+    
+    
+    
+    
+    
+    
+    

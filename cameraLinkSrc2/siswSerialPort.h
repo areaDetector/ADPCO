@@ -1,10 +1,10 @@
 /*******************************************************************************
  *
- *	siswSerialPort.h
+ *    siswSerialPort.h
  *
- *	Author: Tim Madden
- *	Date:	8/01/06
- *	Project: CCD Detector DAQ.
+ *    Author: Tim Madden
+ *    Date:    8/01/06
+ *    Project: CCD Detector DAQ.
  *
  *
  ******************************************************************************/
@@ -35,57 +35,57 @@
  * Double incluson protection.
  */
 #ifndef _siswSerialPort_H
-	#define _siswSerialPort_H
+    #define _siswSerialPort_H
 
 /*
-		 * Class for 
-		 */
+         * Class for 
+         */
 
 class siswSerialPort : public comportInterface
-		{
-		public:	
-			siswSerialPort(char *name);
-			~siswSerialPort();
-			/*
-			 * ports we can write to
-			 */
+        {
+        public:    
+            siswSerialPort(char *name);
+            ~siswSerialPort();
+            /*
+             * ports we can write to
+             */
 
-		
-			
+        
+            
 
-			virtual void open(void);
-			virtual void open(
-				int baud, 
-				int parity, 
-				int nbits, 
-				int nstop);
+            virtual void open(void);
+            virtual void open(
+                int baud, 
+                int parity, 
+                int nbits, 
+                int nstop);
 
-			virtual void open(
-				int baud, 
-				int parity, 
-				int nbits, 
-				int nstop,
-				int rdtimeout);
-				
-			virtual void write(unsigned char *buffer, int length);
-			virtual void read(unsigned char *buffer, int length);
-			virtual void write(unsigned char c);
-			virtual unsigned char read(void);
-			virtual void close(void);
-			virtual void flush(void);
-			virtual void clearPipe();
+            virtual void open(
+                int baud, 
+                int parity, 
+                int nbits, 
+                int nstop,
+                int rdtimeout);
+                
+            virtual void write(unsigned char *buffer, int length);
+            virtual void read(unsigned char *buffer, int length);
+            virtual void write(unsigned char c);
+            virtual unsigned char read(void);
+            virtual void close(void);
+            virtual void flush(void);
+            virtual void clearPipe();
 
-			virtual void setPortName(char *n){};
+            virtual void setPortName(char *n){};
 
-			virtual void wait(int us);
+            virtual void wait(int us);
 
-			// for timing things. call tic. toc returns time in s since last tic.
-			virtual void tic();
-			virtual double toc();
+            // for timing things. call tic. toc returns time in s since last tic.
+            virtual void tic();
+            virtual double toc();
 
-		protected:
+        protected:
 
-			void readDll(void);
+            void readDll(void);
 
 bool is_open;
 
@@ -95,9 +95,9 @@ bool is_open;
 void *serial_ref;
 char mesgx[512];
 
-		};
+        };
 
-	
+    
 
 #endif
 #endif

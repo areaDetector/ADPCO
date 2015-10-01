@@ -120,7 +120,7 @@ record(longin, "$(P)$(R)cor_grabber_type_RBV")
    field(DTYP, "asynInt32")
    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))cor_grabber_type")
    field(SCAN, "I/O Intr")
-}	
+}    
 
 
 
@@ -539,7 +539,7 @@ record(longout, "$(P)$(R)cor_cant_get_ndarray")
 
 
 ###
-	
+    
 
 record(longin, "$(P)$(R)cor_num_repeat_timestamp_RBV")
 {
@@ -609,8 +609,8 @@ record(longin, "$(P)$(R)cor_est_buffers_left_RBV")
 
 
 
-			
-			
+            
+            
 record(longin, "$(P)$(R)cor_max_ndbuffers_RBV")
 {
    field(PINI, "1")
@@ -619,7 +619,7 @@ record(longin, "$(P)$(R)cor_max_ndbuffers_RBV")
    field(SCAN, "I/O Intr")
 }
 
-			
+            
 
 
 record(longin, "$(P)$(R)cor_max_ndmemory_RBV")
@@ -713,7 +713,7 @@ record(longin, "$(P)$(R)cor_num_buff_frames_RBV")
    field(PINI, "1")
    field(DTYP, "asynInt32")
    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))cor_num_buff_frames")
-   field(SCAN, "I/O Intr")	  
+   field(SCAN, "I/O Intr")      
    field(HOPR,"10")
    field(LOPR,"0")
 }
@@ -860,7 +860,7 @@ record(mbbo, "$(P)$(R)cor_fpga_usr_command")
 
    field(SXST, "ResetCounters")
    field(SXVL, "8")
-	   
+       
    field(SVST, "ReturnDark")
    field(SVVL, "9")
 
@@ -898,7 +898,7 @@ record(mbbi, "$(P)$(R)cor_fpga_usr_command_RBV")
    field(SXVL, "8")
    field(SVST, "ReturnDark")
    field(SVVL, "9")
-	   
+       
    
    
    field(SCAN, "I/O Intr")

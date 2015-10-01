@@ -24,15 +24,15 @@ int printlevel=0;
 int asynPrint(asynUser* asyn, int level,char *format,...)
 {
  va_list args;
-	if (level&printlevel > 0)
-	{
-		 
-		va_start (args, format);
-		vprintf (format, args);
-		va_end (args);
-	
+    if (level&printlevel > 0)
+    {
+         
+        va_start (args, format);
+        vprintf (format, args);
+        va_end (args);
+    
 
-	}
+    }
 return(0);
 }
 
@@ -743,9 +743,9 @@ bool TiXMLhdf5SetupNew::VisitEnter(const TiXmlElement& xml_element,
                // we write the const in the xml text
 
                //if (nodeDataTypeInt==H5T_STR_NULLTERM)
-               //	H5Awrite(hdfattr, hdfdatatype, xml_text.Value());
+               //    H5Awrite(hdfattr, hdfdatatype, xml_text.Value());
                //else
-               //	H5Awrite(hdfattr, hdfdatatype, constTextToDataType((char*)xml_text.Value(),nodeDataTypeInt,&anytype_data) );
+               //    H5Awrite(hdfattr, hdfdatatype, constTextToDataType((char*)xml_text.Value(),nodeDataTypeInt,&anytype_data) );
             } //Const
             else if (std::string(nodeSource) == "NDAttr")
             {
@@ -882,11 +882,11 @@ bool TiXMLhdf5SetupNew::Visit(const TiXmlDeclaration &a)
 void TiXMLhdf5SetupNew::writeArrayDataFromString(hsize_t dim0, hsize_t dim1, char *textValue,
       int & nodeDataTypeInt, hid_t dataset)
 {
-	asynPrint(my_epics->pasynUser, ASYN_TRACE_FLOW,"%s::writeArray 1 dims: %d, %d\n", className, dim0, dim1);
-	pMemValue anytype_data;
-	asynPrint(my_epics->pasynUser, ASYN_TRACE_FLOW,"%s::writeArray 2 dims: %d, %d\n", className, dim0, dim1);
+    asynPrint(my_epics->pasynUser, ASYN_TRACE_FLOW,"%s::writeArray 1 dims: %d, %d\n", className, dim0, dim1);
+    pMemValue anytype_data;
+    asynPrint(my_epics->pasynUser, ASYN_TRACE_FLOW,"%s::writeArray 2 dims: %d, %d\n", className, dim0, dim1);
    char **outerArray = new char*[dim1];
-	asynPrint(my_epics->pasynUser, ASYN_TRACE_FLOW,"%s::writeArray 3 dims: %d, %d\n", className, dim0, dim1);
+    asynPrint(my_epics->pasynUser, ASYN_TRACE_FLOW,"%s::writeArray 3 dims: %d, %d\n", className, dim0, dim1);
    for (unsigned int kx = 0; kx < dim1; kx++)
    {
       outerArray[kx] = new char[dim0];
@@ -1156,10 +1156,10 @@ bool TiXMLhdf5SetupNew::Visit(const TiXmlText &xml_text)
                            "%s::Visit(text)* start*** Attr CONST %s **\n", className, nodeValue);
             if (nodeDataTypeInt == H5T_STR_NULLTERM)
             {
-				memset(scratch_str,0,1024);
-				strcpy(scratch_str, xml_text.Value());
+                memset(scratch_str,0,1024);
+                strcpy(scratch_str, xml_text.Value());
                H5Awrite(hdfattr, hdfdatatype, scratch_str);
-		   }
+           }
             else
                H5Awrite(
                      hdfattr,
@@ -1207,8 +1207,8 @@ bool TiXMLhdf5SetupNew::Visit(const TiXmlText &xml_text)
             else if (nodeDataTypeInt == H5T_STR_NULLTERM){
                asynPrint(my_epics->pasynUser, ASYN_TRACE_FLOW,
                               "%s::Visit(Text)*************************\n", className);
-            	memset(scratch_str,0,1024);
-				strcpy(scratch_str, xml_text.Value());
+                memset(scratch_str,0,1024);
+                strcpy(scratch_str, xml_text.Value());
 
                writeData((char *)scratch_str);
                asynPrint(my_epics->pasynUser, ASYN_TRACE_FLOW,
@@ -1252,7 +1252,7 @@ bool TiXMLhdf5SetupNew::Visit(const TiXmlText &xml_text)
             return (true);
          }
 
-         //	asynPrint(my_epics->pasynUser, ASYN_TRACE_FLOW,
+         //    asynPrint(my_epics->pasynUser, ASYN_TRACE_FLOW,
          //"TiXMLhdf5SetupNew::Visit (const TiXmlText &xml_text) : DataSet, Ignoring Text\n");
 
       } //dataset
@@ -1917,8 +1917,8 @@ bool TiXMLhdf5WriteData::Visit (const TiXmlText &xml_text)
          {
             if (nodeDataTypeInt==H5T_STR_NULLTERM)
             {
-					memset(scratch_str,0,1024);
-				strcpy(scratch_str, xml_text.Value());
+                    memset(scratch_str,0,1024);
+                strcpy(scratch_str, xml_text.Value());
             H5Awrite(attr, datatype, scratch_str);
             }
             else
@@ -2266,9 +2266,9 @@ bool TiXMLhdf5Shutdown::VisitEnter(const TiXmlElement &xml_element,
                // we write the const in the xml text
 
                //if (nodeDataTypeInt==H5T_STR_NULLTERM)
-               //	H5Awrite(hdfattr, hdfdatatype, xml_text.Value());
+               //    H5Awrite(hdfattr, hdfdatatype, xml_text.Value());
                //else
-               //	H5Awrite(hdfattr, hdfdatatype, constTextToDataType((char*)xml_text.Value(),nodeDataTypeInt,&anytype_data) );
+               //    H5Awrite(hdfattr, hdfdatatype, constTextToDataType((char*)xml_text.Value(),nodeDataTypeInt,&anytype_data) );
             } //Const
             else if (std::string(nodeSource) == "NDAttr")
             {

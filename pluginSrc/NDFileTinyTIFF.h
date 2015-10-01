@@ -43,17 +43,17 @@ using namespace tinytiff_plugin;
 struct param_type_str
 {
 
-	param_type_str(int *ix, int ip, char* sx){
-		str_ptr=new char[128];
-		int_ptr=ix;
-		param_type = ip;
-		strcpy(str_ptr,sx);
-		};
-	~param_type_str(){delete(str_ptr);};
+    param_type_str(int *ix, int ip, char* sx){
+        str_ptr=new char[128];
+        int_ptr=ix;
+        param_type = ip;
+        strcpy(str_ptr,sx);
+        };
+    ~param_type_str(){delete(str_ptr);};
 
-	int *int_ptr;
-	int param_type;
-	char *str_ptr;
+    int *int_ptr;
+    int param_type;
+    char *str_ptr;
 };
 
 
@@ -73,7 +73,7 @@ public:
                  const char *NDArrayPort, int NDArrayAddr,
                  int priority, int stackSize);
 
-	virtual void processCallbacks(NDArray *pArray);
+    virtual void processCallbacks(NDArray *pArray);
     /* The methods that this class implements */
     virtual asynStatus openFile(const char *fileName, NDFileOpenMode_t openMode, NDArray *pArray);
     virtual asynStatus readFile(NDArray **pArray);
@@ -89,7 +89,7 @@ protected:
 
 
 
-	int recursePath(char *pathstr, bool is_makedirs);
+    int recursePath(char *pathstr, bool is_makedirs);
 
     int arrayDataId;
     int uniqueIdId;
@@ -97,9 +97,9 @@ protected:
     int nextRecord;
     int *pAttributeId;
 
-	tinytiff *f_tiff;
+    tinytiff *f_tiff;
 
-	NDAttribute *pAttribute;
+    NDAttribute *pAttribute;
     char name[256];
     char description[256];
     char tempString[256];
@@ -107,39 +107,39 @@ protected:
     size_t attrSize;
     int numAttributes, attrCount;
 
-	int ii0,ii1;
+    int ii0,ii1;
 
-	int threshold, is_fpga_comp;
-		double acq_time;
-	unsigned int corecoticks;
-	unsigned int num_bad_fpgaheads;
-	int fpga_pixels;
-	unsigned int fpga_timestamp;
-	int fpga_comp_frames;
-
-
-	int bytesperpix;
-	int cam_type;
-	int fileformat;
-
-	int last_filenumber;
-	bool is_valid_head;
-
-	NDFileOpenMode_t openModesave;
-	int capture_trig;
-	int filenum_kludge;
+    int threshold, is_fpga_comp;
+        double acq_time;
+    unsigned int corecoticks;
+    unsigned int num_bad_fpgaheads;
+    int fpga_pixels;
+    unsigned int fpga_timestamp;
+    int fpga_comp_frames;
 
 
+    int bytesperpix;
+    int cam_type;
+    int fileformat;
+
+    int last_filenumber;
+    bool is_valid_head;
+
+    NDFileOpenMode_t openModesave;
+    int capture_trig;
+    int filenum_kludge;
 
 
-	int NDFileTinyTIFF_threshold;
 
-	int ND_makedirs;
 
-	int	NDFileTinyTIFF_is_recapture;
+    int NDFileTinyTIFF_threshold;
 
-	enum {num_params=3};
-	param_type_str *paramStrings[num_params];
+    int ND_makedirs;
+
+    int    NDFileTinyTIFF_is_recapture;
+
+    enum {num_params=3};
+    param_type_str *paramStrings[num_params];
 
 
 };

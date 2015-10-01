@@ -23,305 +23,305 @@
  ************************************************************************/
 
 
-	class pco_command
-	{
-		public:
-			pco_command()
-				{ 
-					setCode(0);
-				};
+    class pco_command
+    {
+        public:
+            pco_command()
+                { 
+                    setCode(0);
+                };
 
-	
-		void setCode(unsigned short cx)
-		{
+    
+        void setCode(unsigned short cx)
+        {
 
-					addr=0;
-					code = cx;
-					// space for length.
-					length=(unsigned short*)data;
-					addUShort(0);
-					calcCheckSum();
-		}
+                    addr=0;
+                    code = cx;
+                    // space for length.
+                    length=(unsigned short*)data;
+                    addUShort(0);
+                    calcCheckSum();
+        }
 
-		void addUShort(unsigned short msg)
-		{
-			unsigned short *ptr;
-			ptr = (unsigned short*)(data+addr);
-			*ptr=msg;
-			addr+=2;
-			calcCheckSum();
-		};
-
-
-		void addUChar(unsigned char msg)
-		{
-			unsigned char *ptr;
-			ptr = (unsigned char*)(data+addr);
-			*ptr=msg;
-			addr+=1;
-			calcCheckSum();
-		};
-
-		void addShort(short msg)
-		{
-			short *ptr;
-			ptr = (short*)(data+addr);
-			*ptr=msg;
-			addr+=2;
-			calcCheckSum();
-		};
-
-		void addLong(long msg)
-		{
-			long *ptr;
-			ptr = (long*)(data+addr);
-			*ptr=msg;
-			addr+=4;
-			calcCheckSum();
-		};
-		void addULong(unsigned long msg)
-		{
-			unsigned long *ptr;
-			ptr = (unsigned long*)(data+addr);
-			*ptr=msg;
-			addr+=4;
-			calcCheckSum();
-		};
-
-		unsigned char* getData(void) {return( (unsigned char*)data);};
-		unsigned short getLen(void) {return(*length);};
-		unsigned short getCode(void) {return(code);};
-
-		protected:
-		// code senyt to detector
-				unsigned short code;
+        void addUShort(unsigned short msg)
+        {
+            unsigned short *ptr;
+            ptr = (unsigned short*)(data+addr);
+            *ptr=msg;
+            addr+=2;
+            calcCheckSum();
+        };
 
 
-		unsigned short *length;
-		unsigned char *checksum;
+        void addUChar(unsigned char msg)
+        {
+            unsigned char *ptr;
+            ptr = (unsigned char*)(data+addr);
+            *ptr=msg;
+            addr+=1;
+            calcCheckSum();
+        };
 
-		char data[256];
-			void calcCheckSum(void)
-				{	int i;
-					int codelo;
-					int codehi;
-					//addr incl lenggm but not checksum or code
-					*length = addr + 2 + 1;
-					//addr where checksum is stored
-					checksum=(unsigned char*)data+addr;
-					totalsum=0;
-					codelo=code&255;
-					codehi=code&(255*256);
-					codehi = codehi/256;
-					totalsum+=codelo;
-					totalsum+=codehi;
-					
-					for (i=0;i<addr;i++)
-						totalsum+=data[i];
+        void addShort(short msg)
+        {
+            short *ptr;
+            ptr = (short*)(data+addr);
+            *ptr=msg;
+            addr+=2;
+            calcCheckSum();
+        };
 
-					*checksum=(unsigned char)(totalsum&255);
-				};
-		 int addr;
-		 int totalsum;
-	};
+        void addLong(long msg)
+        {
+            long *ptr;
+            ptr = (long*)(data+addr);
+            *ptr=msg;
+            addr+=4;
+            calcCheckSum();
+        };
+        void addULong(unsigned long msg)
+        {
+            unsigned long *ptr;
+            ptr = (unsigned long*)(data+addr);
+            *ptr=msg;
+            addr+=4;
+            calcCheckSum();
+        };
+
+        unsigned char* getData(void) {return( (unsigned char*)data);};
+        unsigned short getLen(void) {return(*length);};
+        unsigned short getCode(void) {return(code);};
+
+        protected:
+        // code senyt to detector
+                unsigned short code;
+
+
+        unsigned short *length;
+        unsigned char *checksum;
+
+        char data[256];
+            void calcCheckSum(void)
+                {    int i;
+                    int codelo;
+                    int codehi;
+                    //addr incl lenggm but not checksum or code
+                    *length = addr + 2 + 1;
+                    //addr where checksum is stored
+                    checksum=(unsigned char*)data+addr;
+                    totalsum=0;
+                    codelo=code&255;
+                    codehi=code&(255*256);
+                    codehi = codehi/256;
+                    totalsum+=codelo;
+                    totalsum+=codehi;
+                    
+                    for (i=0;i<addr;i++)
+                        totalsum+=data[i];
+
+                    *checksum=(unsigned char)(totalsum&255);
+                };
+         int addr;
+         int totalsum;
+    };
 /*************************************************************************************
 *
 *
 ***************************************************************************************/
 
-	class pco_response
-	{
-		public:
-			pco_response()
-				{ 
-					addr=0;
-					code = 0;
-					// space for length.
-					length=(unsigned short*)data;
-					addUShort(5);
-					
-				};
+    class pco_response
+    {
+        public:
+            pco_response()
+                { 
+                    addr=0;
+                    code = 0;
+                    // space for length.
+                    length=(unsigned short*)data;
+                    addUShort(5);
+                    
+                };
 
-			void setCode(unsigned short cx) {code = cx;};
+            void setCode(unsigned short cx) {code = cx;};
 
-			void setExpCode(unsigned short cx) {exp_code = cx;};
-			void setErrCode(unsigned short cx) {error_code = cx;};
+            void setExpCode(unsigned short cx) {exp_code = cx;};
+            void setErrCode(unsigned short cx) {error_code = cx;};
 
-			void setLength(unsigned short lx) {
-				*length = lx;
-				addr=*length-2;
-				checksum=(unsigned char*)data+addr-1;
+            void setLength(unsigned short lx) {
+                *length = lx;
+                addr=*length-2;
+                checksum=(unsigned char*)data+addr-1;
 
-			};
+            };
 
-		void copy2Obj(unsigned char *obj,int len)
-		{
-			int k;
-			for (k=0;k<len;k++)
-			{
-				obj[k]=data[k];
-				
-			}
+        void copy2Obj(unsigned char *obj,int len)
+        {
+            int k;
+            for (k=0;k<len;k++)
+            {
+                obj[k]=data[k];
+                
+            }
 
-		}
-		void addUChar(unsigned char msg)
-		{
-			unsigned char *ptr;
-			ptr = (unsigned char*)(data+addr);
-			*ptr=msg;
-			addr+=1;
-			
-		};
+        }
+        void addUChar(unsigned char msg)
+        {
+            unsigned char *ptr;
+            ptr = (unsigned char*)(data+addr);
+            *ptr=msg;
+            addr+=1;
+            
+        };
 
-		void addUChar(unsigned char *msg,int len)
-		{
-			int i;
-			for (i=0;i<len;i++)
-				addUChar(*(msg+i));
-			
-		};
+        void addUChar(unsigned char *msg,int len)
+        {
+            int i;
+            for (i=0;i<len;i++)
+                addUChar(*(msg+i));
+            
+        };
 
-		void addUShort(unsigned short msg)
-		{
-			unsigned short *ptr;
-			ptr = (unsigned short*)(data+addr);
-			*ptr=msg;
-			addr+=2;
-			
-		};
-		void addShort(short msg)
-		{
-			short *ptr;
-			ptr = (short*)(data+addr);
-			*ptr=msg;
-			addr+=2;
-			
-		};
+        void addUShort(unsigned short msg)
+        {
+            unsigned short *ptr;
+            ptr = (unsigned short*)(data+addr);
+            *ptr=msg;
+            addr+=2;
+            
+        };
+        void addShort(short msg)
+        {
+            short *ptr;
+            ptr = (short*)(data+addr);
+            *ptr=msg;
+            addr+=2;
+            
+        };
 
-		void addLong(long msg)
-		{
-			long *ptr;
-			ptr = (long*)(data+addr);
-			*ptr=msg;
-			addr+=4;
-			
-		};
-		void addULong(unsigned long msg)
-		{
-			unsigned long *ptr;
-			ptr = (unsigned long*)(data+addr);
-			*ptr=msg;
-			addr+=4;
-			
-		};
+        void addLong(long msg)
+        {
+            long *ptr;
+            ptr = (long*)(data+addr);
+            *ptr=msg;
+            addr+=4;
+            
+        };
+        void addULong(unsigned long msg)
+        {
+            unsigned long *ptr;
+            ptr = (unsigned long*)(data+addr);
+            *ptr=msg;
+            addr+=4;
+            
+        };
 
-		unsigned short getUShort(int adx)
-		{
-			unsigned short *ptr;
+        unsigned short getUShort(int adx)
+        {
+            unsigned short *ptr;
 
-			ptr = (unsigned short*)(&data[adx]);
-			return(*ptr);
+            ptr = (unsigned short*)(&data[adx]);
+            return(*ptr);
 
-		};
-		
-		 short getShort(int adx)
-		{
-			 short *ptr;
+        };
+        
+         short getShort(int adx)
+        {
+             short *ptr;
 
-			ptr = ( short*)(&data[adx]);
-			return(*ptr);
+            ptr = ( short*)(&data[adx]);
+            return(*ptr);
 
-		};
+        };
 
-		unsigned char getUChar(int adx)
-		{
-			unsigned char *ptr;
+        unsigned char getUChar(int adx)
+        {
+            unsigned char *ptr;
 
-			ptr = (unsigned char*)(&data[adx]);
-			return(*ptr);
+            ptr = (unsigned char*)(&data[adx]);
+            return(*ptr);
 
-		};
+        };
 
-		unsigned long getULong(int adx)
-		{
-			unsigned long *ptr;
+        unsigned long getULong(int adx)
+        {
+            unsigned long *ptr;
 
-			ptr = (unsigned long*)(&data[adx]);
-			return(*ptr);
+            ptr = (unsigned long*)(&data[adx]);
+            return(*ptr);
 
-		};
+        };
 
 
-		void sprintHeader(char* strg) {
+        void sprintHeader(char* strg) {
 
-			verifyCheckSum();
-			sprintf(strg,
-				"code: 0x%x  length: %d cks: 0x%x verified cks: 0x%x \n",
-				getCode(),getLen(),*checksum,verified_chksm);
+            verifyCheckSum();
+            sprintf(strg,
+                "code: 0x%x  length: %d cks: 0x%x verified cks: 0x%x \n",
+                getCode(),getLen(),*checksum,verified_chksm);
 
-		};
+        };
 
-		unsigned char* getData(void) {return( (unsigned char*)data);};
-		// data excluding length word
-		unsigned char* getData2(void) {return( 2+(unsigned char*)data);};
-		unsigned short getLen(void) {return(*length);};
-		unsigned short getCode(void) {return(code);};
-		unsigned short getExpCode(void) {return(exp_code);};
-		unsigned short getErrCode(void) {return(error_code);};
+        unsigned char* getData(void) {return( (unsigned char*)data);};
+        // data excluding length word
+        unsigned char* getData2(void) {return( 2+(unsigned char*)data);};
+        unsigned short getLen(void) {return(*length);};
+        unsigned short getCode(void) {return(code);};
+        unsigned short getExpCode(void) {return(exp_code);};
+        unsigned short getErrCode(void) {return(error_code);};
 
-		int verifyCheckSum(void)
-				{	int i,codelo,codehi;
-					// checksum and length is included in address. not code.
-					verified_length = addr + 2;
-					//address where detector checksum is stored
-					checksum=(unsigned char*)data+addr-1;
-					totalsum=0;
-					codelo=code&255;
-					codehi=code&(255*256);
-					codehi = codehi/256;
-					totalsum+=codelo;
-					totalsum+=codehi;
-					
-					//addr-1 because addr is the checksum, and it is not counted in checksum
-					for (i=0;i<(addr-1);i++)
-						totalsum+=data[i];
+        int verifyCheckSum(void)
+                {    int i,codelo,codehi;
+                    // checksum and length is included in address. not code.
+                    verified_length = addr + 2;
+                    //address where detector checksum is stored
+                    checksum=(unsigned char*)data+addr-1;
+                    totalsum=0;
+                    codelo=code&255;
+                    codehi=code&(255*256);
+                    codehi = codehi/256;
+                    totalsum+=codelo;
+                    totalsum+=codehi;
+                    
+                    //addr-1 because addr is the checksum, and it is not counted in checksum
+                    for (i=0;i<(addr-1);i++)
+                        totalsum+=data[i];
 
-					verified_chksm=(unsigned char)(totalsum&255);
+                    verified_chksm=(unsigned char)(totalsum&255);
 
-					if (*length != verified_length)
-						return 1;
+                    if (*length != verified_length)
+                        return 1;
 
-					if (*checksum != verified_chksm)
-						return 2;
+                    if (*checksum != verified_chksm)
+                        return 2;
 
-					return 0;
-				};
-		
-		protected:
-		
-			int addr;
-			// code returne from the det.
-				unsigned short code;
+                    return 0;
+                };
+        
+        protected:
+        
+            int addr;
+            // code returne from the det.
+                unsigned short code;
 
-						// expected good code from det.
-				unsigned short exp_code;
+                        // expected good code from det.
+                unsigned short exp_code;
 
-		// expected error code from det.
-				unsigned short error_code;
+        // expected error code from det.
+                unsigned short error_code;
 
-		// length from detector
-		unsigned short *length;
-		//checksum from detector
-		unsigned char *checksum;
-		// pc figures out length and checksum we actaully got 
-		// if different from what det sent we have errlr.
-		unsigned char verified_chksm;
-		unsigned short verified_length;
+        // length from detector
+        unsigned short *length;
+        //checksum from detector
+        unsigned char *checksum;
+        // pc figures out length and checksum we actaully got 
+        // if different from what det sent we have errlr.
+        unsigned char verified_chksm;
+        unsigned short verified_length;
 
-		char data[256];
-	
-		 int totalsum;
-	};
+        char data[256];
+    
+         int totalsum;
+    };
 
 
 

@@ -1,10 +1,10 @@
 /*******************************************************************************
  *
- *	exe.h
+ *    exe.h
  *
- *	Author: Tim Madden
- *	Date:	7/01/03
- *	Project:MBC CCD Detector DAQ.
+ *    Author: Tim Madden
+ *    Date:    7/01/03
+ *    Project:MBC CCD Detector DAQ.
  *
  *
  *
@@ -26,7 +26,7 @@
  * Double incluson protection.
  */
 #ifndef _EXE_H
-	#define _EXE_H
+    #define _EXE_H
 
 
 
@@ -39,25 +39,25 @@
 
 /*******************************************************************************
  *
- *	Class exe
+ *    Class exe
  *
- *	Pass to thread object for execution of a specific task. This is an
+ *    Pass to thread object for execution of a specific task. This is an
  *  abstract class. We overload the main function. exe::main is executed.
  ******************************************************************************/
 
 class DLLIMPEXP exe
 {
-	public:
-		// make exe object.
-		exe();
+    public:
+        // make exe object.
+        exe();
 
-		// run this function.
-		virtual int main(int arg);
+        // run this function.
+        virtual int main(int arg);
 
-		// another function that runs on parent thread and returns
-		virtual int processCallback(int arg);
+        // another function that runs on parent thread and returns
+        virtual int processCallback(int arg);
 
-	protected:
+    protected:
 
 };
 

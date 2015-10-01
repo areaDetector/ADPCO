@@ -610,7 +610,7 @@ record(mbbi, "$(P)$(R)pco_busy_RBV")
 
 
 
-		
+        
 
 
 
@@ -1185,8 +1185,8 @@ record(longin, "$(P)$(R)pco_camlink_pixfreq_RBV")
    field(SCAN, "I/O Intr")
 }
 
-	
-	
+    
+    
 
 
 record(longout, "$(P)$(R)pco_cclines")
@@ -1204,7 +1204,7 @@ record(longin, "$(P)$(R)pco_cclines_RBV")
 }
 
 
-	
+    
 
 
 record(longout, "$(P)$(R)pco_camlink_pixperclk")
@@ -1382,8 +1382,8 @@ record(mbbo, "$(P)$(R)pco_live_view")
    field(ONST, "Yes")
    field(ONVL, "1")
    
-#	field(FLNK,"$(P)TIFF1:file_liveviewmon.PROC PP")
-	
+#    field(FLNK,"$(P)TIFF1:file_liveviewmon.PROC PP")
+    
  
 }
 
@@ -1414,8 +1414,8 @@ record(scalcout, "$(P)$(R)pco_lview2_fr_rate")
    
    field(CALC, "A==\"No\"")
     field(OOPT, "Never")
-	field(DOPT,"Use OCAL")
-	field(OCAL,"10")
+    field(DOPT,"Use OCAL")
+    field(OCAL,"10")
 
    field(OUT,  "$(P)$(R)pco_set_frame_rate PP ")
   
@@ -1617,14 +1617,14 @@ record(longin, "$(P)$(R)pco_double_image_error_RBV")
 }
 
 
-#	enum whichPCOCam
-#		{
-#			pco_dimax,
-#			pco_edge,
-#			pco_other,
-#			pco_undef
+#    enum whichPCOCam
+#        {
+#            pco_dimax,
+#            pco_edge,
+#            pco_other,
+#            pco_undef
 #
-#		};
+#        };
 
 
 

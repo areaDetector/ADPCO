@@ -1,10 +1,10 @@
 /*******************************************************************************
  *
- *	ccd_exception.cpp
+ *    ccd_exception.cpp
  *
- *	Author: Tim Madden
- *	Date:	6/17/03
- *	Project:MBC CCD Detector DAQ.
+ *    Author: Tim Madden
+ *    Date:    6/17/03
+ *    Project:MBC CCD Detector DAQ.
  *
  *
  *
@@ -20,40 +20,40 @@
 
 ccd_exception::ccd_exception()
 {
-	strcpy(err,"error");
-	code = unknown;
+    strcpy(err,"error");
+    code = unknown;
 }
-		// make default err message
+        // make default err message
 ccd_exception::ccd_exception(
-			error_code er,
-			const char *mess)
+            error_code er,
+            const char *mess)
 {
-	strcpy(err,mess);
-	code = er;
+    strcpy(err,mess);
+    code = er;
 }
-		// make default err message
+        // make default err message
 ccd_exception::ccd_exception(error_code er)
 {
-	code = er;
+    code = er;
 }
-		// make default err message
+        // make default err message
 
 ccd_exception::ccd_exception(const char *x)
 {
-	strcpy(err,x);
-	code = unknown;
+    strcpy(err,x);
+    code = unknown;
 
 }
 
 
 char* ccd_exception::err_mess(void)
 {
-	return err;
+    return err;
 }
 
 
 // Return error message.
 ccd_exception::error_code ccd_exception::getErrCode(void)
 {
-	return code;
+    return code;
 }

@@ -37,26 +37,26 @@ public:
                  const char *NDArrayPort, int NDArrayAddr,
                  int priority, int stackSize);
 
-	virtual void processCallbacks(NDArray *pArray);
+    virtual void processCallbacks(NDArray *pArray);
     /* The methods that this class implements */
     virtual asynStatus openFile(const char *fileName, NDFileOpenMode_t openMode, NDArray *pArray);
     virtual asynStatus readFile(NDArray **pArray);
     virtual asynStatus writeFile(NDArray *pArray);
     virtual asynStatus closeFile();
 
-	int getIntParam(int param);
+    int getIntParam(int param);
 
     
  //virtual asynStatus drvUserCreate(asynUser *pasynUser, const char *drvInfo,
  //                            const char **pptypeName, size_t *psize);
 protected:
 
-	imm myimm;
+    imm myimm;
 
 //enough for 1 edge imgae. pco imges are smaller...
-	unsigned short *temp_image;
+    unsigned short *temp_image;
 
-	
+    
     int arrayDataId;
     int uniqueIdId;
     int timeStampId;
@@ -64,7 +64,7 @@ protected:
     int *pAttributeId;
 
 
-	NDAttribute *pAttribute;
+    NDAttribute *pAttribute;
     char name[256];
     char description[256];
     char tempString[256];
@@ -72,33 +72,33 @@ protected:
     size_t attrSize;
     int numAttributes, attrCount;
 
-	//
-	// ////////////   PARAMETERS ////////////////////
-	//
-	
-	int sim_first;
-	 #define FIRST_immViewPlugin_PARAM sim_first
+    //
+    // ////////////   PARAMETERS ////////////////////
+    //
+    
+    int sim_first;
+     #define FIRST_immViewPlugin_PARAM sim_first
 
-	 //wait in sec
-	
-	int print_attr;
-	
-	int is_enable;
-	
+     //wait in sec
+    
+    int print_attr;
+    
+    int is_enable;
+    
     int is_did_convert;
     int num_converted;
 
     int arycnt;
-	
-	
-	int sim_last;
-	 #define LAST_immViewPlugin_PARAM sim_last
-	
-	
-	//
-	//////////////// END PARAMETERS ///////////////////
-	//
-	
+    
+    
+    int sim_last;
+     #define LAST_immViewPlugin_PARAM sim_last
+    
+    
+    //
+    //////////////// END PARAMETERS ///////////////////
+    //
+    
 
 
 };

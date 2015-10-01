@@ -25,7 +25,7 @@ imgcnt=0;
 
 int softwareGrabber::getGrabberType()
 {
-	return(gSOFTWARE);
+    return(gSOFTWARE);
 }
 
 
@@ -66,29 +66,29 @@ return(true);
 }
 
 
-	// use to override the image size in the ccf file.
+    // use to override the image size in the ccf file.
 bool softwareGrabber::initialize(int size_x, int size_y,bool is_force_size)
 {
-	m_size_x=size_x;
-	m_size_y=size_y;
+    m_size_x=size_x;
+    m_size_y=size_y;
 
 
 
-	int k;
+    int k;
 
-	for (k=0;k<nimages;k++)
-	{
+    for (k=0;k<nimages;k++)
+    {
 
 
-	int row = 1;
+    int row = 1;
 
-		for (int p=0;p<m_size_x*m_size_y;p++)
-		{
-			images[k][p]=rand()&100 + row;
-			
-			row=k/m_size_x;
-			
-		}	
+        for (int p=0;p<m_size_x*m_size_y;p++)
+        {
+            images[k][p]=rand()&100 + row;
+            
+            row=k/m_size_x;
+            
+        }    
 
     }
 
@@ -104,7 +104,7 @@ void softwareGrabber::setConfigFileName(char *name)
 }
 
 
-	// set CC pins on the card.
+    // set CC pins on the card.
 void softwareGrabber::setPin(char* pinstr, int val)
 {
 }
@@ -136,7 +136,7 @@ m_grab=0;
 
 bool softwareGrabber::isFrameAvailable(void)
 {
-	return(true);
+    return(true);
 
 }
 
@@ -228,17 +228,17 @@ void softwareGrabber::setCamController(void* cc)
 }
 
 
-	 int softwareGrabber::getWidth(void)
-	 {
-		return(m_size_x);
-	 }
-	 
-	 
-	 int softwareGrabber::getHeight(void)
-	 {
-	 
-		return(m_size_y);
-	 }
+     int softwareGrabber::getWidth(void)
+     {
+        return(m_size_x);
+     }
+     
+     
+     int softwareGrabber::getHeight(void)
+     {
+     
+        return(m_size_y);
+     }
 
 void softwareGrabber::setDoubleWidth(int isdw)
 {
@@ -247,7 +247,7 @@ void softwareGrabber::setDoubleWidth(int isdw)
 
 
 
-	// clears any images left in buffer memory by resetting all counters to 0
+    // clears any images left in buffer memory by resetting all counters to 0
 void softwareGrabber::resetBufferCount(void)
 {
 }

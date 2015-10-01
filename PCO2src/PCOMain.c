@@ -18,6 +18,6 @@ int main(int argc,char *argv[])
         epicsThreadSleep(.2);
     }
     iocsh(NULL);
-	epicsExit(0);
+    epicsExit(0);
     return(0);
 }

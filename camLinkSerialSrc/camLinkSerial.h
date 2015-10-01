@@ -38,20 +38,20 @@ typedef enum {
  
  */
  
-	
+    
  
 class epicsShareFunc camLinkSerial : public asynPortDriver {
 public:
     camLinkSerial(
-		const char *portName, 
-		const char *comportname,
-		int maxAddr,
+        const char *portName, 
+        const char *comportname,
+        int maxAddr,
         int interfaceMask, 
-		int interruptMask,
+        int interruptMask,
         int asynFlags, 
-		int autoConnect, 
-		int priority, 
-		int stackSize);
+        int autoConnect, 
+        int priority, 
+        int stackSize);
 
     /* These are the methods that we override from asynPortDriver */
    virtual asynStatus readOctet(asynUser *pasynUser, char *value, size_t maxChars,
@@ -59,12 +59,12 @@ public:
     virtual asynStatus writeOctet(asynUser *pasynUser, const char *value, size_t maxChars,
                                         size_t *nActual);
     virtual asynStatus flushOctet(asynUser *pasynUser);
-	
+    
     virtual void report(FILE *fp, int details);
-	void optionsToSerial(void);
+    void optionsToSerial(void);
 
-	
-	  virtual asynStatus readOption(asynUser *pasynUser, const char *key, char *value, int maxChars);
+    
+      virtual asynStatus readOption(asynUser *pasynUser, const char *key, char *value, int maxChars);
     virtual asynStatus writeOption(asynUser *pasynUser, const char *key, const char *value);
   
 
@@ -75,23 +75,23 @@ protected:
 std::map <std::string, std::string> option_pairs;
 
 comportInterface *serial_port;
-	//
-	// params
-	//
+    //
+    // params
+    //
     int clser_first;
     #define FIRST_CLS_PARAM clser_first
-	
-	int clser_portname;
-	
-	
+    
+    int clser_portname;
+    
+    
     int clser_last;
     #define LAST_CLS_PARAM clser_last
 
-	//
-	// End params
-	//
-	
-	
+    //
+    // End params
+    //
+    
+    
    
 };
 

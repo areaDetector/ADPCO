@@ -1,10 +1,10 @@
 /*******************************************************************************
  *
- *	image_file.cpp
+ *    image_file.cpp
  *
- *	Author: Tim Madden
- *	Date:	8/10/03
- *	Project:MBC CCD Detector DAQ.
+ *    Author: Tim Madden
+ *    Date:    8/10/03
+ *    Project:MBC CCD Detector DAQ.
  *
  *
  *
@@ -29,20 +29,20 @@ namespace nd_imm_plugin {
 image_file::image_file(char* name)
 {
 
-	path_name[0] = 0;
+    path_name[0] = 0;
 
-	strcpy(file_name,name);
+    strcpy(file_name,name);
 
-	is_use_tiff = false;
-	for (int i = 0; i<header_size; i++)
-		head_data[i] = 0;
+    is_use_tiff = false;
+    for (int i = 0; i<header_size; i++)
+        head_data[i] = 0;
 
-	header_ptr=head_data;
+    header_ptr=head_data;
 
-	if (strstr(name,"NULL")==0)
-		is_null_file = false;
-	else
-		is_null_file = true;
+    if (strstr(name,"NULL")==0)
+        is_null_file = false;
+    else
+        is_null_file = true;
 
 }
 
@@ -52,24 +52,24 @@ image_file::image_file(char* name)
  ******************************************************************************/
 // make file object.
 image_file::image_file(
-	char* name,
-	int count)
+    char* name,
+    int count)
 {
-		path_name[0] = 0;
+        path_name[0] = 0;
 
 
-	sprintf(file_name,"%s%0#3i",name,count);
-	is_use_tiff = false;
+    sprintf(file_name,"%s%0#3i",name,count);
+    is_use_tiff = false;
 
-	for (int i = 0; i<header_size; i++)
-		head_data[i] = 0;
+    for (int i = 0; i<header_size; i++)
+        head_data[i] = 0;
 
-	header_ptr=head_data;
+    header_ptr=head_data;
 
-	if (strstr(name,"NULL")==0)
-		is_null_file = false;
-	else
-		is_null_file = true;
+    if (strstr(name,"NULL")==0)
+        is_null_file = false;
+    else
+        is_null_file = true;
 
 }
 
@@ -81,40 +81,40 @@ image_file::image_file(
 // make file object.
 #if 1
 image_file::image_file(
-	char* name,
-	int count,
-	bool is_tiff)
+    char* name,
+    int count,
+    bool is_tiff)
 {
-		path_name[0] = 0;
+        path_name[0] = 0;
 
-	is_use_tiff = is_tiff;
+    is_use_tiff = is_tiff;
 
-	if (strstr(name,"NULL")==0)
-		is_null_file = false;
-	else
-		is_null_file = true;
+    if (strstr(name,"NULL")==0)
+        is_null_file = false;
+    else
+        is_null_file = true;
 
 
 
-	if (count>=0)
-	{
-		if (is_use_tiff)
-			sprintf(file_name,"%s_%0#5i.tif",name,count);
-		else
-			sprintf(file_name,"%s_%0#5i.raw",name,count);
-	}
-	else
-	{
-		if (is_use_tiff)
-			sprintf(file_name,"%s.tif",name);
-		else
-			sprintf(file_name,"%s",name);
-	}
+    if (count>=0)
+    {
+        if (is_use_tiff)
+            sprintf(file_name,"%s_%0#5i.tif",name,count);
+        else
+            sprintf(file_name,"%s_%0#5i.raw",name,count);
+    }
+    else
+    {
+        if (is_use_tiff)
+            sprintf(file_name,"%s.tif",name);
+        else
+            sprintf(file_name,"%s",name);
+    }
 
-	for (int i = 0; i<header_size; i++)
-		head_data[i] = 0;
+    for (int i = 0; i<header_size; i++)
+        head_data[i] = 0;
 
-	header_ptr=head_data;
+    header_ptr=head_data;
 
 
 }
@@ -128,48 +128,48 @@ image_file::image_file(
 // make file object.
 #if 1
 image_file::image_file(
-	char* name,
-	char* path,
-	int count,
-	bool is_tiff)
+    char* name,
+    char* path,
+    int count,
+    bool is_tiff)
 {
-		path_name[0] = 0;
+        path_name[0] = 0;
 
-	if (strstr(name,"NULL")==0)
-		is_null_file = false;
-	else
-		is_null_file = true;
-
-
+    if (strstr(name,"NULL")==0)
+        is_null_file = false;
+    else
+        is_null_file = true;
 
 
-	is_use_tiff = is_tiff;
 
-	strcpy(path_name,path);
 
-	// put / at end of path
-	if (path_name[0] != 0 && (path_name[strlen(path_name)-1] != '/'))
-		strcat(path_name,"/");
+    is_use_tiff = is_tiff;
 
-	if (count>=0)
-	{
-		if (is_use_tiff)
-			sprintf(file_name,"%s%s_%0#5i.tif",path_name,name,count);
-		else
-			sprintf(file_name,"%s%s_%0#5i.raw",path_name,name,count);
-	}
-	else
-	{
-		if (is_use_tiff)
-			sprintf(file_name,"%s%s.tif",path_name,name);
-		else
-			sprintf(file_name,"%s%s",path_name,name);
-	}
+    strcpy(path_name,path);
 
-	for (int i = 0; i<header_size; i++)
-		head_data[i] = 0;
+    // put / at end of path
+    if (path_name[0] != 0 && (path_name[strlen(path_name)-1] != '/'))
+        strcat(path_name,"/");
 
-	header_ptr=head_data;
+    if (count>=0)
+    {
+        if (is_use_tiff)
+            sprintf(file_name,"%s%s_%0#5i.tif",path_name,name,count);
+        else
+            sprintf(file_name,"%s%s_%0#5i.raw",path_name,name,count);
+    }
+    else
+    {
+        if (is_use_tiff)
+            sprintf(file_name,"%s%s.tif",path_name,name);
+        else
+            sprintf(file_name,"%s%s",path_name,name);
+    }
+
+    for (int i = 0; i<header_size; i++)
+        head_data[i] = 0;
+
+    header_ptr=head_data;
 
 
 }
@@ -185,20 +185,20 @@ bool image_file::cd(char* path)
 {//!!
 
 #if 0
-	int er;
+    int er;
 
-	if (path[0] != 0)
-	{
-		er = SetCurrentDirectory(path);
-		if (er==0)
-			return false;
+    if (path[0] != 0)
+    {
+        er = SetCurrentDirectory(path);
+        if (er==0)
+            return false;
 
-		return true;
+        return true;
 
-	}
+    }
 
 #endif
-	return false;
+    return false;
 }
 
 /*******************************************************************************
@@ -209,11 +209,11 @@ bool image_file::cd(char* path)
 bool image_file::open_r(void)
 {//!!
 
-	if (is_null_file)
-		return(true);
+    if (is_null_file)
+        return(true);
 
 #ifdef _WINDOWS
-	fp = CreateFile(file_name,           // file to create
+    fp = CreateFile(file_name,           // file to create
              GENERIC_READ,                // open for writing
              0,                            // do not share
              NULL,                         // default security
@@ -221,18 +221,18 @@ bool image_file::open_r(void)
              FILE_ATTRIBUTE_NORMAL,       // normal file
              NULL);                        // no attr. template
 
-	if (fp == INVALID_HANDLE_VALUE)
-		return false;
+    if (fp == INVALID_HANDLE_VALUE)
+        return false;
 
 #else
 
-	fp = fopen(file_name,"rb");
-	if (fp==0)
-		return false;
+    fp = fopen(file_name,"rb");
+    if (fp==0)
+        return false;
 
 #endif
 
-	return true;
+    return true;
 }
 
 
@@ -243,12 +243,12 @@ bool image_file::open_r(void)
 // open for writing.
 bool image_file::open_w(void)
 {//!!
-	if (is_null_file)
-		return(true);
+    if (is_null_file)
+        return(true);
 
-	#ifdef _WINDOWS
+    #ifdef _WINDOWS
 
-	fp = CreateFile(file_name,           // file to create
+    fp = CreateFile(file_name,           // file to create
              GENERIC_WRITE,                // open for writing
              0,                            // do not share
              NULL,                         // default security
@@ -256,17 +256,17 @@ bool image_file::open_w(void)
              FILE_ATTRIBUTE_NORMAL,       // normal file
              NULL);                        // no attr. template
 
-		if (fp == INVALID_HANDLE_VALUE)
-		return false;
+        if (fp == INVALID_HANDLE_VALUE)
+        return false;
 
 #else
 
-	fp = fopen(file_name,"wb");
-	if (fp==0)
-		return false;
+    fp = fopen(file_name,"wb");
+    if (fp==0)
+        return false;
 #endif
 
-	return true;
+    return true;
 }
 
 /*******************************************************************************
@@ -276,14 +276,14 @@ bool image_file::open_w(void)
 // open for writing at end of file.
 bool image_file::open_a(void)
 {
-	if (is_null_file)
-		return(true);
+    if (is_null_file)
+        return(true);
 
-//	fp = fopen(file_name,"a");
-	if (fp == 0)
-		return false;
+//    fp = fopen(file_name,"a");
+    if (fp == 0)
+        return false;
 
-	return true;
+    return true;
 }
 
 
@@ -294,22 +294,22 @@ bool image_file::open_a(void)
 
 bool image_file::close(void)
 {
-	if (is_null_file)
-		return(true);
+    if (is_null_file)
+        return(true);
 
 #ifdef _WINDOWS
 
-	if (fp != INVALID_HANDLE_VALUE)
- 	    CloseHandle(fp);
+    if (fp != INVALID_HANDLE_VALUE)
+         CloseHandle(fp);
 #else
 
-	if (fp!=0)
-		fclose(fp);
+    if (fp!=0)
+        fclose(fp);
 
 #endif
 
 
-	return true;
+    return true;
 }
 
 
@@ -324,39 +324,39 @@ bool image_file::close(void)
  ******************************************************************************/
 // write data.
 bool image_file::write(
-			char *ptr,
-			int size)
+            char *ptr,
+            int size)
 {
-	unsigned long ww;
-	bool err;
+    unsigned long ww;
+    bool err;
 
-	if (is_null_file)
-		return(true);
+    if (is_null_file)
+        return(true);
 
 
-	if (is_use_tiff)
-	{
-		unsigned long sizeq=(unsigned long)sqrt((double)(size/sizeof(short)));
-	//tiff.tifWr(fp,(unsigned short*)ptr,sizeq,sizeq);
-	return false;
-	}
+    if (is_use_tiff)
+    {
+        unsigned long sizeq=(unsigned long)sqrt((double)(size/sizeof(short)));
+    //tiff.tifWr(fp,(unsigned short*)ptr,sizeq,sizeq);
+    return false;
+    }
 
 #ifdef _WINDOWS
-	err =WriteFile(
-	fp,
-		ptr,
-		size,
-		&ww,
-		NULL
-		);
+    err =WriteFile(
+    fp,
+        ptr,
+        size,
+        &ww,
+        NULL
+        );
 
 #else
 ww=fwrite(ptr,size,sizeof(char),fp);
 #endif
 
 
-	return true;
-	//!!
+    return true;
+    //!!
 }
 /*******************************************************************************
  *
@@ -364,61 +364,61 @@ ww=fwrite(ptr,size,sizeof(char),fp);
  ******************************************************************************/
 // write data.
 bool image_file::write(
-			char *ptr,
-			int size,
-			int skipbytes)
+            char *ptr,
+            int size,
+            int skipbytes)
 {
-	unsigned long ww;
-	bool err;
-	// write skipbutes from the image ram. copy header info here later
-	if (is_null_file)
-		return(true);
+    unsigned long ww;
+    bool err;
+    // write skipbutes from the image ram. copy header info here later
+    if (is_null_file)
+        return(true);
 
 
-	if (is_use_tiff)
-	{
-		//size is num of bytes- convert to x and y pixels for square images.
-		unsigned long sizeq=(unsigned long)sqrt((double)(size/sizeof(short)));
-	//tiff.tifWr(fp,(unsigned short*)ptr,sizeq,sizeq);
-	return false;
-	}
+    if (is_use_tiff)
+    {
+        //size is num of bytes- convert to x and y pixels for square images.
+        unsigned long sizeq=(unsigned long)sqrt((double)(size/sizeof(short)));
+    //tiff.tifWr(fp,(unsigned short*)ptr,sizeq,sizeq);
+    return false;
+    }
 
-	if (skipbytes>header_size) skipbytes = header_size;
+    if (skipbytes>header_size) skipbytes = header_size;
 
-	#ifdef _WINDOWS
+    #ifdef _WINDOWS
 
-	err =WriteFile(
-	fp,
-		head_data,
-		skipbytes,
-		&ww,
-		NULL
-		);
+    err =WriteFile(
+    fp,
+        head_data,
+        skipbytes,
+        &ww,
+        NULL
+        );
 
 #else
 ww=fwrite(head_data,skipbytes,sizeof(char),fp);
 #endif
 
 
-	//now we write the whole image.
+    //now we write the whole image.
 
 
-	#ifdef _WINDOWS
-	err =WriteFile(
-	fp,
-		ptr,
-		size,
-		&ww,
-		NULL
-		);
+    #ifdef _WINDOWS
+    err =WriteFile(
+    fp,
+        ptr,
+        size,
+        &ww,
+        NULL
+        );
 
 #else
 ww=fwrite(ptr,size,sizeof(char),fp);
 #endif
 
 
-	return true;
-	//!!
+    return true;
+    //!!
 }
 
 
@@ -426,10 +426,10 @@ ww=fwrite(ptr,size,sizeof(char),fp);
  *
  *
  ******************************************************************************/
-		// set file to beginning.
+        // set file to beginning.
 bool image_file::rewind(void)
 {//!!
-	return false;
+    return false;
 }
 
 
@@ -437,95 +437,95 @@ bool image_file::rewind(void)
  *
  *
  ******************************************************************************/
-		// read file data.
+        // read file data.
 bool image_file::read(
-			char *ptr,
-			unsigned long size)
+            char *ptr,
+            unsigned long size)
 {
-	bool is_ok;
-	unsigned long got;
+    bool is_ok;
+    unsigned long got;
 
-	if (is_null_file)
-		return(true);
+    if (is_null_file)
+        return(true);
 
 
 
 //!!
-	if (size==0) //we then read 4096 header_size or until eof
-	{
+    if (size==0) //we then read 4096 header_size or until eof
+    {
 
 #ifdef _WINDOWS
-		size = GetFileSize(fp,0);
+        size = GetFileSize(fp,0);
 #else
-		fseek(fp,0,SEEK_END);
-		size=ftell(fp);
-		fseek(fp,0,SEEK_SET);
+        fseek(fp,0,SEEK_END);
+        size=ftell(fp);
+        fseek(fp,0,SEEK_SET);
 #endif
-		if (size>header_size) size=header_size;
-	}
+        if (size>header_size) size=header_size;
+    }
 
 #ifdef _WINDOWS
-	is_ok= ReadFile(
-		fp,
-		ptr,
-		 size,
-		&got,
-		0
-		);
+    is_ok= ReadFile(
+        fp,
+        ptr,
+         size,
+        &got,
+        0
+        );
 
 
 #else
-	fread(ptr,1,size,fp);
+    fread(ptr,1,size,fp);
 
 #endif
 
 
-	return(is_ok);
+    return(is_ok);
 }
 /*******************************************************************************
  *
  *
  ******************************************************************************/
-		// read file data.
+        // read file data.
 bool image_file::read(
-			char *ptr,
-			int size,
-			int skip)
+            char *ptr,
+            int size,
+            int skip)
 {
-	bool is_ok;
-	unsigned long got;
+    bool is_ok;
+    unsigned long got;
 
-	if (is_null_file)
-		return(true);
+    if (is_null_file)
+        return(true);
 
 //!!
-//	fread(ptr,size,size,fp);
+//    fread(ptr,size,size,fp);
 // read in header into image mem-- we overrite it below
 #ifdef _WINDOWS
 
-	is_ok= ReadFile(
-		fp,
-		this->head_data,
-		 skip,
-		&got,
-		0
-		);
+    is_ok= ReadFile(
+        fp,
+        this->head_data,
+         skip,
+        &got,
+        0
+        );
 
 //read in data
-	is_ok= ReadFile(
-		fp,
-		ptr,
-		 size,
-		&got,
-		0
-		);
+    is_ok= ReadFile(
+        fp,
+        ptr,
+         size,
+        &got,
+        0
+        );
 #else
 fread(ptr,1,skip,fp);
 fread(ptr,1,size,fp);
 
 #endif
 
-	return(is_ok);
+    return(is_ok);
 }
 
 };

@@ -51,17 +51,17 @@ static const char *driverName = "immViewPlugin";
 asynStatus immViewPlugin::openFile(const char *fileName, NDFileOpenMode_t openMode, NDArray *pArray)
 {
 /*    nc_type ncType=NC_NAT;*/
-	char str0[256];
-	char str1[256];
-	int fn0,fn1;
-	char fullfname[256];
-	int is_update;
+    char str0[256];
+    char str1[256];
+    int fn0,fn1;
+    char fullfname[256];
+    int is_update;
     static const char *functionName = "openFile";
 
-	
-	double wt;
-	
-	
+    
+    double wt;
+    
+    
 
     return(asynSuccess);
 }
@@ -70,30 +70,30 @@ asynStatus immViewPlugin::openFile(const char *fileName, NDFileOpenMode_t openMo
  *  to add arrays to a single file in stream or capture mode */
 asynStatus immViewPlugin::writeFile(NDArray *pArray)
 {
-	unsigned long int stripsize;
+    unsigned long int stripsize;
     static const char *functionName = "writeFile";
-	int sizex, sizey;
-	int is_update;
-	int fnx;
-	int ii0;
-	int imgc,nimg;
-	double wt;
-	
-	
-	
-	return(asynSuccess);
+    int sizex, sizey;
+    int is_update;
+    int fnx;
+    int ii0;
+    int imgc,nimg;
+    double wt;
+    
+    
+    
+    return(asynSuccess);
 }
 
 
 
 int immViewPlugin::getIntParam(int param)
 {
-	int saveparamx;
-	getIntegerParam(param, &saveparamx);
-	
-	
-	
-	return(saveparamx);
+    int saveparamx;
+    getIntegerParam(param, &saveparamx);
+    
+    
+    
+    return(saveparamx);
 
 }
 
@@ -106,61 +106,61 @@ int immViewPlugin::getIntParam(int param)
 void immViewPlugin::processCallbacks(NDArray *pArray)
 {
 double elapsed_time;
-	//unsigned short *shrt_img;
-	int xs;
-	int ys;
-	int rowa;
-	int rowb;
-	int rows;
-	int kx;
-	void *dst,*src;
-	
+    //unsigned short *shrt_img;
+    int xs;
+    int ys;
+    int rowa;
+    int rowb;
+    int rows;
+    int kx;
+    void *dst,*src;
+    
 
-			unsigned short diff;
-		int diff_tot;
-	int rowbytes;
+            unsigned short diff;
+        int diff_tot;
+    int rowbytes;
  int attrval=0;
 
 char mesgx[256];
-	
+    
 int dd;
 size_t dims[2];
-							 
+                             
 
-	NDArrayPool *mypool;
-	
-	mypool=pArray->pNDArrayPool;
+    NDArrayPool *mypool;
+    
+    mypool=pArray->pNDArrayPool;
 
-	///
-	///
-	///
+    ///
+    ///
+    ///
 
-	// numAttributes = pArray->numAttributes();
-	
-	if (getIntParam(print_attr)==1)
-	{
-	 numAttributes = pArray->pAttributeList->count();
+    // numAttributes = pArray->numAttributes();
+    
+    if (getIntParam(print_attr)==1)
+    {
+     numAttributes = pArray->pAttributeList->count();
 
-	printf("Num Attributes %i \n", numAttributes);
-	pAttribute = pArray->pAttributeList->next(NULL);
-		for (attrCount=0; attrCount<numAttributes; attrCount++)
-		{
+    printf("Num Attributes %i \n", numAttributes);
+    pAttribute = pArray->pAttributeList->next(NULL);
+        for (attrCount=0; attrCount<numAttributes; attrCount++)
+        {
 
-			pAttribute->getValueInfo(&attrDataType, &attrSize);
-			//strcpy(name, pAttribute->pName);
-			//strcpy(description, pAttribute->pDescription);
-					// pAttribute->getDescription(description, sizeof(description));
-			//pAttribute->getValue(attrDataType, void *pValue, attrSize);
+            pAttribute->getValueInfo(&attrDataType, &attrSize);
+            //strcpy(name, pAttribute->pName);
+            //strcpy(description, pAttribute->pDescription);
+                    // pAttribute->getDescription(description, sizeof(description));
+            //pAttribute->getValue(attrDataType, void *pValue, attrSize);
 
-			printf("Attr Name %s, Addr Disc %s\n",pAttribute->pName, pAttribute->pDescription);
+            printf("Attr Name %s, Addr Disc %s\n",pAttribute->pName, pAttribute->pDescription);
 
 
-				pAttribute = pArray->pAttributeList->next(pAttribute);
-			// pAttribute = pArray->nextAttribute(pAttribute);
+                pAttribute = pArray->pAttributeList->next(pAttribute);
+            // pAttribute = pArray->nextAttribute(pAttribute);
 
-		}
-	}
-	
+        }
+    }
+    
 
     //if (getIntParam(is_decompress)==1 || getIntParam(is_descramble)==1)
 
@@ -184,7 +184,7 @@ size_t dims[2];
          printf("ERROR: imm viewer plugin could not alloc nd array\n");
     }
     else
-	{
+    {
 
           this->unlock();
 
@@ -194,27 +194,27 @@ size_t dims[2];
         mypool->copy(pArray,nimg,1);
 
         unsigned short *shrt_img = (unsigned short*)(nimg->pData);
-		
-		
+        
+        
          unsigned char* cimg=(unsigned char*)(pArray->pData);
 
-		
-		int sx,sy,np,tk;
+        
+        int sx,sy,np,tk;
 
-		immHeader *immh = (immHeader*)cimg;
-		if (immh->mode==2 && \
+        immHeader *immh = (immHeader*)cimg;
+        if (immh->mode==2 && \
                 immh->rows==pArray->dims[1].size && \
-        		immh->cols==pArray->dims[0].size)
-		{
-        	    //imm file
-        	    myimm.IMMtoRaw(
-                		(unsigned char*)cimg,
-                		pArray->dataSize,
-                		(unsigned short*)shrt_img,
-                		&sx,
-                		&sy,
-                		&np,
-                		&tk);
+                immh->cols==pArray->dims[0].size)
+        {
+                //imm file
+                myimm.IMMtoRaw(
+                        (unsigned char*)cimg,
+                        pArray->dataSize,
+                        (unsigned short*)shrt_img,
+                        &sx,
+                        &sy,
+                        &np,
+                        &tk);
 
 
                 nimg->dims[0].size = sx;
@@ -225,34 +225,34 @@ size_t dims[2];
                 setIntegerParam(num_converted,1+ getIntParam(num_converted));
                 setIntegerParam(is_did_convert,1);
 
-		}
+        }
 
          nimg->uniqueId=arycnt++;
 
-		nimg->timeStamp= pArray->timeStamp;
-		nimg->uniqueId=getIntParam(NDUniqueId);
-							
-							
-		setIntegerParam(NDUniqueId,getIntParam(NDUniqueId)+1);
+        nimg->timeStamp= pArray->timeStamp;
+        nimg->uniqueId=getIntParam(NDUniqueId);
+                            
+                            
+        setIntegerParam(NDUniqueId,getIntParam(NDUniqueId)+1);
 
-		getAttributes(nimg->pAttributeList);
-		
-		doCallbacksGenericPointer(nimg, NDArrayData, 0);
-		nimg->release();
-		callParamCallbacks();
+        getAttributes(nimg->pAttributeList);
+        
+        doCallbacksGenericPointer(nimg, NDArrayData, 0);
+        nimg->release();
+        callParamCallbacks();
 
         this->lock();
-	}
-	
+    }
+    
 
-	
-	
-	
-	// check for bad FPGA headers, get stats etc...
-	// call base class function...
-	NDPluginFile::processCallbacks(pArray);
+    
+    
+    
+    // check for bad FPGA headers, get stats etc...
+    // call base class function...
+    NDPluginFile::processCallbacks(pArray);
 
-	
+    
 
 
 }
@@ -268,12 +268,12 @@ asynStatus immViewPlugin::readFile(NDArray **pArray)
 asynStatus immViewPlugin::closeFile()
 {
     static const char *functionName = "closeFile";
-	int fnx;
-	int is_update;
+    int fnx;
+    int is_update;
 
  
 
-			return asynSuccess;
+            return asynSuccess;
 }
 
 /*
@@ -337,17 +337,17 @@ immViewPlugin::immViewPlugin(const char *portName, int queueSize, int blockingCa
                            int priority, int stackSize)
     : NDPluginFile(portName, queueSize, blockingCallbacks,
                   NDArrayPort, NDArrayAddr,
-		   1, NUM_immViewPlugin_PARAMS, 200000, -1, asynGenericPointerMask, asynGenericPointerMask,
+           1, NUM_immViewPlugin_PARAMS, 200000, -1, asynGenericPointerMask, asynGenericPointerMask,
                    ASYN_CANBLOCK, 1, priority, stackSize),
-		   myimm(8000000)
+           myimm(8000000)
 {
-	int i;
+    int i;
 
  //wait in sec
-	
-	
-	createParam("print_attr",asynParamInt32,&print_attr);
-	
+    
+    
+    createParam("print_attr",asynParamInt32,&print_attr);
+    
     createParam("is_enable",asynParamInt32,&is_enable);
 
     createParam("is_did_convert",asynParamInt32,&is_did_convert);
@@ -355,14 +355,14 @@ immViewPlugin::immViewPlugin(const char *portName, int queueSize, int blockingCa
 
 
     arycnt=0;
-	
-		//enough for edge dimax and thensome
-	temp_image=(unsigned short*)malloc(2560*2200*sizeof(short));
+    
+        //enough for edge dimax and thensome
+    temp_image=(unsigned short*)malloc(2560*2200*sizeof(short));
 
-	setIntegerParam(is_enable, 0);
+    setIntegerParam(is_enable, 0);
     setIntegerParam(is_did_convert,0);
     setIntegerParam(num_converted, 0);
-	
+    
     this->supportsMultipleArrays = 1;
     this->pAttributeId = NULL;
 

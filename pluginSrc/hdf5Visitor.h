@@ -100,7 +100,7 @@ extern int printlevel;
 struct asynUser 
 {
   
-	char          *errorMessage;
+    char          *errorMessage;
     int            errorMessageSize;
     /* timeout must be set by the user */
     double         timeout;  /*Timeout for I/O operations*/
@@ -110,7 +110,7 @@ struct asynUser
     void          *drvUser;
     /*The following is normally set by driver*/
     int            reason;
-    int	 timestamp;
+    int     timestamp;
     /* The following are for additional information from method calls */
     int            auxStatus; /*For auxillary status*/
 };
@@ -258,7 +258,7 @@ protected:
 
    void* constTextToDataType(char *inText, int dataType, pMemValue *pValue);
 
-//	void getNdArraySpecs(pArraySpecs *a);
+//    void getNdArraySpecs(pArraySpecs *a);
 
    // have a stack of open hdf obhects we keep track up.
    hdfStack stack;
@@ -289,18 +289,18 @@ public:
    TiXMLhdf5WriteData();
 
    virtual bool VisitEnter(const TiXmlDocument &);
-   //virtual bool 	VisitExit (const TiXmlDocument &);
+   //virtual bool     VisitExit (const TiXmlDocument &);
 
    virtual bool VisitEnter(const TiXmlElement &, const TiXmlAttribute *);
-   //virtual bool 	VisitExit (const TiXmlElement &);
+   //virtual bool     VisitExit (const TiXmlElement &);
 
-   //virtual bool 	Visit (const TiXmlDeclaration &);
+   //virtual bool     Visit (const TiXmlDeclaration &);
 
-   //virtual bool 	Visit (const TiXmlText &);
+   //virtual bool     Visit (const TiXmlText &);
 
-//	virtual bool 	Visit (const TiXmlComment &);
+//    virtual bool     Visit (const TiXmlComment &);
 
-   //virtual bool 	Visit (const TiXmlUnknown &);
+   //virtual bool     Visit (const TiXmlUnknown &);
 
    virtual void setHDFFilePtr(hid_t fp);
 
@@ -320,19 +320,19 @@ public:
 
    TiXMLhdf5Shutdown();
 
-//	virtual bool 	VisitEnter (const TiXmlDocument &);
-   //virtual bool 	VisitExit (const TiXmlDocument &);
+//    virtual bool     VisitEnter (const TiXmlDocument &);
+   //virtual bool     VisitExit (const TiXmlDocument &);
 
    virtual bool VisitEnter(const TiXmlElement &, const TiXmlAttribute *);
-   //virtual bool 	VisitExit (const TiXmlElement &);
+   //virtual bool     VisitExit (const TiXmlElement &);
 
-   //virtual bool 	Visit (const TiXmlDeclaration &);
+   //virtual bool     Visit (const TiXmlDeclaration &);
 
-   //virtual bool 	Visit (const TiXmlText &);
+   //virtual bool     Visit (const TiXmlText &);
 
-//	virtual bool 	Visit (const TiXmlComment &);
+//    virtual bool     Visit (const TiXmlComment &);
 
-   //virtual bool 	Visit (const TiXmlUnknown &);
+   //virtual bool     Visit (const TiXmlUnknown &);
 
 protected:
 

@@ -72,13 +72,13 @@ static const iocshFuncDef blockPCO = {"PCOBlock", 2, PCOBlockArgs};
 static void blockPCOCallFunc(const iocshArgBuf *args)
 {
    if ( strcmp(args[0].sval,"blockN")==0)
-		pco_blocking = args[1].ival;
+        pco_blocking = args[1].ival;
 
    if ( strcmp(args[0].sval,"prMutex")==0)
-	   pco_pr_mutex=args[1].ival;
+       pco_pr_mutex=args[1].ival;
 
    if ( strcmp(args[0].sval,"prMutex2")==0)
-	   pco_pr_mutex2=args[1].ival;
+       pco_pr_mutex2=args[1].ival;
 
 
 }

@@ -30,7 +30,7 @@ siSoftware *siSoftware::mycard=0;
 siSoftware::siSoftware(bool is_use_fpga) :
 lf("sisoGrabber.log")
 {
-//	m_bEnableRtPro = is_use_fpga;
+//    m_bEnableRtPro = is_use_fpga;
 
 lf.enablePrintf(true);
 
@@ -79,14 +79,14 @@ fg=0;
 
 int siSoftware::getGrabberType()
 {
-	return((int)gSISW);
+    return((int)gSISW);
 }
 
 
 
 void siSoftware::makeView(void)
 {
-	//*2 becuse we have 8bit data for 16bit images- 10tap camlink
+    //*2 becuse we have 8bit data for 16bit images- 10tap camlink
   dispId0 = CreateDisplay(8,sensor_width*2,sensor_height);
   
   SetBufferWidth(dispId0,sensor_width*2,sensor_height);
@@ -100,68 +100,68 @@ num_buffers=b;
 
 bool siSoftware::isFrameAvailable(void)
 {
-	frame_count = Fg_getLastPicNumberEx(fg,camPort,(dma_mem*)ptrMem);
-	
-//	int a = Fg_getStatus(fg,NUMBER_OF_ACT_IMAGE,0,0);
-//	int b = Fg_getStatus(fg,NUMBER_OF_LAST_IMAGE,0,0);
-//	int c = Fg_getStatus(fg,NUMBER_OF_GRABBED_IMAGES,0,0);
-//	int d = Fg_getStatus(fg,NUMBER_OF_LOST_IMAGES,0,0);
-//	int e = Fg_getStatus(fg,NUMBER_OF_BLOCK_LOST_IMAGES,0,0);
-//	int f = Fg_getStatus(fg,NUMBER_OF_IMAGES_IN_PROGRESS,0,0);
-	//int lastacq=
-	
-	if (frame_count==FG_TIMEOUT_ERR)
-		return false;
+    frame_count = Fg_getLastPicNumberEx(fg,camPort,(dma_mem*)ptrMem);
+    
+//    int a = Fg_getStatus(fg,NUMBER_OF_ACT_IMAGE,0,0);
+//    int b = Fg_getStatus(fg,NUMBER_OF_LAST_IMAGE,0,0);
+//    int c = Fg_getStatus(fg,NUMBER_OF_GRABBED_IMAGES,0,0);
+//    int d = Fg_getStatus(fg,NUMBER_OF_LOST_IMAGES,0,0);
+//    int e = Fg_getStatus(fg,NUMBER_OF_BLOCK_LOST_IMAGES,0,0);
+//    int f = Fg_getStatus(fg,NUMBER_OF_IMAGES_IN_PROGRESS,0,0);
+    //int lastacq=
+    
+    if (frame_count==FG_TIMEOUT_ERR)
+        return false;
 
-		
-	
-	
-	
-	int behind=frame_count-frames_to_cpu;
-	
-	if (behind>sap_buffer_count)
-	{
-		recent_missed_frames=behind-sap_buffer_count;
-		missed_frames+=recent_missed_frames;
-	}	
-		
-	if (frame_count>frames_to_cpu)
-		return true;
-		
-		
+        
+    
+    
+    
+    int behind=frame_count-frames_to_cpu;
+    
+    if (behind>sap_buffer_count)
+    {
+        recent_missed_frames=behind-sap_buffer_count;
+        missed_frames+=recent_missed_frames;
+    }    
+        
+    if (frame_count>frames_to_cpu)
+        return true;
+        
+        
 
-	return false;
+    return false;
 }
 
 bool siSoftware::isMissedFrame(void)
 {
 
-	return(is_missed_frame);
+    return(is_missed_frame);
 }
 
 void siSoftware::clearMissedFrames(void)
 {
-	frame_count = Fg_getLastPicNumberEx(fg,camPort,(dma_mem*)ptrMem);
+    frame_count = Fg_getLastPicNumberEx(fg,camPort,(dma_mem*)ptrMem);
 
-	frames_to_cpu=frame_count;
-	is_missed_frame=false;
-	recent_missed_frames=0;
+    frames_to_cpu=frame_count;
+    is_missed_frame=false;
+    recent_missed_frames=0;
 }
 long siSoftware::getTotalMissedFrames(void)
 {
-	return(missed_frames);
+    return(missed_frames);
 }
 
 long siSoftware::getRecentMissedFrames(void)
 {
-	return(recent_missed_frames);
+    return(recent_missed_frames);
 }
 
 
 
 void siSoftware::setCamController(void *cc)
 {
-	//cam_control=cc;
+    //cam_control=cc;
 
 }
 
@@ -169,13 +169,13 @@ void siSoftware::setCamController(void *cc)
 int siSoftware::getWidth(void)
 {
 
-	return(sensor_width);
+    return(sensor_width);
 }
 
 int siSoftware::getHeight(void)
 {
 
-	return(sensor_height);
+    return(sensor_height);
 }
 
 
@@ -184,103 +184,103 @@ int siSoftware::getHeight(void)
 bool siSoftware::getFrame(void *copy_memory,unsigned int *siSoftware_timestamp)
 {
 
-	return(
-		getFrame(
-			copy_memory,
-			siSoftware_timestamp,
-			(sensor_height*sensor_width*sizeof(unsigned short))));
+    return(
+        getFrame(
+            copy_memory,
+            siSoftware_timestamp,
+            (sensor_height*sensor_width*sizeof(unsigned short))));
 }
 
 bool siSoftware::getFrame(void *copy_memory,unsigned int *siSoftware_timestamp,int nbytes)
 {
-	bool sap_result;
-	int grab_index;
-	void  *image_address;
-	char mesx[256];
-	int retrycnt=0;
-	int buffnum;
-	int param;
+    bool sap_result;
+    int grab_index;
+    void  *image_address;
+    char mesx[256];
+    int retrycnt=0;
+    int buffnum;
+    int param;
 
-	if (isFrameAvailable())
-	{
+    if (isFrameAvailable())
+    {
 
-		if (is_blocking)
-			param=SEL_NEXT_IMAGE;
-		else
-			param = SEL_NUMBER;
-
-
-		buffnum= Fg_getImageEx(fg, param,frames_to_cpu+1, camPort, 0,(dma_mem*)ptrMem);
-//			buffnum= Fg_getImageEx(fg, SEL_NEXT_IMAGE,0, camPort, 4,(dma_mem*)ptrMem);
-		retrycnt=0;
-		while (dbg_last_imgnum==(buffnum) && retrycnt<5)
-		{
-			int aa;
-			aa=1;
-//			printf("siSoftware::getFrame() - Grabbed same img twice from grabber-buffnum= %d frames_to_cpu+1= %d\n",buffnum,frames_to_cpu+1);
-			buffnum= Fg_getImageEx(fg, param,frames_to_cpu+1, camPort, 4,(dma_mem*)ptrMem);
-			retrycnt++;
-			//trap here
-		}
-		if (dbg_last_imgnum==buffnum)
-		{
-			
-			sprintf(mesx,"siSoftware::getFrame() - Grabbed same img twice from grabber-buffnum= %d frames_to_cpu+1= %d\n",buffnum,frames_to_cpu+1);
-			lf.log(mesx);
-		}
-		dbg_last_imgnum=buffnum;
-
-		if (buffnum>=0)
-		{
-				image_address = Fg_getImagePtrEx(fg,buffnum,camPort,(dma_mem*)ptrMem);
-
-			if (image_address!=0)
-			{
-				
-				if (copy_memory!=0)
-					memcpy(copy_memory,image_address,nbytes);
+        if (is_blocking)
+            param=SEL_NEXT_IMAGE;
+        else
+            param = SEL_NUMBER;
 
 
-				*siSoftware_timestamp = buffnum;
-				Fg_getParameter(fg, FG_TIMESTAMP, siSoftware_timestamp,camPort);
-				if (is_display)
-					DrawBuffer(dispId0,image_address,buffnum,"");
-				if (is_blocking)
-					Fg_setStatusEx(fg, FG_UNBLOCK, buffnum, camPort, (dma_mem*)ptrMem);
-	
-				frames_to_cpu++;
-			}
-			else
-			{
-				lf.log("SISW returned image address=0 for some reason...\n");
-				
-				recent_missed_frames++;
-				missed_frames++;
-				is_missed_frame=true;
-			}
-		}
-		else
-		{
-		     sprintf(mesx,
-				"ERROR-SISW Grabber got buffnum=%d, frames2cpu1= %d, param =  %d \n ", 
-				buffnum, frames_to_cpu+1,param);
-			lf.log(mesx);
-		}
-	}
+        buffnum= Fg_getImageEx(fg, param,frames_to_cpu+1, camPort, 0,(dma_mem*)ptrMem);
+//            buffnum= Fg_getImageEx(fg, SEL_NEXT_IMAGE,0, camPort, 4,(dma_mem*)ptrMem);
+        retrycnt=0;
+        while (dbg_last_imgnum==(buffnum) && retrycnt<5)
+        {
+            int aa;
+            aa=1;
+//            printf("siSoftware::getFrame() - Grabbed same img twice from grabber-buffnum= %d frames_to_cpu+1= %d\n",buffnum,frames_to_cpu+1);
+            buffnum= Fg_getImageEx(fg, param,frames_to_cpu+1, camPort, 4,(dma_mem*)ptrMem);
+            retrycnt++;
+            //trap here
+        }
+        if (dbg_last_imgnum==buffnum)
+        {
+            
+            sprintf(mesx,"siSoftware::getFrame() - Grabbed same img twice from grabber-buffnum= %d frames_to_cpu+1= %d\n",buffnum,frames_to_cpu+1);
+            lf.log(mesx);
+        }
+        dbg_last_imgnum=buffnum;
 
-	return false;
+        if (buffnum>=0)
+        {
+                image_address = Fg_getImagePtrEx(fg,buffnum,camPort,(dma_mem*)ptrMem);
+
+            if (image_address!=0)
+            {
+                
+                if (copy_memory!=0)
+                    memcpy(copy_memory,image_address,nbytes);
+
+
+                *siSoftware_timestamp = buffnum;
+                Fg_getParameter(fg, FG_TIMESTAMP, siSoftware_timestamp,camPort);
+                if (is_display)
+                    DrawBuffer(dispId0,image_address,buffnum,"");
+                if (is_blocking)
+                    Fg_setStatusEx(fg, FG_UNBLOCK, buffnum, camPort, (dma_mem*)ptrMem);
+    
+                frames_to_cpu++;
+            }
+            else
+            {
+                lf.log("SISW returned image address=0 for some reason...\n");
+                
+                recent_missed_frames++;
+                missed_frames++;
+                is_missed_frame=true;
+            }
+        }
+        else
+        {
+             sprintf(mesx,
+                "ERROR-SISW Grabber got buffnum=%d, frames2cpu1= %d, param =  %d \n ", 
+                buffnum, frames_to_cpu+1,param);
+            lf.log(mesx);
+        }
+    }
+
+    return false;
 }
 
 bool siSoftware::getFrame(void *copy_memory)
 {
 
-	unsigned int ts;
+    unsigned int ts;
 
-	return(
-		getFrame(
-			copy_memory,
-			&ts,
-			(sensor_height*sensor_width*sizeof(unsigned short))));
+    return(
+        getFrame(
+            copy_memory,
+            &ts,
+            (sensor_height*sensor_width*sizeof(unsigned short))));
 
 }
 
@@ -288,15 +288,15 @@ bool siSoftware::getFrame(void *copy_memory)
 
 void siSoftware::setDoubleWidth(int isdw)
 {
-	is_doub_width=1.0;
+    is_doub_width=1.0;
 
-	if (isdw==1)
-		is_doub_width=2.0;
+    if (isdw==1)
+        is_doub_width=2.0;
 
-	if (isdw==2)
-		is_doub_width=1.5;
+    if (isdw==2)
+        is_doub_width=1.5;
 
-		
+        
 }
 
 
@@ -309,7 +309,7 @@ void siSoftware::setDoubleWidth(int isdw)
 //***********************************************************************************
 bool siSoftware::initialize(int size_x, int size_y)
 {
-	return(initialize(size_x,size_y,false));
+    return(initialize(size_x,size_y,false));
 }
 
 
@@ -321,20 +321,20 @@ bool siSoftware::initialize(int size_x, int size_y,bool is_force_size)
 {
 char mesx[256];
 
-		this->is_force_size = is_force_size;
+        this->is_force_size = is_force_size;
 
 
-		
+        
   if ((fg = Fg_InitConfig(camera_format_file, boardNr)) == NULL) {
     sprintf(mesx, "error in siSoftware::initialize,Fg_InitConfig: %s\n", Fg_getLastErrorDescription(NULL));
-	lf.log(mesx);
-	
+    lf.log(mesx);
+    
     return(FALSE);
   }
 
   //
   // check for special edge global shut fw
-	//  
+    //  
     int IdVersion;
 
    IdVersion = Fg_getParameterIdByName(fg, "Device1_Process0_version_Value");
@@ -346,21 +346,21 @@ char mesx[256];
    {
     int val;
     Fg_getParameterWithType(fg, IdVersion, &val, 0);
-	
+    
     sprintf(mesx,"siSoftware::initialize: HAP_PCOGLSH version %d",val);
-	lf.log(mesx);
-	if (val>=0)
+    lf.log(mesx);
+    if (val>=0)
     {
-	act_sccmos_version=val;
-	is_edge_globalshut=true;
-	}
-	else
-	{
-	lf.log("siSoftware::initialize no GS FW- assume normal FW");
-	act_sccmos_version=-1;
-	is_edge_globalshut=false;
-	
-	}
+    act_sccmos_version=val;
+    is_edge_globalshut=true;
+    }
+    else
+    {
+    lf.log("siSoftware::initialize no GS FW- assume normal FW");
+    act_sccmos_version=-1;
+    is_edge_globalshut=false;
+    
+    }
    }
 
    //DataFormat=SCCMOS_FORMAT_TOP_CENTER_BOTTOM_CENTER|PCO_CL_DATAFORMAT_5x12;
@@ -373,112 +373,112 @@ char mesx[256];
   
   if (is_force_size && !is_edge_globalshut)
   {
-	  
-	this->sensor_height=size_y;
-	//when we config the grabber- we assume we convert raw 8 bit data to 16bit pixels.
-	//10 tap mode assumed...
-	// if we have 12 bit data, we have to set is_doub_width to 1.5... a real pain...
-	this->sensor_width=(int)(is_doub_width*(double)size_x);
+      
+    this->sensor_height=size_y;
+    //when we config the grabber- we assume we convert raw 8 bit data to 16bit pixels.
+    //10 tap mode assumed...
+    // if we have 12 bit data, we have to set is_doub_width to 1.5... a real pain...
+    this->sensor_width=(int)(is_doub_width*(double)size_x);
 
-	  /*Image width of the acquisition window.*/
-	  if (Fg_setParameter(fg,FG_WIDTH,(void*)&sensor_width,camPort) < 0 ) {
-		sprintf(mesx, "Fg_setParameter(FG_WIDTH) failed: %s\n", Fg_getLastErrorDescription(fg));
-		lf.log(mesx);
-		Fg_FreeGrabber(fg);
-		return FALSE;
-	  }
+      /*Image width of the acquisition window.*/
+      if (Fg_setParameter(fg,FG_WIDTH,(void*)&sensor_width,camPort) < 0 ) {
+        sprintf(mesx, "Fg_setParameter(FG_WIDTH) failed: %s\n", Fg_getLastErrorDescription(fg));
+        lf.log(mesx);
+        Fg_FreeGrabber(fg);
+        return FALSE;
+      }
 
-	  /*Image height of the acquisition window.*/
-	  if (Fg_setParameter(fg,FG_HEIGHT,(void*)&sensor_height,camPort) < 0 ) {
-		sprintf(mesx, "Fg_setParameter(FG_HEIGHT) failed: %s\n", Fg_getLastErrorDescription(fg));
-		lf.log(mesx);
-		
-		Fg_FreeGrabber(fg);
-		return FALSE;
-	  }
-		//set to num pixels...	
-	  this->sensor_width=size_x;
+      /*Image height of the acquisition window.*/
+      if (Fg_setParameter(fg,FG_HEIGHT,(void*)&sensor_height,camPort) < 0 ) {
+        sprintf(mesx, "Fg_setParameter(FG_HEIGHT) failed: %s\n", Fg_getLastErrorDescription(fg));
+        lf.log(mesx);
+        
+        Fg_FreeGrabber(fg);
+        return FALSE;
+      }
+        //set to num pixels...    
+      this->sensor_width=size_x;
 
-			//we need to mult by 2 for 16 bit images...sizex and sizey are for 16 bit images
-	  // we assume grabber is set for 8 bit 10 tyap data, with 2 raw pixels for one 16biyt image piuxel..
-			   totalBufferSize = 2*sensor_height * sensor_width *num_buffers;
+            //we need to mult by 2 for 16 bit images...sizex and sizey are for 16 bit images
+      // we assume grabber is set for 8 bit 10 tyap data, with 2 raw pixels for one 16biyt image piuxel..
+               totalBufferSize = 2*sensor_height * sensor_width *num_buffers;
 
   }
   
   if (is_force_size && is_edge_globalshut)
   {
-	  
-	this->sensor_height=size_y;
-	//when we config the grabber- we assume we convert raw 8 bit data to 16bit pixels.
-	//10 tap mode assumed...
-	// if we have 12 bit data, we have to set is_doub_width to 1.5... a real pain...
-	this->sensor_width=(int)(is_doub_width*(double)size_x);
+      
+    this->sensor_height=size_y;
+    //when we config the grabber- we assume we convert raw 8 bit data to 16bit pixels.
+    //10 tap mode assumed...
+    // if we have 12 bit data, we have to set is_doub_width to 1.5... a real pain...
+    this->sensor_width=(int)(is_doub_width*(double)size_x);
 
-	  /*Image width of the acquisition window.*/
-	  if (Fg_setParameter(fg,FG_WIDTH,(void*)&sensor_width,camPort) < 0 ) {
-		sprintf(mesx, "Fg_setParameter(FG_WIDTH) failed: %s\n", Fg_getLastErrorDescription(fg));
-		lf.log(mesx);
-		Fg_FreeGrabber(fg);
-		return FALSE;
-	  }
+      /*Image width of the acquisition window.*/
+      if (Fg_setParameter(fg,FG_WIDTH,(void*)&sensor_width,camPort) < 0 ) {
+        sprintf(mesx, "Fg_setParameter(FG_WIDTH) failed: %s\n", Fg_getLastErrorDescription(fg));
+        lf.log(mesx);
+        Fg_FreeGrabber(fg);
+        return FALSE;
+      }
 
-	  /*Image height of the acquisition window.*/
-	  if (Fg_setParameter(fg,FG_HEIGHT,(void*)&sensor_height,camPort) < 0 ) {
-		sprintf(mesx, "Fg_setParameter(FG_HEIGHT) failed: %s\n", Fg_getLastErrorDescription(fg));
-		lf.log(mesx);
-		
-		Fg_FreeGrabber(fg);
-		return FALSE;
-	  }
-		//set to num pixels...	
-	  this->sensor_width=size_x;
+      /*Image height of the acquisition window.*/
+      if (Fg_setParameter(fg,FG_HEIGHT,(void*)&sensor_height,camPort) < 0 ) {
+        sprintf(mesx, "Fg_setParameter(FG_HEIGHT) failed: %s\n", Fg_getLastErrorDescription(fg));
+        lf.log(mesx);
+        
+        Fg_FreeGrabber(fg);
+        return FALSE;
+      }
+        //set to num pixels...    
+      this->sensor_width=size_x;
 
-			//we need to mult by 2 for 16 bit images...sizex and sizey are for 16 bit images
-	  // we assume grabber is set for 8 bit 10 tyap data, with 2 raw pixels for one 16biyt image piuxel..
-			   totalBufferSize = 2*sensor_height * sensor_width *num_buffers;
-			   
-			   
-		  lf.log("set_actual_size_global_shutter: Get ID's");
+            //we need to mult by 2 for 16 bit images...sizex and sizey are for 16 bit images
+      // we assume grabber is set for 8 bit 10 tyap data, with 2 raw pixels for one 16biyt image piuxel..
+               totalBufferSize = 2*sensor_height * sensor_width *num_buffers;
+               
+               
+          lf.log("set_actual_size_global_shutter: Get ID's");
 
 
-		   int Idxoff0, Idxlen0, Idyoff0, Idylen0;
-	  int Idxoff1, Idxlen1, Idyoff1, Idylen1;
-	  int Idxoff2, Idxlen2, Idyoff2, Idylen2;
-	  int Idxoff3, Idxlen3, Idyoff3, Idylen3;
-	  int Idoffset, Idenable, Idsplitter;
-	  int ConstLGShift4_Value_Id, ConstHGShift4_Value_Id;
-	 
-	 int rcode, nError;
-	 
-	  Idxoff0  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM0_XOffset");
-	  Idxlen0  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM0_XLength");
-	  Idyoff0  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM0_YOffset");
-	  Idylen0  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM0_YLength");
+           int Idxoff0, Idxlen0, Idyoff0, Idylen0;
+      int Idxoff1, Idxlen1, Idyoff1, Idylen1;
+      int Idxoff2, Idxlen2, Idyoff2, Idylen2;
+      int Idxoff3, Idxlen3, Idyoff3, Idylen3;
+      int Idoffset, Idenable, Idsplitter;
+      int ConstLGShift4_Value_Id, ConstHGShift4_Value_Id;
+     
+     int rcode, nError;
+     
+      Idxoff0  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM0_XOffset");
+      Idxlen0  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM0_XLength");
+      Idyoff0  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM0_YOffset");
+      Idylen0  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM0_YLength");
 
-	  Idxoff1  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM1_XOffset");
-	  Idxlen1  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM1_XLength");
-	  Idyoff1  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM1_YOffset");
-	  Idylen1  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM1_YLength");
+      Idxoff1  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM1_XOffset");
+      Idxlen1  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM1_XLength");
+      Idyoff1  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM1_YOffset");
+      Idylen1  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferReset_DRAM1_YLength");
 
-	  Idxoff2  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM0_XOffset");
-	  Idxlen2  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM0_XLength");
-	  Idyoff2  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM0_YOffset");
-	  Idylen2  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM0_YLength");
+      Idxoff2  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM0_XOffset");
+      Idxlen2  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM0_XLength");
+      Idyoff2  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM0_YOffset");
+      Idylen2  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM0_YLength");
 
-	  Idxoff3  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM1_XOffset");
-	  Idxlen3  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM1_XLength");
-	  Idyoff3  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM1_YOffset");
-	  Idylen3  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM1_YLength");
+      Idxoff3  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM1_XOffset");
+      Idxlen3  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM1_XLength");
+      Idyoff3  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM1_YOffset");
+      Idylen3  = Fg_getParameterIdByName(fg, "Device1_Process0_ImageBufferData_DRAM1_YLength");
 
-	  Idsplitter    = Fg_getParameterIdByName(fg, "Device1_Process0_DoubleFrameSplit_Splitter_ImageHeight");
+      Idsplitter    = Fg_getParameterIdByName(fg, "Device1_Process0_DoubleFrameSplit_Splitter_ImageHeight");
 
-	  Idenable      = Fg_getParameterIdByName(fg, "Device1_Process0_EnableSubImage_Enable_Value");
-	  Idoffset      = Fg_getParameterIdByName(fg, "Device1_Process0_SubImages_Offset_Value");
+      Idenable      = Fg_getParameterIdByName(fg, "Device1_Process0_EnableSubImage_Enable_Value");
+      Idoffset      = Fg_getParameterIdByName(fg, "Device1_Process0_SubImages_Offset_Value");
 
-	  ConstLGShift4_Value_Id = Fg_getParameterIdByName(fg, "Device1_Process0_Match16Bit_ConstLGShift4_Value");
-	  ConstHGShift4_Value_Id = Fg_getParameterIdByName(fg, "Device1_Process0_Match16Bit_ConstHGShift4_Value");
-		   
-			   //==Image Buffer==//
+      ConstLGShift4_Value_Id = Fg_getParameterIdByName(fg, "Device1_Process0_Match16Bit_ConstLGShift4_Value");
+      ConstHGShift4_Value_Id = Fg_getParameterIdByName(fg, "Device1_Process0_Match16Bit_ConstHGShift4_Value");
+           
+               //==Image Buffer==//
   
   int xoff,yoff,xlen,ylen;
   ylen=size_y;
@@ -576,7 +576,7 @@ char mesx[256];
    sprintf(mesx,"siSoftware::initialize: global shutter: LG Mult %d (%.02f)",Value,(float)(Value/4.0));
    lf.log(mesx);
    
-	}
+    }
   
   Value = 13; //*(32/10)=3.2 << 2 = 13 -> 3.25
   Fg_setParameterWithType(fg, ConstHGShift4_Value_Id, &Value, 0, FG_PARAM_TYPE_INT32_T);
@@ -586,7 +586,7 @@ char mesx[256];
    {
    sprintf(mesx,"siSoftware::initialize: global shutter: HG Mult %d (%.02f)",Value,(float)(Value/4.0));
    lf.log(mesx);
-	}
+    }
 /*
   if(act_sccmos_version>=HAP_VERSION_NOISE)
   {
@@ -604,15 +604,15 @@ char mesx[256];
    else
    {
     sprintf(mesx,"siSoftware::initialize: global shutter: Append Images set to %d ",Value);
-	lf.log(mesx);
-	}
+    lf.log(mesx);
+    }
   }//if(act_sccmos_version>=HAP_VERSION_NOISE)
   else
   {
    sprintf(mesx,"siSoftware::initialize: global shutter: doublemode not possible with this version",Value);
    lf.log(mesx);
    
-	}
+    }
  */
  
  if(nError)
@@ -634,26 +634,26 @@ char mesx[256];
   
   if (!is_force_size)
   {
-	if (Fg_getParameter(fg, FG_WIDTH,(void*) &sensor_width, camPort)<0)
-	{
-		sprintf(mesx, "Fg_getParameter(FG_WIDTH) failed: %s\n", Fg_getLastErrorDescription(fg));
-		lf.log(mesx);
-		Fg_FreeGrabber(fg);
-		return FALSE;
-	}
-	if (Fg_getParameter(fg, FG_HEIGHT, (void*)&sensor_height, camPort)<0)
-	{
-		sprintf(mesx, "Fg_getParameter(FG_HEIGHT) failed: %s\n", Fg_getLastErrorDescription(fg));
-		lf.log(mesx);
-		Fg_FreeGrabber(fg);
-		return FALSE;
-	}
-		
-		sensor_width=sensor_width/2;
-		//leave height alone... we /2 because we have 10tap 8 bit data, to convert to 16bit pixels.
+    if (Fg_getParameter(fg, FG_WIDTH,(void*) &sensor_width, camPort)<0)
+    {
+        sprintf(mesx, "Fg_getParameter(FG_WIDTH) failed: %s\n", Fg_getLastErrorDescription(fg));
+        lf.log(mesx);
+        Fg_FreeGrabber(fg);
+        return FALSE;
+    }
+    if (Fg_getParameter(fg, FG_HEIGHT, (void*)&sensor_height, camPort)<0)
+    {
+        sprintf(mesx, "Fg_getParameter(FG_HEIGHT) failed: %s\n", Fg_getLastErrorDescription(fg));
+        lf.log(mesx);
+        Fg_FreeGrabber(fg);
+        return FALSE;
+    }
+        
+        sensor_width=sensor_width/2;
+        //leave height alone... we /2 because we have 10tap 8 bit data, to convert to 16bit pixels.
 
-		//2 for 16 bit images. silicon grabber is set for 8 bit 10 tap data
-	   totalBufferSize = 2*sensor_height * sensor_width *num_buffers;
+        //2 for 16 bit images. silicon grabber is set for 8 bit 10 tap data
+       totalBufferSize = 2*sensor_height * sensor_width *num_buffers;
 
   }
 
@@ -667,31 +667,31 @@ char mesx[256];
   if ( ptrMem == NULL) {
     sprintf(mesx, "error in siSoftware::initialize Fg_AllocMem: %s\n", Fg_getLastErrorDescription(fg));
     lf.log(mesx);
-	//CloseDisplay(dispId0);
+    //CloseDisplay(dispId0);
     Fg_FreeGrabber(fg);
     return(FALSE);
   }
 
 
 //!!
-	//makeView();
+    //makeView();
 
    // Get current input signal connection status
 //   GetSignalStatus();
 
 //   m_Acq->SaveParameters("D:/siSoftwarefiles/current_params.ccf");
 
-	return TRUE;  // return TRUE  unless you set the focus to a control
+    return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
 
 void siSoftware::setConfigFileName(char *name)
 {
     char mesx[256];
-	sprintf(mesx,"siSoftware::setConfigFileName use %s",name);
-	lf.log(mesx);
-	
-	strcpy(camera_format_file, name);
+    sprintf(mesx,"siSoftware::setConfigFileName use %s",name);
+    lf.log(mesx);
+    
+    strcpy(camera_format_file, name);
 }
 
 
@@ -700,42 +700,42 @@ bool siSoftware::CreateObjects()
 {
 
 
-//		if (is_force_size)
-//		{
-//			m_Acq->SetParameter(CORACQ_PRM_CROP_HEIGHT , sensor_height,false);
-//		   m_Acq->SetParameter(CORACQ_PRM_CROP_WIDTH , sensor_width,false);
+//        if (is_force_size)
+//        {
+//            m_Acq->SetParameter(CORACQ_PRM_CROP_HEIGHT , sensor_height,false);
+//           m_Acq->SetParameter(CORACQ_PRM_CROP_WIDTH , sensor_width,false);
 //
-//		   m_Acq->SetParameter(CORACQ_PRM_SCALE_VERT , sensor_height,false);
-//		   m_Acq->SetParameter(CORACQ_PRM_SCALE_HORZ , sensor_width,false);
+//           m_Acq->SetParameter(CORACQ_PRM_SCALE_VERT , sensor_height,false);
+//           m_Acq->SetParameter(CORACQ_PRM_SCALE_HORZ , sensor_width,false);
 //
-//			m_Acq->SetParameter(CORACQ_PRM_VACTIVE , sensor_height,false);
-//		   m_Acq->SetParameter(CORACQ_PRM_HACTIVE , sensor_width,true);
-//
-//
+//            m_Acq->SetParameter(CORACQ_PRM_VACTIVE , sensor_height,false);
+//           m_Acq->SetParameter(CORACQ_PRM_HACTIVE , sensor_width,true);
 //
 //
-//		}
+//
+//
+//        }
 
 
 
-	return TRUE;
+    return TRUE;
 }
 
 bool siSoftware::DestroyObjects()
-{	
-	
-	if (is_display)
-		CloseDisplay(dispId0);
+{    
+    
+    if (is_display)
+        CloseDisplay(dispId0);
 
-	Fg_FreeMemEx(fg,(dma_mem*)ptrMem);
-	Fg_FreeGrabber(fg);
-	return TRUE;
+    Fg_FreeMemEx(fg,(dma_mem*)ptrMem);
+    Fg_FreeGrabber(fg);
+    return TRUE;
 }
 
 bool siSoftware::DestroyObjectsNoDelete()
 {
 
-	return TRUE;
+    return TRUE;
 }
 
 
@@ -747,85 +747,85 @@ bool siSoftware::DestroyObjectsNoDelete()
 
 //*****************************************************************************************
 //
-//					Acquisition Control
+//                    Acquisition Control
 //
 //*****************************************************************************************
 
 void siSoftware::abort()
 {
-	Fg_stopAcquireEx(fg, camPort,(dma_mem*)ptrMem,STOP_SYNC);
-	//UpdateMenu();
+    Fg_stopAcquireEx(fg, camPort,(dma_mem*)ptrMem,STOP_SYNC);
+    //UpdateMenu();
 }
 
 void siSoftware::freeze( )
 {
-	Fg_stopAcquireEx(fg, camPort,(dma_mem*)ptrMem,STOP_SYNC);
+    Fg_stopAcquireEx(fg, camPort,(dma_mem*)ptrMem,STOP_SYNC);
 
-//	UpdateMenu();
+//    UpdateMenu();
 }
 
 void siSoftware::grab()
 {
 char mesx[256];
 
-//	clearMissedFrames();
+//    clearMissedFrames();
  if (is_blocking==false)
  {
-	  if (Fg_AcquireEx(fg,camPort,GRAB_INFINITE,ACQ_STANDARD,(dma_mem*)ptrMem) < 0)
-	  {
-		sprintf(mesx, "siSoftware::grab Fg_Acquire() failed: %s\n", Fg_getLastErrorDescription(fg));
-		lf.log(mesx);
-	  }
+      if (Fg_AcquireEx(fg,camPort,GRAB_INFINITE,ACQ_STANDARD,(dma_mem*)ptrMem) < 0)
+      {
+        sprintf(mesx, "siSoftware::grab Fg_Acquire() failed: %s\n", Fg_getLastErrorDescription(fg));
+        lf.log(mesx);
+      }
   }
  else
  {
  if (Fg_AcquireEx(fg,camPort,GRAB_INFINITE,ACQ_BLOCK,(dma_mem*)ptrMem) < 0)
-	  {
-		sprintf(mesx, "siSoftware::grab Fg_Acquire() failed: %s\n", Fg_getLastErrorDescription(fg));
-		lf.log(mesx);
-	  }
+      {
+        sprintf(mesx, "siSoftware::grab Fg_Acquire() failed: %s\n", Fg_getLastErrorDescription(fg));
+        lf.log(mesx);
+      }
  }
 
   clearMissedFrames();
-	//UpdateMenu();
+    //UpdateMenu();
 }
 
 void siSoftware::snap()
 {
 char mesx[256];
 
-	clearMissedFrames();
+    clearMissedFrames();
   // m_statusWnd.SetWindowText("");
   if(Fg_AcquireEx(fg,camPort,1,ACQ_STANDARD,(dma_mem*)ptrMem) < 0){
     sprintf(mesx, "siSoftware::grab Fg_Acquire() failed: %s\n", Fg_getLastErrorDescription(fg));
-	lf.log(mesx);
+    lf.log(mesx);
   }
-	//UpdateMenu();
+    //UpdateMenu();
 }
 
 int siSoftware::getNumFreeBuffers(void)
 {
-	
-	return(sap_buffer_count - (frame_count-frames_to_cpu));
+    
+    return(sap_buffer_count - (frame_count-frames_to_cpu));
 }
 int siSoftware::getNumBuffers(void)
 {
-		return(sap_buffer_count);
+        return(sap_buffer_count);
 }
 
 
      //inc missed frames counter
    void siSoftware::incMissedFrames(void)
    {
-	missed_frames++;
-	recent_missed_frames++;
-	
+    missed_frames++;
+    recent_missed_frames++;
+    
    }
 
 
 //*****************************************************************************************
 //
-//					Acquisition Options
+//                    Acquisition Options
 //
 //*****************************************************************************************
 
@@ -836,14 +836,14 @@ int siSoftware::getNumBuffers(void)
 
 //*****************************************************************************************
 //
-//					File Options
+//                    File Options
 //
 //*****************************************************************************************
 
 
 //**************************************************************************************
 //
-//			Processing Options
+//            Processing Options
 //
 //**************************************************************************************
 
@@ -858,14 +858,14 @@ void siSoftware::GetSignalStatus()
 void siSoftware::setPin(char* pinstr, int val)
 {
 
-	int status,status2;
-	//char msg[255];
-	//char errbuff[1024];
+    int status,status2;
+    //char msg[255];
+    //char errbuff[1024];
 //char infobuff[1024];
 
 
 
-//	siSoftware_log.log("Doing Reset in siSoftware Card");
+//    siSoftware_log.log("Doing Reset in siSoftware Card");
 
 
 
