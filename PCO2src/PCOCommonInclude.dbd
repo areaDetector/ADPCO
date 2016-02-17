@@ -1,50 +1,43 @@
-# stuff for any ioc
+#stuff for any ioc
 
 include "base.dbd"
 
-# asyn
-include "asyn.dbd"
-include "drvAsynSerialPort.dbd"
-include "drvAsynIPPort.dbd"
-include "drvVxi11.dbd"
-include "devGpib.dbd"
+#asyn
+    include "asyn.dbd" include "drvAsynSerialPort.dbd" include
+        "drvAsynIPPort.dbd" include "drvVxi11.dbd" include "devGpib.dbd"
 
-# std
-include "stdSupport.dbd"
+#std
+    include "stdSupport.dbd"
 
-# calc
-include "calcSupport.dbd"
+#calc
+    include "calcSupport.dbd"
 
-# busy
-include "busySupport.dbd"
+#busy
+    include "busySupport.dbd"
 
-# sscan
-include "sscanSupport.dbd"
+#sscan
+    include "sscanSupport.dbd"
 
-# autosave
-include "asSupport.dbd"
+#autosave
+    include "asSupport.dbd"
 
-# mca
-include "mcaSupport.dbd"
+#mca
+    include "mcaSupport.dbd"
 
-# seq
-include "devSequencer.dbd"
+#seq
+    include "devSequencer.dbd"
 
-# stream
-include "stream.dbd"
-include "streamSynApps.dbd"
+#stream
+    include "stream.dbd" include "streamSynApps.dbd"
 
-# areaDetector
-include "ADSupport.dbd"
-include "NDPluginSupport.dbd"
-
-
+#areaDetector
+    include "ADSupport.dbd" include "NDPluginSupport.dbd"
 
 #caputrecorder
 
-include "caputRecorder.dbd"
+    include "caputRecorder.dbd"
 
-# Change to match detector used
+#Change to match detector used
 #include "adscSupport.dbd"
 #include "BISDetectorSupport.dbd"
 #include "firewireWinDCAMSupport.dbd"
@@ -57,4 +50,4 @@ include "caputRecorder.dbd"
 #include "roperSupport.dbd"
 #include "PSLSupport.dbd"
 #include "URLDriverSupport.dbd"
-include "simDetectorSupport.dbd"
+    include "simDetectorSupport.dbd"

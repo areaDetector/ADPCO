@@ -9,7 +9,6 @@
  *
  ******************************************************************************/
 
-
 /*
  * Include files.
  */
@@ -25,84 +24,63 @@
  * Double incluson protection.
  */
 #ifndef _CL_COM_PORT_H
-    #define _CL_COM_PORT_H
+#define _CL_COM_PORT_H
 
 /*
-         * Class for 
+         * Class for
          */
 
-class cl_com_port : public comportInterface
-        {
-        public:    
-            cl_com_port(char *name);
-            ~cl_com_port();
-            /*
-             * ports we can write to
-             */
+class cl_com_port : public comportInterface {
+ public:
+  cl_com_port(char *name);
+  ~cl_com_port();
+  /*
+   * ports we can write to
+   */
 
-        
-            
+  virtual void open(void);
+  virtual void open(int baud, int parity, int nbits, int nstop);
 
-            virtual void open(void);
-            virtual void open(
-                int baud, 
-                int parity, 
-                int nbits, 
-                int nstop);
+  virtual void open(int baud, int parity, int nbits, int nstop, int rdtimeout);
 
-            
-            virtual void open(
-                int baud, 
-                int parity, 
-                int nbits, 
-                int nstop,
-                int rdtimeout);
+  virtual void write(unsigned char *buffer, int length);
+  virtual void read(unsigned char *buffer, int length);
+  virtual void write(unsigned char c);
+  virtual unsigned char read(void);
+  virtual void close(void);
+  virtual void flush(void);
+  virtual void clearPipe();
 
-            virtual void write(unsigned char *buffer, int length);
-            virtual void read(unsigned char *buffer, int length);
-            virtual void write(unsigned char c);
-            virtual unsigned char read(void);
-            virtual void close(void);
-            virtual void flush(void);
-            virtual void clearPipe();
+  virtual void setPortName(char *n);
 
-            virtual void setPortName(char *n);
+  virtual void wait(int us);
 
+  // for timing things. call tic. toc returns time in s since last tic.
+  virtual void tic();
+  virtual double toc();
 
-            virtual void wait(int us);
+ protected:
+  bool is_open;
 
-            // for timing things. call tic. toc returns time in s since last tic.
-            virtual void tic();
-            virtual double toc();
+  double currenttime, elapsedtime;
 
-        protected:
+  char INBUFFER[500];
 
-bool is_open;
+  char OUTBUFFER[20];
 
+  DWORD bytes_read;  // Number of bytes read from port
 
-  double currenttime,elapsedtime;
+  DWORD bytes_written;  // Number of bytes written to the port
 
-    char INBUFFER[500];
+  HANDLE comport;  // Handle COM port
 
-    char OUTBUFFER[20];
+  int bStatus;
 
-    DWORD        bytes_read;    // Number of bytes read from port
+  DCB comSettings;  // Contains various port settings
 
-    DWORD        bytes_written;    // Number of bytes written to the port
+  COMMTIMEOUTS CommTimeouts;
 
-    HANDLE       comport;  // Handle COM port
-
- int   bStatus;
-
-    DCB          comSettings;          // Contains various port settings
-
-    COMMTIMEOUTS CommTimeouts;
-  
-    char port_name[64];
-
-
-        };
-
-    
+  char port_name[64];
+};
 
 #endif

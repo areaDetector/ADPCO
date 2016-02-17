@@ -11,9 +11,14 @@ include $(TOP)/configure/CONFIG
 
 LIBRARY_IOC = pco
 
+LIB_SRCS    +=legacystubs.c
+
 LIB_SRCS    += PCOSerial.cpp
 LIB_SRCS    += pco.cpp
 LIB_SRCS    +=  drvPcoEpics.c
+
+
+
 
 #one or the other
 #USR_CXXFLAGS += /D USE_SAP
@@ -88,8 +93,12 @@ PROD_LDFLAGS_WIN32 +=  display_lib.lib  gbelib.lib  clsersis.lib  fglib5.lib  io
 PROD_LDFLAGS_LINUX +=  -l display -l  gbe  -l clserserme4 -l fglib5  -l haprt
 
 
-PROD_LDFLAGS += /LIBPATH:C:\\Program\ Files\\HDF5-1.8.7_win_x64\\lib
-PROD_LDFLAGS += hdf5.lib hdf5_cpp.lib zlib.lib libszip.lib
+#PROD_LDFLAGS += /LIBPATH:D:\\HDF5-1.8.7_win_x64\\lib
+PROD_LDFLAGS += /LIBPATH:$(ADBINARIES)/lib/windows-x64-debug
+#PROD_LDFLAGS += hdf5.lib hdf5_cpp.lib zlib.lib libszip.lib
+PROD_LDFLAGS +=  libhdf5.lib libzlib.lib libszip.lib
+
+PROD_LDFLAGS+= $(AREA_DETECTOR)/lib/windows-x64-debug/NeXus.lib
 
 #PROD_LDFLAGS_WIN32 += /LIBPATH:C:\\Program\ Files\\HDF5-1.8.7_win_x64\\lib
 

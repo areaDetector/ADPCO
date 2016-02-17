@@ -11,7 +11,6 @@
  *
  ******************************************************************************/
 
-
 /*
  * Include files.
  */
@@ -24,10 +23,7 @@
  * Double incluson protection.
  */
 #ifndef _LOG_FILE_H
-    #define _LOG_FILE_H
-
-
-
+#define _LOG_FILE_H
 
 /*******************************************************************************
  *
@@ -36,33 +32,29 @@
  *
  ******************************************************************************/
 
-class log_file 
-{
-    public:
-        // make file object.
-        log_file(char* filename);
+class log_file {
+ public:
+  // make file object.
+  log_file(char* filename);
 
-        // destroy file object.
-        ~log_file();
+  // destroy file object.
+  ~log_file();
 
-        void enableLog(bool is_en);
-        // output to log ile.
-        void log(char* message);
-        void logNoDate(char* message);
-        void puts(char* message,int len);
-        void enablePrintf(bool is_pr);
+  void enableLog(bool is_en);
+  // output to log ile.
+  void log(char* message);
+  void logNoDate(char* message);
+  void puts(char* message, int len);
+  void enablePrintf(bool is_pr);
 
-    protected:
+ protected:
+  enum { num_saved_files = 5 };
 
-        enum {num_saved_files=5};
-        
-        // file pointer
-        FILE *fp;
-        char log_file_name[255];
-        bool is_enabled;
-        bool is_printf;
-
+  // file pointer
+  FILE* fp;
+  char log_file_name[255];
+  bool is_enabled;
+  bool is_printf;
 };
 
 #endif
-

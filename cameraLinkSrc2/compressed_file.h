@@ -70,62 +70,62 @@ header(52,:) = {'cameratype',    fread(fid,1 ,'int')}                      ; % s
 header(53,:) = {'threshhold',    fread(fid,1 ,'float')}                    ; % starting byte 628 : length  4 bytes
 
 */
-long                 mode;                 //comp mode 
-long                 compression;  //comp?
-char              date[32];        //date today 
-char              prefix[16];       //?
-long                 number;     // filenum  
-char              suffix[16];      
-long                 monitor;    //0  
-long                 shutter;    //0  
-long                 row_beg;    //  
-long               row_end;      // whatever they are
-long                 col_beg;      
-long               col_end;      
-long                 row_bin;      //1
-long                 col_bin;      //1
-long                 rows;         //
-long                 cols;         
-long                 bytes;        //2
-long                 kinetics;     //0 part of ccd
-long                 kinwinsize;   //0
-double              elapsed;      //timestamp 
-double              preset;       //exp time
-long                 topup;     //0   
-long                 inject;       //0
-unsigned long                 dlen;         
-long                 roi_number;   //1
+long	     		mode;         		//comp mode 
+long	     		compression;  //comp?
+char	  		date[32];        //date today 
+char	  		prefix[16];       //?
+long	     		number;     // filenum  
+char	  		suffix[16];      
+long	     		monitor;    //0  
+long	     		shutter;    //0  
+long	     		row_beg;    //  
+long	   		row_end;      // whatever they are
+long	     		col_beg;      
+long	   		col_end;      
+long	     		row_bin;      //1
+long	     		col_bin;      //1
+long	     		rows;         //
+long	     		cols;         
+long	     		bytes;        //2
+long	     		kinetics;     //0 part of ccd
+long	     		kinwinsize;   //0
+double	  		elapsed;      //timestamp 
+double	  		preset;       //exp time
+long	     		topup;     //0   
+long	     		inject;       //0
+unsigned long	     		dlen;         
+long	     		roi_number;   //1
 
-int          buffer_number;    //0
-unsigned int          systick;//0      
+int	  	buffer_number;	//0
+unsigned int	  	systick;//0      
 
-char               pv1[40];          
-float               pv1VAL;       
-char               pv2[40];          
-float               pv2VAL;       
-char               pv3[40];          
-float               pv3VAL;       
-char               pv4[40];          
-float               pv4VAL;       
-char               pv5[40];          
-float               pv5VAL;       
-char               pv6[40];          
-float               pv6VAL;       
-char               pv7[40];          
-float               pv7VAL;       
-char               pv8[40];          
-float               pv8VAL;       
-char               pv9[40];          
-float               pv9VAL;       
-char               pv10[40];         
-float               pv10VAL;      
+char	   		pv1[40];          
+float	   		pv1VAL;       
+char	   		pv2[40];          
+float	   		pv2VAL;       
+char	   		pv3[40];          
+float	   		pv3VAL;       
+char	   		pv4[40];          
+float	   		pv4VAL;       
+char	   		pv5[40];          
+float	   		pv5VAL;       
+char	   		pv6[40];          
+float	   		pv6VAL;       
+char	   		pv7[40];          
+float	   		pv7VAL;       
+char	   		pv8[40];          
+float	   		pv8VAL;       
+char	   		pv9[40];          
+float	   		pv9VAL;       
+char	   		pv10[40];         
+float	   		pv10VAL;      
 
-float               imageserver;  //make up
-float               CPUspeed;     //0
-long                 immversion;   //11
-int          corecotick;   //
-int                 cameratype;//160   
-float               threshhold;   //my val
+float	   		imageserver;  //make up
+float	   		CPUspeed;     //0
+long	     		immversion;   //11
+int		  corecotick;   //
+int	     		cameratype;//160   
+float	   		threshhold;   //my val
 
 enum {header_size=1024};
 };
@@ -134,32 +134,32 @@ class fpga_pix_rec
 {
 public:
 
-    unsigned short pval0;
-    unsigned short loclsb;
-    unsigned char locmsb;
-    unsigned char offset;
-    unsigned short pval1;
+	unsigned short pval0;
+	unsigned short loclsb;
+	unsigned char locmsb;
+	unsigned char offset;
+	unsigned short pval1;
 
 };
 
 class comp_img_header
 {
 public:
-    unsigned short num_pixels;
-    unsigned short num_pixels_msb;
-    unsigned short ave_coef0;
-    unsigned short ffff;
-    unsigned short timestamp0;
-    unsigned short timestamp1;
-    unsigned short timestamp2;
-    unsigned char numframes;
-    unsigned char flags;
+	unsigned short num_pixels;
+	unsigned short num_pixels_msb;
+	unsigned short ave_coef0;
+	unsigned short ffff;
+	unsigned short timestamp0;
+	unsigned short timestamp1;
+	unsigned short timestamp2;
+	unsigned char numframes;
+	unsigned char flags;
 
-    unsigned short mem_st_b_lsb;
-    unsigned short mem_st_b_msb;
+	unsigned short mem_st_b_lsb;
+	unsigned short mem_st_b_msb;
 
-    unsigned short mem_st_e_lsb;
-    unsigned short mem_st_e_msb;
+	unsigned short mem_st_e_lsb;
+	unsigned short mem_st_e_msb;
 
 };
 
@@ -168,98 +168,98 @@ class compressed_file
 {
 public:
 
-    compressed_file();
-    ~compressed_file();
+	compressed_file();
+	~compressed_file();
 
-    void open_w(
-        char* name, 
-        int start_num, 
-        int end_number);
+	void open_w(
+		char* name, 
+		int start_num, 
+		int end_number);
 
-    void open_w(
-        char* name, 
-        char* path,
-        int start_num, 
-        int end_number);
+	void open_w(
+		char* name, 
+		char* path,
+		int start_num, 
+		int end_number);
 
-    void open_r(
-        char* name, 
-        int start_num, 
-        int end_number);
-    void open_r(
-        char* name, 
-        char* path,
-        int start_num, 
-        int end_number);
-
-
-    void close();
-
-    void appendImage(
-        compressed_header *head, 
-        void *img_ptr);
-
-    // make new empty header. resercves header_siuze of memory
-    compressed_header* newHeader(void);
+	void open_r(
+		char* name, 
+		int start_num, 
+		int end_number);
+	void open_r(
+		char* name, 
+		char* path,
+		int start_num, 
+		int end_number);
 
 
+	void close();
 
-    void readTopHeader(compressed_header* head);
-    void readImage(
-        int index, 
-        compressed_header *head, 
-        void *img_data);
+	void appendImage(
+		compressed_header *head, 
+		void *img_ptr);
 
-    image_file *myfile;
+	// make new empty header. resercves header_siuze of memory
+	compressed_header* newHeader(void);
 
-    bool is_open;
+
+
+	void readTopHeader(compressed_header* head);
+	void readImage(
+		int index, 
+		compressed_header *head, 
+		void *img_data);
+
+	image_file *myfile;
+
+	bool is_open;
 
 void fpgaToIMM(
-    unsigned char* fpga_image,
-    int fpga_bytes,
-    int img_index,
-    unsigned char** IMM_image,
-    int *IMM_bytes);
+	unsigned char* fpga_image,
+	int fpga_bytes,
+	int img_index,
+	unsigned char** IMM_image,
+	int *IMM_bytes);
 
 void rawToIMM(
-    unsigned char* raw_image,
-    int raw_bytes,// tottal bytes
-    int raw_precision,//num bytes per pixel
-    int raw_x_pixels,
-    int raw_y_pixels,
-    int threshold,
-    int raw_timestamp,
-    int img_index,
-    unsigned char** IMM_image,
-    int *IMM_bytes);
+	unsigned char* raw_image,
+	int raw_bytes,// tottal bytes
+	int raw_precision,//num bytes per pixel
+	int raw_x_pixels,
+	int raw_y_pixels,
+	int threshold,
+	int raw_timestamp,
+	int img_index,
+	unsigned char** IMM_image,
+	int *IMM_bytes);
 
-    int getFpgaNumFrames(void* img);
-    
-    comp_img_header* getFpgaHeadAddr(unsigned char *img, int img_index);
-    unsigned long ushortAddrPix0(fpga_pix_rec* pr);
-    unsigned long ushortAddrPix1(fpga_pix_rec* pr);
+	int getFpgaNumFrames(void* img);
+	
+	comp_img_header* getFpgaHeadAddr(unsigned char *img, int img_index);
+	unsigned long ushortAddrPix0(fpga_pix_rec* pr);
+	unsigned long ushortAddrPix1(fpga_pix_rec* pr);
 
-    int numFpgaPixRec(comp_img_header *h);
+	int numFpgaPixRec(comp_img_header *h);
 
 
-    int pixDataBytes(comp_img_header *h);
-        // 32 bit raw time stamp at 133 MHz
-        unsigned long getFpgaTimeStamp32(comp_img_header *h);
-        // 48 bit raw time stamp at 133MHz
-        double getFpgaTimeStamp48(comp_img_header *h);
-        // 32 bit time stamp in us. mask out to get lower bit timestamp
+	int pixDataBytes(comp_img_header *h);
+		// 32 bit raw time stamp at 133 MHz
+		unsigned long getFpgaTimeStamp32(comp_img_header *h);
+		// 48 bit raw time stamp at 133MHz
+		double getFpgaTimeStamp48(comp_img_header *h);
+		// 32 bit time stamp in us. mask out to get lower bit timestamp
 unsigned int getFpgaUsTimeStamp32(comp_img_header *h,unsigned int mask);
 
-    unsigned long pixDataByteAdr(comp_img_header *h);
+	unsigned long pixDataByteAdr(comp_img_header *h);
 bool fpgaIsValidHeader(unsigned char *fpga_image);
-    // memory in which we can put IMM compressed data, IMM as in Alec IMM at APS
-    unsigned char *scratch_memory;
-    enum {scratch_mem_bytes = 8388608};
-    enum {fpga_header_bytes = 8192};
-    enum {fpga_max_comp_frames=16};
-    //measured fpga clk freq in Hz. Problem: we may have freq differences between grabber cards
-    // this was measured on Mica
-    enum {fpga_clk_freq_hz=132906500};
+	// memory in which we can put IMM compressed data, IMM as in Alec IMM at APS
+	unsigned char *scratch_memory;
+	enum {scratch_mem_bytes = 8388608};
+	enum {fpga_header_bytes = 8192};
+	enum {fpga_max_comp_frames=16};
+	//measured fpga clk freq in Hz. Problem: we may have freq differences between grabber cards
+	// this was measured on Mica
+	enum {fpga_clk_freq_hz=132906500};
 
 
 };
