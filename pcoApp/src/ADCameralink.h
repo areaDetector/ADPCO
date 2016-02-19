@@ -39,7 +39,6 @@
 
 #include "comportInterface.h"
 #include "logfile.h"
-#include "image_ram2.h"
 #include "ccd_exception.h"
 #include "coreco.h"
 #include "siliconSoftware.h"

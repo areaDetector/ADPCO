@@ -1,5 +1,7 @@
-TOP=..
+TOP=../..
 include $(TOP)/configure/CONFIG
+
+
 #----------------------------------------
 #  
 #
@@ -9,7 +11,7 @@ include $(TOP)/configure/CONFIG
 #=============================
 
 #Never need this
-USR_INCLUDES += -I $(TOP)/siliconSoftwareSupport/os/WIN64/Runtime5.2.0/include
+#USR_INCLUDES += -I $(TOP)/siliconSoftwareSupport/os/WIN64/Runtime5.2.0/include
 
 
 #if building w/ dalsa
@@ -27,7 +29,6 @@ LIB_SRCS    +=  drvPcoEpics.c
 
 LIB_SRCS    += camLinkSerial.cpp
 
-LIBRARY_IOC = ADCameralink
 LIB_SRCS += ccd_exception.cpp
 LIB_SRCS    += coreco.cpp
 LIB_SRCS    += siswSerialPort.cpp
@@ -117,18 +118,18 @@ PROD_LDFLAGS_WIN32 += /STACK:12000000,12000000
 
 #for silicon SW card
 
-PROD_LDFLAGS_WIN32 += /LIBPATH:$(TOP)/siliconSoftwareSupport/os/WIN64/Runtime5.2.0/lib/visualc
-PROD_LDFLAGS_WIN32 +=  display_lib.lib  gbelib.lib  clsersis.lib  fglib5.lib  iolibrt.lib
+#!!PROD_LDFLAGS_WIN32 += /LIBPATH:$(TOP)/siliconSoftwareSupport/os/WIN64/Runtime5.2.0/lib/visualc
+#!!PROD_LDFLAGS_WIN32 +=  display_lib.lib  gbelib.lib  clsersis.lib  fglib5.lib  iolibrt.lib
 
 
 
 
 #PROD_LDFLAGS_LINUX += -L/opt/siso/lib
-PROD_LDFLAGS_LINUX +=  -l display -l  gbe  -l clserserme4 -l fglib5  -l haprt
+#!!PROD_LDFLAGS_LINUX +=  -l display -l  gbe  -l clserserme4 -l fglib5  -l haprt
 
 
 #PROD_LDFLAGS += /LIBPATH:D:\\HDF5-1.8.7_win_x64\\lib
-PROD_LDFLAGS += /LIBPATH:$(ADBINARIES)/lib/windows-x64-debug
+#!!PROD_LDFLAGS += /LIBPATH:$(ADBINARIES)/lib/windows-x64-debug
 #PROD_LDFLAGS += hdf5.lib hdf5_cpp.lib zlib.lib libszip.lib
 #PROD_LDFLAGS +=  libhdf5.lib libzlib.lib libszip.lib
 
@@ -155,8 +156,8 @@ PROD_LIBS += caputRecorder
 
 
 # Put additional areaDetector libraries here
-PROD_LIBS +=  ADCameralink
-PROD_LIBS +=  camLinkSerial
+#PROD_LIBS +=  ADCameralink
+#PROD_LIBS +=  camLinkSerial
 
 
 #PROD_LIBS +=display_lib
@@ -171,16 +172,11 @@ PROD_LIBS += $(EPICS_BASE_IOC_LIBS)
 
 
 
-USR_INCLUDES += -I $(AREA_DETECTOR)/ADApp/ADSrc
-USR_INCLUDES += -I $(AREA_DETECTOR)/ADApp/
-
-USR_INCLUDES += -I $(TOP)/cameraLinkSrc2
-
-
 
 #USR_INCLUDES += -I $(TOP)/siliconSoftwareSupport/os/WIN64/Runtime5.2.0/include
 
-include $(AREA_DETECTOR)/ADApp/commonDriverMakefile
+
+include $(ADCORE)/ADApp/commonLibraryMakefile
 
 
 include $(TOP)/configure/RULES
