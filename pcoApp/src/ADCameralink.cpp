@@ -1,29 +1,71 @@
+/** 
+ * AreaDetector Driver for general Camera Link cards
+ *
+ *@author Timothy Madden
+ *@date Jan 2012
+ */
+
+
+
 #include "ADCameralink.h"
 #include "softwareGrabber.h"
 
 static const char *driverName = "ADCameralink";
 
-/** This function is called when the exposure time timer expires */
+/** 
+ * This function is called when the exposure time timer expires 
+ */
+ 
 extern "C" void timerCallbackC(void *drvPvt) {
   ADCameralink *pPvt = (ADCameralink *)drvPvt;
 
   epicsEventSignal(pPvt->stopEventId);
 }
 
+/**
+ * Runs on own thread to get images from the grabber.
+ */
+ 
 static void ADCameralinkGetImageTask(void *drvPvt) {
   ADCameralink *pPvt = (ADCameralink *)drvPvt;
 
   pPvt->getImageTask(0);
 }
 
+
+/**
+ * Sets amount of debugging message flood the screen.
+ */
+ 
 void ADCameralink::setDebuggingMessage(int level) { dbg_msg_level = level; }
 
+/**
+ * Get mutex for serial port.
+ */
 void ADCameralink::grabSerialMutex(void) { epicsMutexLock(serialMutex); }
+
+/**
+ * Release mutex for serial port.
+ */
+ 
 void ADCameralink::releaseSerialMutex(void) { epicsMutexUnlock(serialMutex); }
 
+/**
+ * Get mutex for image grabber.
+ */
+ 
 void ADCameralink::grabGrabberMutex(void) { epicsMutexLock(grabberMutex); }
+
+/**
+ * Release image grabber mutex.
+ */
+ 
 void ADCameralink::releaseGrabberMutex(void) { epicsMutexUnlock(grabberMutex); }
 
+/**
+ * Get mutex for semaphore for grabber.
+ */
+ 
 int ADCameralink::getSemaphore(void) {
   int i;
 
@@ -33,20 +75,28 @@ int ADCameralink::getSemaphore(void) {
   epicsMutexUnlock(cntMutex);
   return (i);
 }
+
+/**
+ * Inc grabber semaphore.
+ */
+ 
 void ADCameralink::incSemaphore(void) {
   epicsMutexLock(cntMutex);
   semaphore_counter++;
   epicsMutexUnlock(cntMutex);
 }
 
-/** Called when asyn clients call pasynInt32->write().
+/** 
+  * Called when asyn clients call pasynInt32->write().
   * This function performs actions for some parameters, including ADAcquire,
- * ADBinX, etc.
+  * ADBinX, etc.
   * For all parameters it sets the value in the parameter library and calls any
- * registered callbacks..
+  * registered callbacks..
   * \param[in] pasynUser pasynUser structure that encodes the reason and
- * address.
-  * \param[in] value Value to write. */
+  * address.
+  * \param[in] value Value to write. 
+  */
+  
 asynStatus ADCameralink::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   int function = pasynUser->reason;
   asynStatus status = asynSuccess;
@@ -82,6 +132,10 @@ asynStatus ADCameralink::writeInt32(asynUser *pasynUser, epicsInt32 value) {
   return (status);
 }
 
+/**
+ * Helper function for getIntegerparam, returns an int.
+ */
+ 
 int ADCameralink::getIntParam(int param) {
   int saveparamx;
   getIntegerParam(param, &saveparamx);
@@ -89,6 +143,10 @@ int ADCameralink::getIntParam(int param) {
   return (saveparamx);
 }
 
+/**
+ * Helper for getDoubleParam, returns double.
+ */
+ 
 double ADCameralink::getDoubleParam(int param) {
   double saveparamx;
   ADDriver::getDoubleParam(param, &saveparamx);
@@ -96,6 +154,10 @@ double ADCameralink::getDoubleParam(int param) {
   return (saveparamx);
 }
 
+/**
+ * Helper for getString Param, returns char*.
+ */
+ 
 char *ADCameralink::getStringParam(int param) {
   static char saveparamx[256];
   ADDriver::getStringParam(param, 255, saveparamx);
@@ -103,13 +165,15 @@ char *ADCameralink::getStringParam(int param) {
   return (saveparamx);
 }
 
-/** Called when asyn clients call pasynFloat64->write().
-  * This function performs actions for some parameters.
-  * For all parameters it sets the value in the parameter library and calls any
+/** 
+ *Called when asyn clients call pasynFloat64->write().
+ * This function performs actions for some parameters.
+ * For all parameters it sets the value in the parameter library and calls any
  * registered callbacks..
-  * \param[in] pasynUser pasynUser structure that encodes the reason and
+ * \param[in] pasynUser pasynUser structure that encodes the reason and
  * address.
-  * \param[in] value Value to write. */
+ * \param[in] value Value to write. 
+ */
 asynStatus ADCameralink::writeFloat64(asynUser *pasynUser, epicsFloat64 value) {
   int function = pasynUser->reason;
   asynStatus status = asynSuccess;
@@ -751,9 +815,23 @@ void ADCameralink::oneLoopImage(void) {
   releaseGrabberMutex();
 }
 
+/**
+ * Function to be overridden. Called every time a new image comes from grabber.
+ */
+ 
 void ADCameralink::processNewImage(void *img_ptr) {}
+
+/**
+ *	called every time grabber thread runs its loop. For "keeping house" and reporting status of grabber etc.
+ *  Override in sub class.
+ */
+ 
 void ADCameralink::keepHouse(void) {}
 
+/**
+ *	 Set up grabber related parameters. Called by writeIntParam, function passed from writeIntparam. 
+ */
+ 
 void ADCameralink::grabberSetup(int function) {
   char mesx[256];
 
@@ -855,6 +933,10 @@ void ADCameralink::grabberSetup(int function) {
   releaseGrabberMutex();
 }
 
+/**
+ * Load CCF, MCF, or other vendor grabber configuration file into grabber. 
+ */
+ 
 void ADCameralink::loadCCF() {
   char mesx[256];
 

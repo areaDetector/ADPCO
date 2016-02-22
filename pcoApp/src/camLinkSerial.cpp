@@ -1,9 +1,10 @@
+ 
 /**
- * camLinkSerial.cpp
- * Tim Madden
- * 2013
+ * asyn Driver for Serial port on Camera Link grabber. Functions like standard rs232 port in ASyn.
+ *
+ *@author Timothy Madden
+ *@date 2013
  */
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -26,7 +27,13 @@
 
 static const char *driverName = "camLinkSerial";
 
-asynStatus camLinkSerial::writeOption(asynUser *pasynUser, const char *key,
+/**
+ *	for setting key val pairs to serial port. 
+ * 	clearpipe optino for reading out all garbage in the serial port .
+ *  
+ */
+
+ asynStatus camLinkSerial::writeOption(asynUser *pasynUser, const char *key,
                                       const char *value) {
   lock();
 
@@ -52,6 +59,11 @@ asynStatus camLinkSerial::writeOption(asynUser *pasynUser, const char *key,
 
   return (asynSuccess);
 }
+
+/**
+ *  Set options to serial port.
+ */
+
 void camLinkSerial::optionsToSerial(void) {
   int baud;
   int parity;
@@ -80,6 +92,10 @@ void camLinkSerial::optionsToSerial(void) {
   // from asynDriver serial docs
 }
 
+/**
+ *  Read options from serial port. 
+ */
+
 asynStatus camLinkSerial::readOption(asynUser *pasynUser, const char *key,
                                      char *value, int maxChars) {
   lock();
@@ -93,9 +109,16 @@ asynStatus camLinkSerial::readOption(asynUser *pasynUser, const char *key,
   return (asynError);
 }
 
-/**
 
+/**
+ * Called by asyn write Octet.
+ * takes asynuser,
+ * value, a string.
+ * size_t chars, len of string, max.
+ * size_t, nActial, actuial len of string. 
+ * writes the octet of bytes to the serial port. 
  */
+
 asynStatus camLinkSerial::writeOctet(asynUser *pasynUser, const char *value,
                                      size_t nChars, size_t *nActual) {
   int addr = 0;
@@ -111,6 +134,11 @@ asynStatus camLinkSerial::writeOctet(asynUser *pasynUser, const char *value,
   return status;
 }
 
+/**
+ * 
+ * reads the serial port back to epics driver. 
+ */
+
 asynStatus camLinkSerial::readOctet(asynUser *pasynUser, char *value,
                                     size_t maxChars, size_t *nActual,
                                     int *eomReason) {
@@ -123,21 +151,25 @@ asynStatus camLinkSerial::readOctet(asynUser *pasynUser, char *value,
   return (asynSuccess);
 }
 
+/**
+ *  Flushes the serial port. 
+ */
+
 asynStatus camLinkSerial::flushOctet(asynUser *pasynUser) {
   serial_port->flush();
   return (asynSuccess);
 }
 
 /**
+ * reports on driver.  
+ */
 
-
-  */
 void camLinkSerial::report(FILE *fp, int details) {
   asynPortDriver::report(fp, details);
 }
 
 /**
-
+ * constructor. Same as asynPortdriver stuff.  
  */
 
 camLinkSerial::camLinkSerial(const char *portName, const char *comportname,

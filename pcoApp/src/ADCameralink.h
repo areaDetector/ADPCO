@@ -1,8 +1,8 @@
-/* ADCameralink.cpp
+/** 
+ * AreaDetector Driver for general Camera Link cards
  *
- * Author: TJ Madden
- *
- *
+ *@author Timothy Madden
+ *@date Jan 2012
  */
 
 #ifndef _ADCAMERALINK_H
@@ -52,15 +52,11 @@
 #define NULL reinterpret_cast<void *>(0)
 #endif
 
-/** Driver for ADCameralink (Rayonix) CCD detector; communicates with the
- * ADCameralink program over a TCP/IP
-  * socket with the ADCameralink_server_socket program that they distribute.
-  * The ADCameralink program must be set into Acquire/Remote Control/Start to
- * use this driver.
-  */
+/** 
+* Driver for Camera Link cards. 
+ */
 
-//   putIntParam\((?<param>[a-z_]*).*
-// createParam\("$+{param}",asynInt32,$+{param}\)
+
 
 class ADCameralink : public ADDriver {
  public:

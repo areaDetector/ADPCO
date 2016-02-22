@@ -1,6 +1,18 @@
+/**
+ * Class that inherits grabberIntefface. This class hides all Dalsa grabber API calls into an interface.
+ * use when building for Dalsa Grabber. Define USE_SAP in makefile to build AD driver for dalsa grabber.
+ *
+ *@author timothy madden
+ *@date 2006
+ *
+ */
+ 
+
+
 // AncDemoRotationExpDlg.h : header file
 //
 #ifdef USE_SAP
+
 
 #ifndef _CORECO_H
 #define _CORECO_H

@@ -1,18 +1,41 @@
-
+/**
+ * Class for general serial port. Can be overridden. Used for camera link serial port. 
+ *
+ *@author Timothy Madden
+ *@date 2003
+ */
+ 
 #ifdef _WIN32
 
 #include "cl_com_port2.h"
 
+/**
+ * construct with name like "COM1"
+ */
+ 
 cl_com_port::cl_com_port(char *name) {
   strcpy(port_name, name);
   is_open = false;
 }
+
+/**
+ * Destructior. 
+ */
+ 
 cl_com_port::~cl_com_port() {
   if (is_open) close();
 }
 
+/**
+ * Set port name like COM1 or etc..
+ */
+ 
 void cl_com_port::setPortName(char *n) { strcpy(port_name, n); }
 
+/**
+ * Open comport with baud as int, parity (1,0), nbits 7,8, nstop, 0,1.
+ */
+ 
 void cl_com_port::open(int baud, int parity, int nbits, int nstop) {
   char errmess[128];
   DWORD errcode;
@@ -100,6 +123,10 @@ void cl_com_port::open(int baud, int parity, int nbits, int nstop) {
   }
 }
 
+/**
+ * Open com port with standard specs and add read time out in ms.
+ */
+ 
 void cl_com_port::open(int baud, int parity, int nbits, int nstop,
                        int rdtimeout) {
   char errmess[128];
@@ -188,6 +215,10 @@ void cl_com_port::open(int baud, int parity, int nbits, int nstop,
   }
 }
 
+/**
+ * OPen com port with default settings. 115200 baud, 1stop, no parituy, 8 bit data.
+ */
+ 
 void cl_com_port::open(void) {
   if (is_open) {
     return;
@@ -259,11 +290,20 @@ void cl_com_port::open(void) {
   }
 }
 
+/**
+ * Write byte to serial port, flush.
+ */
+ 
 void cl_com_port::write(unsigned char c) {
   this->write(&c, 1);
   flush();
 }
 
+
+/**
+ * Write mem buffer of byes, num bytes to ser port, flush.
+ */
+ 
 void cl_com_port::write(unsigned char *buffer, int length) {
   char errmess[128];
   DWORD errcode;
@@ -303,12 +343,21 @@ void cl_com_port::write(unsigned char *buffer, int length) {
   }
 }
 
+/**
+ * read 1 byte from ser port. 
+ */
+ 
 unsigned char cl_com_port::read(void) {
   unsigned char buffer[10];
   read(buffer, 1);
   flush();
   return (buffer[0]);
 }
+
+/**
+ * read length bytes into bufferfrom ser port. 
+ */
+ 
 void cl_com_port::read(unsigned char *buffer, int length) {
   char errmess[128];
   DWORD errcode;
@@ -355,16 +404,21 @@ void cl_com_port::flush(void) {
   }
 }
 
+/**
+ * close ser port. 
+ */
+ 
 void cl_com_port::close() {
   if (is_open) {
     CloseHandle(comport);
     is_open = false;
   }
 }
-/*
-*
-*/
 
+/**
+ * read ser port until no data left. clears out garbage that may be in serial port. 
+ */
+ 
 void cl_com_port::clearPipe(void) {
   char ret;
   int counter = 0;
@@ -376,11 +430,11 @@ void cl_com_port::clearPipe(void) {
   }
 }
 
-/**************************************************************************
- *
- * wait x us
- *
- **************************************************************************/
+
+/**
+ * Waait in a for loop. Not a sleep. give micro sec.
+ */
+ 
 void cl_com_port::wait(int us) {
   int t0, t1;
 
@@ -392,20 +446,19 @@ void cl_com_port::wait(int us) {
   }
 }
 
-/**************************************************************************
- *
- * stat stop watch
- *
- **************************************************************************/
-void cl_com_port::tic() {
+/**
+ * Start a stop watch. like tic in matlab.
+ */
+
+ void cl_com_port::tic() {
   currenttime = (double)clock() / (double)CLOCKS_PER_SEC;
 }
 
-/**************************************************************************
- *
- * read stop watch
- *
- **************************************************************************/
+/**
+ * read stop watch in sec. return double seconds since tic. let stop watch keep going. 
+ * likc toc in matlab.
+ */
+
 double cl_com_port::toc() {
   elapsedtime = ((double)clock() / (double)CLOCKS_PER_SEC) - currenttime;
   return (elapsedtime);

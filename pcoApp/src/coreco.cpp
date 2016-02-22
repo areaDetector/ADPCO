@@ -1,3 +1,13 @@
+/**
+ * Class that inherits grabberIntefface. This class hides all Dalsa grabber API calls into an interface.
+ * use when building for Dalsa Grabber. Define USE_SAP in makefile to build AD driver for dalsa grabber.
+ *
+ *@author timothy madden
+ *@date 2006
+ *
+ */
+ 
+
 // AncDemoRotationExpDlg.cpp : implementation file
 //
 
@@ -27,6 +37,12 @@ coreco *coreco::mycard = 0;
 /////////////////////////////////////////////////////////////////////////////
 // corecoFPGA dialog
 
+
+/**
+ * Open new dalsa (coreco) grabber, init grabber. if grabber has fpga on board spec if we use it.
+ * if no fpga, set to false. 
+ */
+ 
 coreco::coreco(bool is_use_fpga) {
   //    m_bEnableRtPro = is_use_fpga;
   m_Xfer = NULL;
@@ -61,37 +77,89 @@ coreco::coreco(bool is_use_fpga) {
   coreco::mycard = this;
 }
 
+/**
+ * Return enum spec'ing grabber vendor. 
+ */
+ 
 int coreco::getGrabberType() { return ((int)gDALSA); }
 
+
+/**
+ * If vendor has gui image dusplay, then create it on screen. often vendor has lib to do this. 
+ */
+ 
 void coreco::makeView(void) {
   m_View = new SapView(m_Buffers);
   m_View->Create();
 }
+
+/**
+ *  set num memory buffers (num images) that grabber stores in memory. 
+ */
+ 
 void coreco::setNumBuffers(int b) { num_buffers = b; }
 
-int coreco::getNumFreeBuffers(void) {
+/**
+ * return num buffers in grabber that are free.  
+ */
+ 
+ int coreco::getNumFreeBuffers(void) {
   return (sap_buffer_count - (frame_count - frames_to_cpu));
 }
 int coreco::getNumBuffers(void) { return (sap_buffer_count); }
 
+/**
+ * return true of new frame is available. else return false.  
+ */
+ 
 bool coreco::isFrameAvailable(void) {
   if (frame_count > frames_to_cpu) return true;
 
   return false;
 }
 
+/**
+ * sime grabbers have double width mode, where if we have 1k image size in x direction , we have to set to 2x.
+ * this has to do with data size of pixels in the grabber.  
+ */
+ 
 void coreco::setDoubleWidth(int isdw) { is_double_width = isdw; }
+
+
+/**
+ * return true if grabber missed a frame. else false.
+ */
+ 
 bool coreco::isMissedFrame(void) { return (is_missed_frame); }
 
+/**
+ * clear flags for missed frames.  
+ */
+ 
 void coreco::clearMissedFrames(void) {
   frames_to_cpu = frame_count;
   is_missed_frame = false;
   recent_missed_frames = 0;
 }
+
+/**
+ * return num missed frames since grabber was initialized.  
+ */
+ 
 long coreco::getTotalMissedFrames(void) { return (missed_frames); }
 
+/**
+ * return num missed frames since we last checked and cleared flags. 
+ */
+ 
 long coreco::getRecentMissedFrames(void) { return (recent_missed_frames); }
 //
+
+
+/**
+ * get latest frame fram camera.  
+ */
+ 
 bool coreco::getFrame(void *copy_memory, unsigned int *coreco_timestamp) {
   // bool sap_result;
   // int grab_index;
@@ -118,13 +186,21 @@ bool coreco::getFrame(void *copy_memory, unsigned int *coreco_timestamp) {
   return false;
 }
 
+/**
+ *  clear frames and mem buffers. 
+ */
+ 
 void coreco::resetBufferCount(void) {
   clearMissedFrames();
   m_Buffers->ResetIndex();
   grab_index = m_Buffers->GetIndex();
 }
 
-//
+
+/**
+ * get latest frame, supply mem to copy, get time stamp in to supplied mem. tell max num bytes. to return. 
+ */
+ 
 bool coreco::getFrame(void *copy_memory, unsigned int *coreco_timestamp,
                       int nbytes) {
   //    bool sap_result;
@@ -149,6 +225,10 @@ bool coreco::getFrame(void *copy_memory, unsigned int *coreco_timestamp,
   return false;
 }
 
+/**
+ * get lastes frame into supplied memroy.  
+ */
+ 
 bool coreco::getFrame(void *copy_memory) {
   ///    bool sap_result;
   //    int grab_index;
@@ -176,6 +256,12 @@ bool coreco::getFrame(void *copy_memory) {
 /////////////////////////////////////////////////////////////////////////////
 // corecoFPGA message handlers
 
+
+/**
+ * when frame comes in to grabber, this callback uis called. Called by vendor grabber thread
+* under the hood. this callback passed to vendor driver.  
+ */
+ 
 void coreco::XferCallback(SapXferCallbackInfo *pInfo) {
   //!!    corecoFPGA *pDlg= (corecoFPGA *) pInfo->GetContext();
   int i;
@@ -193,6 +279,10 @@ void coreco::XferCallback(SapXferCallbackInfo *pInfo) {
   //    cam_control->imageCallback(NULL);
 }
 
+/**
+ * callback when signal changes on grabber like clock etc. 
+ */
+ 
 void coreco::SignalCallback(SapAcqCallbackInfo *pInfo) {
   //    corecoFPGA *pDlg = (corecoFPGA *) pInfo->GetContext();
   //  pDlg->GetSignalStatus(pInfo->GetSignalStatus());
@@ -202,17 +292,37 @@ void coreco::SignalCallback(SapAcqCallbackInfo *pInfo) {
   i = 1;
 }
 
+/**
+ * deprecated 
+ */
+ 
 void coreco::setCamController(void *cc) {
   // cam_control=(genCamController*)cc;
 }
 
+
+/**
+ * get image width. 
+ */
+ 
 int coreco::getWidth(void) { return (sensor_width); }
 
+/**
+ * get image height 
+ */
+ 
 int coreco::getHeight(void) { return (sensor_height); }
 
 //***********************************************************************************
 // Initialize Demo Dialog based application
 //***********************************************************************************
+
+
+/**
+ * Init the grabber for x and y size images.  reads the config file set in object.
+ * 
+ */
+ 
 bool coreco::initialize(int size_x, int size_y) {
   // if (dlg.DoModal() == IDOK)
   //{
@@ -245,9 +355,10 @@ bool coreco::initialize(int size_x, int size_y) {
   return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
-//***********************************************************************************
-// Initialize Demo Dialog based application
-//***********************************************************************************
+/**
+ * We generally use this one. sets uip gravbber and forces img size to x and y.  
+ */
+ 
 bool coreco::initialize(int size_x, int size_y, bool is_force_size) {
   // if (dlg.DoModal() == IDOK)
   //{
@@ -284,8 +395,18 @@ bool coreco::initialize(int size_x, int size_y, bool is_force_size) {
   return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
+/**
+ * set grabber config file name. we init from a file, and edit the x and y sizes.
+ * vendor config file has 100 params or so, and all we set is x y size programattically.
+ * 
+ */
+ 
 void coreco::setConfigFileName(char *name) { strcpy(camera_format_file, name); }
 
+/**
+ * Dalsa needs this for it sdriver. makes SapAcq object.  
+ */
+ 
 SapAcquisition *coreco::makeAcquision() {
   bool sap_result;
   SapAcquisition *sap_acquisition;
@@ -314,6 +435,10 @@ SapAcquisition *coreco::makeAcquision() {
   return (sap_acquisition);
 }
 
+/**
+ * Creates dalsa objects per the Dalsa API. 
+ */
+ 
 bool coreco::CreateObjects() {
   is_destroyed = false;
 
@@ -386,6 +511,10 @@ bool coreco::CreateObjects() {
   return TRUE;
 }
 
+/**
+ * Kills Dalsa API objects for shutting down grabber. 
+ */
+ 
 bool coreco::DestroyObjects() {
   if (is_destroyed) return (true);
 
@@ -415,6 +544,10 @@ bool coreco::DestroyObjects() {
   return TRUE;
 }
 
+/**
+ *  destroys Dalsa API objects, no delete memory. 
+ */
+ 
 bool coreco::DestroyObjectsNoDelete() {
   if (m_Xfer) {
     if (*m_Xfer) {
@@ -439,12 +572,12 @@ bool coreco::DestroyObjectsNoDelete() {
   return TRUE;
 }
 
-//*****************************************************************************************
-//
-//                    Acquisition Control
-//
-//*****************************************************************************************
 
+
+/**
+ * call this to abort frame grabbing 
+ */
+ 
 void coreco::abort() {
   if (m_Xfer) {
     m_Xfer->Abort();
@@ -453,6 +586,10 @@ void coreco::abort() {
   // UpdateMenu();
 }
 
+/**
+ * similar to abort above, Never used.  
+ */
+ 
 void coreco::freeze() {
   if (m_Xfer) {
     m_Xfer->Freeze();
@@ -461,6 +598,10 @@ void coreco::freeze() {
   //    UpdateMenu();
 }
 
+/**
+ * Set into grab mode, where grabber gets any images from camera.  
+ */
+ 
 void coreco::grab() {
   if (m_Xfer) {
     //    m_statusWnd.SetWindowText("");
@@ -470,6 +611,10 @@ void coreco::grab() {
   // UpdateMenu();
 }
 
+/**
+ * Grabs one frame then stops. Not used ususally.  
+ */
+ 
 void coreco::snap() {
   // m_statusWnd.SetWindowText("");
   if (m_Xfer) {
@@ -483,29 +628,20 @@ void coreco::snap() {
 }
 
 // inc missed frames counter
+/**
+ * Inc the missed frames counter. 
+ */
+ 
 void coreco::incMissedFrames(void) {
   missed_frames++;
   recent_missed_frames++;
 }
 
-//*****************************************************************************************
-//
-//                    Acquisition Options
-//
-//*****************************************************************************************
 
-//*****************************************************************************************
-//
-//                    File Options
-//
-//*****************************************************************************************
-
-//**************************************************************************************
-//
-//            Processing Options
-//
-//**************************************************************************************
-
+/**
+ * Get signal stat like pixel clock present etc.  
+ */
+ 
 void coreco::GetSignalStatus() {
   SapAcquisition::SignalStatus signalStatus;
 
@@ -515,10 +651,19 @@ void coreco::GetSignalStatus() {
   }
 }
 
+/**
+ *  get signal stat like clk present on grabber. 
+ */
+ 
 void coreco::GetSignalStatus(SapAcquisition::SignalStatus signalStatus) {
   m_IsSignalDetected = (signalStatus != SapAcquisition::SignalNone);
 }
 
+/**
+ * set CameraLink pin. CL has 4 user pins to trigger camera. Sets on of the pins. String is
+ *"CC0", "CC1", "CC2", "CC3", and 0 or 1 for val. 
+ */
+ 
 void coreco::setPin(char *pinstr, int val) {
   int status, status2;
 // char msg[255];

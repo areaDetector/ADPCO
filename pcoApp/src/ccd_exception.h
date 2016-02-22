@@ -1,15 +1,12 @@
-/*******************************************************************************
+/**
+ *  Class for storing errors from detector. Originally written for ccd cameras, but works for anything...
+ *    
  *
- *    ccd_exception.h
- *
- *    Author: Tim Madden
- *    Date:    6/17/03
- *    Project:MBC CCD Detector DAQ.
- *
+ *@author Tim Madden
+ *@date  June 2003
  *
  *
- *
- ******************************************************************************/
+ */
 
 /*
  * Include files.
@@ -31,7 +28,7 @@
 // #define EXPORT
 
 //#endif
-/*******************************************************************************
+/**
  *
  *    Class ccd_exception
  *
@@ -39,7 +36,7 @@
  *    contains char* error passed as exception. not using std::string because
  *  it has questionable thread safety.
  *
- ******************************************************************************/
+ */
 
 // class EXPORT ccd_exception
 class ccd_exception {

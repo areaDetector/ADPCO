@@ -1,13 +1,12 @@
-/*******************************************************************************
+/**
+ * Interface to a com port, on a grabber.\
+ * We inherite this with any class to represent the serial port ona grabber. 
+ * Pure virtual class.
  *
- *	comportInterface.h
+ *@author Timothy Madden
+ *@date 2005
  *
- *	Author: Tim Madden
- *	Date:	8/01/06
- *	Project: CCD Detector DAQ.
- *
- *
- ******************************************************************************/
+ */
 
 /*
  * Include files.

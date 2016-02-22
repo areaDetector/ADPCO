@@ -1,3 +1,12 @@
+/**
+ * asyn Driver for Serial port on Camera Link grabber. Functions like standard rs232 port in ASyn.
+ *
+ *@author Timothy Madden
+ *@date 2013
+ */
+
+
+
 #ifndef camLinkSerial_H
 #define camLinkSerial_H
 
@@ -13,30 +22,12 @@
 #include <string.h>
 #include <map>
 
-/*
- * Tim Madden- 2013AD
+/**
+ * Class for serial port on grabber. Acts like asyn rs232 driver.
  */
 
-/*
 
-
-typedef enum {
-   asynParamUndefined,
-   asynParamInt32,
-   asynParamUInt32Digital,
-   asynParamFloat64,
-   asynParamOctet,
-   asynParamInt8Array,
-   asynParamInt16Array,
-   asynParamInt32Array,
-   asynParamFloat32Array,
-   asynParamFloat64Array,
-   asynParamGenericPointer
-} asynParamType;
-
-
-*/
-
+ 
 class epicsShareFunc camLinkSerial : public asynPortDriver {
  public:
   camLinkSerial(const char *portName, const char *comportname, int maxAddr,

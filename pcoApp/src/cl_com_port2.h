@@ -1,13 +1,11 @@
-/*******************************************************************************
+/**
+ * Class for general serial port. Can be overridden. Used for camera link serial port. 
  *
- *    cl_com_port.h
- *
- *    Author: Tim Madden
- *    Date:    8/01/06
- *    Project: CCD Detector DAQ.
- *
- *
- ******************************************************************************/
+ *@author Timothy Madden
+ *@date 2003
+ */
+ 
+
 
 /*
  * Include files.

@@ -1,15 +1,12 @@
-/*******************************************************************************
+/**
+ *  Class for storing errors from detector. Originally written for ccd cameras, but works for anything...
+ *    
  *
- *    ccd_exception.cpp
- *
- *    Author: Tim Madden
- *    Date:    6/17/03
- *    Project:MBC CCD Detector DAQ.
- *
+ *@author Tim Madden
+ *@date  June 2003
  *
  *
- *
- ******************************************************************************/
+ */
 
 /*
  * Include files.
@@ -17,25 +14,47 @@
 
 #include "ccd_exception.h"
 
+/**
+ * Constructor. default, puts "error" as a message. code is enum unmknown. 
+ */
+ 
 ccd_exception::ccd_exception() {
   strcpy(err, "error");
   code = unknown;
 }
-// make default err message
+
+/**
+ * Constructor to spec. error string and code as int. 
+ */
+ 
 ccd_exception::ccd_exception(error_code er, const char *mess) {
   strcpy(err, mess);
   code = er;
 }
-// make default err message
-ccd_exception::ccd_exception(error_code er) { code = er; }
-// make default err message
 
+/**
+ * construcor for speced error code. 
+ */
+ 
+ccd_exception::ccd_exception(error_code er) { code = er; }
+
+/**
+ * Constructor to spec error string. . 
+ */
+ 
 ccd_exception::ccd_exception(const char *x) {
   strcpy(err, x);
   code = unknown;
 }
 
+/**
+ * Return error message. 
+ */
+ 
 char *ccd_exception::err_mess(void) { return err; }
 
-// Return error message.
+/**
+ * return error code.
+ */
+ 
 ccd_exception::error_code ccd_exception::getErrCode(void) { return code; }
