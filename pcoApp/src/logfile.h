@@ -1,15 +1,11 @@
-/*******************************************************************************
+/**
  *
- *    log_file.h
+ *    Provide a log file to screen and files. writes log messages to fie with date and times. 
  *
- *    Author: Tim Madden
- *    Date:    7/27/03
- *    Project:MBC CCD Detector DAQ.
+ *@author  Tim Madden
+ *@date 2003
  *
- *
- *
- *
- ******************************************************************************/
+ */
 
 /*
  * Include files.
@@ -25,12 +21,12 @@
 #ifndef _LOG_FILE_H
 #define _LOG_FILE_H
 
-/*******************************************************************************
+/**
  *
  *    Class LOG_FILE
  *
- *
- ******************************************************************************/
+ */
+ 
 
 class log_file {
  public:

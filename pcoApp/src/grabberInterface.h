@@ -1,5 +1,10 @@
-// AncDemoRotationExpDlg.h : header file
-//
+/**
+ * Virtual class to represent any vendor frame grabber. Inherit this class and use the subclass to call
+ * whatevery vendor api is there. Hide all vendor API calles in this interface. this allows use fo any grabber.
+ *
+ *@author Tim madden
+ *@date 2009
+ */
 
 #ifndef _grabberInterface_H
 #define _grabberInterface_H

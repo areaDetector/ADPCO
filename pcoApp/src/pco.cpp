@@ -1,18 +1,39 @@
+/** 
+ * pco.cpp
+ * Area Detector Driver for PCO cameras that use Camera Link
+ * Inherite ADCameraLink to provide Image Grabbing functions. 
+ * this class addes all the commands/control that is sent over serial port on CL grabber.
+ *
+ *@author tim madden
+ *@date 2014
+ */
+
 #include "pco.h"
 
 static const char *driverName = "pco";
 
-// debugging flags
+/**
+ * debugging flags
+ */
 extern "C" int pco_blocking = 0;
 extern "C" int pco_pr_mutex = 0;
 extern "C" int pco_pr_mutex2 = 0;
 
+
+/**
+ * runs on thread for seding and receiving serial port message. 
+ */
+ 
 static void pcoTaskC(void *drvPvt) {
   pco *pPvt = (pco *)drvPvt;
 
   pPvt->pcoTask();
 }
 
+/**
+ * deprecated
+ */
+ 
 static void pcoTaskC2(void *drvPvt) {
   pco *pPvt = (pco *)drvPvt;
 
@@ -111,6 +132,11 @@ void pco::report(FILE *fp, int details) {
   /* Invoke the base class method */
   ADDriver::report(fp, details);
 }
+
+/**
+ * Called in IOC shell to start PCO
+ */
+ 
 
 extern "C" int PCOConfig(const char *portName, const char *serverPort,
                          int maxBuffers, size_t maxMemory, int priority,
@@ -585,6 +611,12 @@ pco::pco(const char *portName, const char *serverPort, int maxBuffers,
   }
 }
 
+/**
+ * Called when new image comes from grabber. 
+ * can descramble if enabled for Edge camera. Can test pixels for repeated images. It takes a line of pixels
+ * whcih shoudl be noise, and compares to previous image. if same, then noise is not noise, and we have repeated frames.
+ */
+ 
 void pco::processNewImage(void *img_ptr) {
   double elapsed_time;
   unsigned short *shrt_img;
@@ -786,8 +818,16 @@ void pco::processNewImage(void *img_ptr) {
   }
 }
 
+/**
+ * called every serial thraed loop. does nothing. 
+ */
+ 
 void pco::keepHouse(void) {}
 
+/**
+ * flip endian of images from camera. 
+ */
+ 
 int pco::intFlEndian(unsigned int in) {
   char a[4];
   char b[4];
@@ -807,6 +847,10 @@ int pco::intFlEndian(unsigned int in) {
   return (ans);
 }
 
+/**
+ * Check image to see if edge descrambling work correctly.
+ */
+ 
 void pco::checkEdgeDescramble(NDArray *img_ptr) {
   double elapsed_time;
   unsigned short *shrt_img;

@@ -1,10 +1,10 @@
-/*
+/**
  * drvsimPlugin.h
  *
  *
- * Author: Tim Madden 
- *
- * Created Nov 4, 2009
+ *@author Tim Madden 
+ *
+ *@date Nov 4, 2009
  */
 
 #ifndef DRV_pcoEdgePlugin_H

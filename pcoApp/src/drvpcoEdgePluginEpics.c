@@ -1,10 +1,10 @@
-/*
+/**
  * drvsimPluginEpics.c
  *
  *
- * Author: Madden
+ * @author Madden
  *
- * Created March 25, 2009
+ * @date March 25, 2009
  */
 
 #include <stdlib.h>
@@ -16,7 +16,7 @@
 
 #include "drvpcoEdgePlugin.h"
 
-
+
 /* EPICS iocsh shell commands */
 
 static const iocshArg initArg0 = { "portName",iocshArgString};

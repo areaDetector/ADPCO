@@ -1,10 +1,10 @@
-/* drvSimDetector.h
+/** drvSimDetector.h
  *
  * This is a driver for a simulated area detector.
  *
- * Author: /Tim Madden
+ *@author Timothy Madden
  *
- * Created:  2010
+ *@date  2010
  *
  */
 

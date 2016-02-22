@@ -1,19 +1,12 @@
-/*******************************************************************************
+/**
  *
- *    log_file.cpp
+ *    Provide a log file to screen and files. writes log messages to fie with date and times. 
  *
- *    Author: Tim Madden
- *    Date:    7/27/03
- *    Project:MBC CCD Detector DAQ.
+ *@author  Tim Madden
+ *@date 2003
  *
- *
- *
- *
- ******************************************************************************/
-
-/*
- * Include files.
  */
+
 #include <time.h>
 #include <stdio.h>
 
@@ -29,12 +22,13 @@
 #include <unistd.h>
 #endif
 
-/*******************************************************************************
+/**
  *
- *    Class LOG_FILE
+ *  constructor, give filename to write to. Like "C:/a/b/cc/dd.txt"
+ * or linux name like "/hello/meme/logs/me.txt"
  *
- *
- ******************************************************************************/
+ */
+ 
 log_file::log_file(char* filename) {
   time_t tp;
   char fnameto[256];
@@ -80,24 +74,20 @@ log_file::log_file(char* filename) {
   is_printf = false;
 }
 
-/*******************************************************************************
- *
- *    Class LOG_FILE
- *
- *
- ******************************************************************************/
-// destroy file object.
+
+/**
+ * destroy file object.
+ */
+ 
 log_file::~log_file() {
   if (fp != 0) fclose(fp);
 }
 
-/*******************************************************************************
- *
- *    Class LOG_FILE
- *
- *
- ******************************************************************************/
-// output to log ile.
+
+/**
+ * write message or string to log file w/ current date time. also writes to screen.
+ */
+ 
 void log_file::log(char* message) {
   time_t tp;
 
@@ -116,13 +106,11 @@ void log_file::log(char* message) {
   }
 }
 
-/*******************************************************************************
- *
- *    Class LOG_FILE
- *
- *
- ******************************************************************************/
-// output to log ile.
+
+/**
+ * write string to logfile w/ no timestamp.
+ */
+
 void log_file::logNoDate(char* message) {
   time_t tp;
 
@@ -140,7 +128,11 @@ void log_file::logNoDate(char* message) {
   }
 }
 
-void log_file::puts(char* message, int len) {
+/**
+ * low level write to log file. string and lengt of string.
+ */
+
+ void log_file::puts(char* message, int len) {
   unsigned int ixx;
   unsigned char cxx;
 
@@ -160,6 +152,14 @@ void log_file::puts(char* message, int len) {
   }
 }
 
+/**
+ * True.False to enable or disable logs to the file.
+ */
+
 void log_file::enableLog(bool is_en) { is_enabled = is_en; }
 
+/**
+ * true.false to enable print logs to screen as well as file. 
+ */
+ 
 void log_file::enablePrintf(bool is_en) { is_printf = is_en; }

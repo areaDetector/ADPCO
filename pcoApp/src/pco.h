@@ -1,8 +1,11 @@
-/* pco.cpp
+/** 
+ * pco.cpp
+ * Area Detector Driver for PCO cameras that use Camera Link
+ * Inherite ADCameraLink to provide Image Grabbing functions. 
+ * this class addes all the commands/control that is sent over serial port on CL grabber.
  *
- * Author: TJ Madden
- *
- *
+ *@author tim madden
+ *@date 2014
  */
 
 #ifndef PCO_H_
@@ -60,12 +63,9 @@
 #include <math.h>
 #include "time.h"
 
-/** Driver for pco (Rayonix) CCD detector; communicates with the pco program
- * over a TCP/IP
-  * socket with the pco_server_socket program that they distribute.
-  * The pco program must be set into Acquire/Remote Control/Start to use this
- * driver.
-  */
+/** 
+ *PCO Driver. Serial port functions. 
+ */
 
 //   putIntParam\((?<param>[a-z_]*).*
 // createParam\("$+{param}",asynInt32,$+{param}\)
