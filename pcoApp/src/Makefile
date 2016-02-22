@@ -10,7 +10,7 @@ include $(TOP)/configure/CONFIG
 #
 #=============================
 
-
+INC += pco.h
 
 LIBRARY_IOC = pco
 
@@ -34,9 +34,6 @@ LIB_SRCS    += ADCameralink.cpp
 
 LIB_SRCS +=drvpcoEdgePluginEpics.c
 LIB_SRCS +=pcoEdgePlugin.cpp
-
-DBD += camLinkSerialSupport.dbd
-
 
 
 
@@ -80,19 +77,12 @@ PROD_LDFLAGS_WIN32 += /VERBOSE:LIB
 
 #DBD += caputRecorder.dbd
 
-DBD += PCOApp.dbd
+#!!DBD += PCOApp.dbd
 #DBD += PCOAppInclude.dbd
+
+DBD += camLinkSerialSupport.dbd
 DBD += PCOSupport.dbd
 DBD += pcoEdgePluginSupport.dbd
-
-
-
-
-
-PROD_LDFLAGS_WIN32 += /STACK:12000000,12000000
-
-
-PROD_LIBS += pco
 
 
 

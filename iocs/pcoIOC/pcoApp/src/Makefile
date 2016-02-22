@@ -16,10 +16,11 @@ DBD += $(PROD_NAME).dbd
 $(PROD_NAME)_DBD += PCOSupport.dbd
 
 # <name>_registerRecordDeviceDriver.cpp will be created from <name>.dbd
-$(PROD_NAME)_SRCS += $(PROD_NAME)_registerRecordDeviceDriver.cpp $(PROD_NAME)Main.cpp
+PROD_SRCS_DEFAULT += $(PROD_NAME)_registerRecordDeviceDriver.cpp $(PROD_NAME)Main.cpp
+
 
 # Add locally compiled object code
-$(PROD_NAME)_LIBS += pco
+PROD_LIBS += pco clsersis display_lib fglib5 gbelib iolibrt 
 
 
 #!!$(foreach v, $(.VARIABLES), $(info $(v) = $($(v))))
