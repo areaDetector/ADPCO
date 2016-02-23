@@ -1,0 +1,3509 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html><head><title>areaDetector PCO driver</title>
+
+  
+
+  
+  
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="Content-Type"></head><body>
+<div style="text-align: center;">
+<h1> areaDetector PCO driver</h1>
+<h2>&nbsp; February 15, 2016</h2>
+<h2> Timothy J. Madden, Argonne National Laboratory<br>
+</h2>
+<h2><br>
+</h2>
+</div>
+
+<h2> Table of Contents</h2>
+
+<ul>
+
+  <li><a href="#Introduction">Introduction</a></li>
+  <li><a href="#AD_Parameters_">AD Parameters<br>
+</a></li>
+  <li><a href="#CameraLink_parameters">Cameralink Parameters<br>
+</a></li>
+  <li><a href="#PCO_Parameters_">PCO Parameters<br>
+</a></li>
+  
+  
+  <li><a href="#Configuration">Configuration</a></li>
+  <li><a href="#MEDM_screens">MEDM screens</a></li>
+  
+</ul>
+
+<h2 id="Introduction" style="text-align: left;"> Introduction</h2>
+
+<p> This is an <a href="http://www.aps.anl.gov/epics">EPICS</a> <a href="areaDetector.html"> areaDetector</a> driver for&nbsp; detectors
+from <a href="http://www.pco.de/">PCO</a>
+using raw serial communication to a Camera Link frame grabber. The
+driver is in use at the Advanced Photon Source to control the Dimax and
+Edge cameras from PCO. The driver
+is supported on 32-bit and 64- bit Linux and 32-bit and 64-bit Windows.</p>
+
+<p> The driver currently provides access to most of the features of the
+PCO cameras:</p>
+
+<ul>
+
+  <li>Most features of the Edge and Dimax cameras are supported. <br>
+  </li>
+  <li>Control of the exposure time, wait time, frame rate.<br>
+  </li>
+  <li>Support for all&nbsp; trigger modes supported by PCO.<br>
+  </li>
+  <li>Support for rolling and global shutter mode on Edge.</li>
+  <li>Support for two Frame Grabbers: The Silicon Software and Dalsa.</li>
+  <li>Descrambling of Edge images as an Area Detector Plugin.<br>
+  </li>
+  <li>Support of Dimax on-board memory. <br>
+  </li>
+</ul>
+
+<p> The PCO driver consists of three parts.First,a driver
+called ADCameraLink&nbsp; that inherits from ADDriver provides&nbsp;
+functions for grabbing images from the Camera Link frame grabber.
+Second,&nbsp; pco, a class that&nbsp; inherits from ADCameraLink,
+provides all serial port control over the RS-232 port built in to the
+Camera Link grabber card. If one were to write a Camera Link driver for
+some camera other than PCO, one
+would inherit ADCameraLink and add serial control code. Last,
+camLinkSerial,&nbsp; provides serial port I/O as an asynPortDriver
+similar to <a href="http://www.aps.anl.gov/epics/modules/soft/asyn/R4-29/asynDriver.html#interposeInterfaces">drvAsynSerialPort</a>.
+&nbsp;</p>
+
+<span style="text-decoration: underline;"></span>
+<p>PCO provides a Windows-based SDK for driving their cameras. Because
+this driver was developed largely before the PCO SDK was mature, this
+driver uses direct Camera Link serial port control. An advantage of
+this approach is that any camera link card can be supported. Also the
+driver can be run in a Linux system (The PCO SDK is Windows-only.)</p>
+
+<p>The Camera Link frame grabbers ship with a software API and library.
+This driver hides all Frame Grabber API calls in a C++ interface called
+grabber Interface.h. To support new frame grabbers, a developer muvst
+write a new C++ class implementing grabberInterface.h specific to that
+frame grabber. The Makefile should be changed to link against the new
+grabber vendor libraries. The grabber vendor libraries are available
+from the vendors. The Silicon Software libraries can be downloaded <a href="http://silicon.software/products/development-software/">here
+(SISW)</a>. This PCo Driver specifically supports the Micro Enable IV
+grabber from Silicon Software. The&nbsp;<a href="http://www.teledynedalsa.com/imaging/products/fg/">Dalsa</a>
+drivers require the purchase of a license of their software called
+Sapera.&nbsp; Because Dalsa used to be called Coreco, the source code
+in this driver referes to "Coreco" rather than Dalsa. <br>
+</p>
+
+<br>
+
+<p>The PCO parameters are documented in their Camera Link serial
+command manual available <a href="http://www.pco.de/fileadmin/user_upload/db/download/MA_DCCTRLCOME_105.pdf">here.</a>
+The Dimax parameters are documented <a href="http://www.pco.de/fileadmin/user_upload/db/download/MA_DCCTRLCOME_105.pdf">here.
+</a><br>
+The PCO AD Driver supports nearly all of the parameters documented in
+these manuals.<br>
+</p>
+
+<br>
+
+<h2 id="StandardNotes" style="text-align: left;"><a name="AD_Parameters_"></a>AD Parameters<br>
+</h2>
+
+Parameters for ADDriver are shown in the table below. Parameters not
+supported in ADPCO are greyed out.&nbsp; <br>
+<br>
+Reagarding the exposure time, the PCO has two modes:<br>
+1) Frame rate mode: In this mode the frame rate is set in pco_frame_rate. ADAcquireTime, ADAcquirePeriod are ignored.<br>
+2) Expose mode: In this mode ADAcquireTime, ADAcquirePeriod&nbsp; are used, and pco_frame_rate is ignored.<br>
+<br>
+
+<br>
+
+<table style="text-align: left;" border="1" cellpadding="2" cellspacing="2">
+
+  <tbody>
+    <tr>
+      <td colspan="7" align="center"><b>Parameter Definitions in
+ADDriver.h and EPICS Record Definitions in ADBase.template</b> </td>
+    </tr>
+    <tr>
+      <th> Parameter index variable</th>
+      <th> asyn interface</th>
+      <th> Access</th>
+      <th> Description</th>
+      <th> drvInfo string</th>
+      <th> EPICS record name</th>
+      <th> EPICS record type</th>
+    </tr>
+    <tr>
+      <td colspan="7" style="height: 25px;" align="center"> <b>Information
+about the detector</b></td>
+    </tr>
+    <tr>
+      <td> ADManufacturer</td>
+      <td> asynOctet</td>
+      <td> r/o</td>
+      <td> Detector manufacturer name</td>
+      <td> MANUFACTURER</td>
+      <td> $(P)$(R)Manufacturer_RBV</td>
+      <td> stringin</td>
+    </tr>
+    <tr>
+      <td> ADModel</td>
+      <td> asynOctet</td>
+      <td> r/o</td>
+      <td> Detector model name</td>
+      <td> MODEL</td>
+      <td> $(P)$(R)Model_RBV</td>
+      <td> stringin</td>
+    </tr>
+    <tr>
+      <td> ADMaxSizeX</td>
+      <td> asynInt32</td>
+      <td> r/o</td>
+      <td> Maximum (sensor) size in the X direction</td>
+      <td> MAX_SIZE_X</td>
+      <td> $(P)$(R)MaxSizeX_RBV</td>
+      <td> longin</td>
+    </tr>
+    <tr>
+      <td> ADMaxSizeY</td>
+      <td> asynInt32</td>
+      <td> r/o</td>
+      <td> Maximum (sensor) size in the Y direction</td>
+      <td> MAX_SIZE_Y</td>
+      <td> $(P)$(R)MaxSizeY_RBV</td>
+      <td> longin</td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);"> ADTemperature</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynFloat64</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/w</td>
+      <td style="background-color: rgb(153, 153, 153);"> Detector
+temperature</td>
+      <td style="background-color: rgb(153, 153, 153);"> TEMPERATURE</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)Temperature<br>
+$(P)$(R)Temperature_RBV<br>
+      </td>
+      <td style="background-color: rgb(153, 153, 153);"> ao<br>
+ai</td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);">
+ADTemperatureActual</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynFloat64</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/o</td>
+      <td style="background-color: rgb(153, 153, 153);"> Actual
+detector temperature</td>
+      <td style="background-color: rgb(153, 153, 153);">
+TEMPERATURE_ACTUAL</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)Temperature_Actual </td>
+      <td style="background-color: rgb(153, 153, 153);"> ai</td>
+    </tr>
+    <tr>
+      <td colspan="7" align="center"> <b>Detector readout control
+including gain, binning, region start and size, reversal</b> </td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);"> ADGain</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynFloat64</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/w</td>
+      <td style="background-color: rgb(153, 153, 153);"> Detector gain</td>
+      <td style="background-color: rgb(153, 153, 153);"> GAIN</td>
+      <td style="background-color: rgb(153, 153, 153);"> $(P)$(R)Gain<br>
+$(P)$(R)Gain_RBV</td>
+      <td style="background-color: rgb(153, 153, 153);"> ao<br>
+ai</td>
+    </tr>
+    <tr>
+      <td> ADBinX</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> Binning in the X direction. Always 1<br>
+      </td>
+      <td> BIN_X</td>
+      <td> $(P)$(R)BinX<br>
+$(P)$(R)BinX_RBV</td>
+      <td> longout<br>
+longin</td>
+    </tr>
+    <tr>
+      <td> ADBinY</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> Binning in the Y direction, Always 1.<br>
+      </td>
+      <td> BIN_Y</td>
+      <td> $(P)$(R)BinY<br>
+$(P)$(R)BinY_RBV</td>
+      <td> longout<br>
+longin</td>
+    </tr>
+    <tr>
+      <td> ADMinX</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> First pixel to read in the X direction. <br>
+0 is the first pixel on the detector.Always 1.<br>
+      </td>
+      <td> MIN_X</td>
+      <td> $(P)$(R)MinX<br>
+$(P)$(R)MinX_RBV</td>
+      <td> longout<br>
+longin</td>
+    </tr>
+    <tr>
+      <td> ADMinY</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> First pixel to read in the Y direction.<br>
+0 is the first pixel on the detector. Always 1.<br>
+      </td>
+      <td> MIN_Y</td>
+      <td> $(P)$(R)MinY<br>
+$(P)$(R)MinY_RBV</td>
+      <td> longout<br>
+longin</td>
+    </tr>
+    <tr>
+      <td> ADSizeX</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> Size of the region to read in the X direction</td>
+      <td> SIZE_X</td>
+      <td> $(P)$(R)SizeX<br>
+$(P)$(R)SizeX_RBV</td>
+      <td> longout<br>
+longin</td>
+    </tr>
+    <tr>
+      <td> ADSizeY</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> Size of the region to read in the Y direction</td>
+      <td> SIZE_Y</td>
+      <td> $(P)$(R)SizeY<br>
+$(P)$(R)SizeY_RBV</td>
+      <td> longout<br>
+longin</td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);"> ADReverseX</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynInt32</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/w</td>
+      <td style="background-color: rgb(153, 153, 153);"> Reverse array
+in the X direction<br>
+(0=No, 1=Yes)</td>
+      <td style="background-color: rgb(153, 153, 153);"> REVERSE_X</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)ReverseX<br>
+$(P)$(R)ReverseX_RBV</td>
+      <td style="background-color: rgb(153, 153, 153);"> longout<br>
+longin</td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);"> ADReverseY</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynInt32</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/w</td>
+      <td style="background-color: rgb(153, 153, 153);"> Reverse array
+in the Y direction<br>
+(0=No, 1=Yes)</td>
+      <td style="background-color: rgb(153, 153, 153);"> REVERSE_Y</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)ReverseY<br>
+$(P)$(R)ReverseY_RBV</td>
+      <td style="background-color: rgb(153, 153, 153);"> longout<br>
+longin</td>
+    </tr>
+    <tr>
+      <td colspan="7" align="center"> <b>Image and trigger modes</b></td>
+    </tr>
+    <tr>
+      <td> ADImageMode</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> Image mode (ADImageMode_t).</td>
+      <td> IMAGE_MODE</td>
+      <td> $(P)$(R)ImageMode<br>
+$(P)$(R)ImageMode_RBV</td>
+      <td> mbbo<br>
+mbbi</td>
+    </tr>
+    <tr>
+      <td> ADTriggerMode</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> Trigger mode (ADTriggerMode_t).</td>
+      <td> TRIGGER_MODE</td>
+      <td> $(P)$(R)TriggerMode<br>
+$(P)$(R)TriggerMode_RBV</td>
+      <td> mbbo<br>
+mbbi</td>
+    </tr>
+    <tr>
+      <td colspan="7" align="center"> <b>Frame type</b></td>
+    </tr>
+    <tr>
+      <td> ADFrameType</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> Frame type (ADFrameType_t).</td>
+      <td> FRAME_TYPE</td>
+      <td> $(P)$(R)FrameType<br>
+$(P)$(R)FrameType_RBV</td>
+      <td> mbbo<br>
+mbbi</td>
+    </tr>
+    <tr>
+      <td colspan="7" align="center"> <b>Acquisition time and period</b></td>
+    </tr>
+    <tr>
+      <td> ADAcquireTime</td>
+      <td> asynFloat64</td>
+      <td> r/w</td>
+      <td> Acquisition time per image</td>
+      <td> ACQ_TIME</td>
+      <td> $(P)$(R)AcquireTime<br>
+$(P)$(R)AcquireTime_RBV</td>
+      <td> ao<br>
+ai</td>
+    </tr>
+    <tr>
+      <td> ADAcquirePeriod</td>
+      <td> asynFloat64</td>
+      <td> r/w</td>
+      <td> Acquisition period between images</td>
+      <td> ACQ_PERIOD</td>
+      <td> $(P)$(R)AcquirePeriod<br>
+$(P)$(R)AcquirePeriod_RBV</td>
+      <td> ao<br>
+ai</td>
+    </tr>
+    <tr>
+      <td colspan="7" align="center"> <b>Number of exposures and
+number of images</b></td>
+    </tr>
+    <tr>
+      <td> ADNumExposures</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> Number of exposures per image to acquire</td>
+      <td> NEXPOSURES</td>
+      <td> $(P)$(R)NumExposures<br>
+$(P)$(R)NumExposures_RBV</td>
+      <td> longout<br>
+longin</td>
+    </tr>
+    <tr>
+      <td> ADNumImages</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> Number of images to acquire in one acquisition sequence</td>
+      <td> NIMAGES</td>
+      <td> $(P)$(R)NumImages<br>
+$(P)$(R)NumImages_RBV</td>
+      <td> longout<br>
+longin</td>
+    </tr>
+    <tr>
+      <td colspan="7" align="center"> <b>Acquisition control</b></td>
+    </tr>
+    <tr>
+      <td> ADAcquire</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> Start (1) or stop (0) image acquisition. This is an EPICS
+busy record that does not process its forward link until acquisition is
+complete. Clients should write 1 to the Acquire record to start
+acquisition, and wait for Acquire to go to 0 to know that acquisition
+is complete.</td>
+      <td> ACQUIRE</td>
+      <td> $(P)$(R)Acquire<br>
+$(P)$(R)Acquire_RBV</td>
+      <td> busy<br>
+bi</td>
+    </tr>
+    <tr>
+      <td colspan="7" align="center"> <b>Status information</b></td>
+    </tr>
+    <tr>
+      <td> ADStatus</td>
+      <td> asynInt32</td>
+      <td> r/o</td>
+      <td> Acquisition status (ADStatus_t)</td>
+      <td> STATUS</td>
+      <td> $(P)$(R)DetectorState_RBV</td>
+      <td> mbbi</td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);"> ADStatusMessage</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynOctet</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/o</td>
+      <td style="background-color: rgb(153, 153, 153);"> Status message
+string</td>
+      <td style="background-color: rgb(153, 153, 153);"> STATUS_MESSAGE</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)StatusMessage_RBV</td>
+      <td style="background-color: rgb(153, 153, 153);"> waveform</td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);">
+ADStringToServer</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynOctet</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/o</td>
+      <td style="background-color: rgb(153, 153, 153);"> String from
+driver to string-based vendor server</td>
+      <td style="background-color: rgb(153, 153, 153);">
+STRING_TO_SERVER</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)StringToServer_RBV</td>
+      <td style="background-color: rgb(153, 153, 153);"> waveform</td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);">
+ADStringFromServer</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynOctet</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/o</td>
+      <td style="background-color: rgb(153, 153, 153);"> String from
+string-based vendor server to driver</td>
+      <td style="background-color: rgb(153, 153, 153);">
+STRING_FROM_SERVER</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)StringFromServer_RBV</td>
+      <td style="background-color: rgb(153, 153, 153);"> waveform</td>
+    </tr>
+    <tr>
+      <td> ADNumExposuresCounter</td>
+      <td> asynInt32</td>
+      <td> r/o</td>
+      <td> Counter that increments by 1 each time an exposure is
+acquired for the current image. Driver resets to 0 when acquisition is
+started.</td>
+      <td> NUM_EXPOSURES_COUNTER</td>
+      <td> $(P)$(R)NumExposuresCounter_RBV</td>
+      <td> longin</td>
+    </tr>
+    <tr>
+      <td> ADNumImagesCounter</td>
+      <td> asynInt32</td>
+      <td> r/o</td>
+      <td> Counter that increments by 1 each time an image is acquired
+in the current acquisition sequence. Driver resets to 0 when
+acquisition is started. Drivers can use this as the loop counter when
+ADImageMode=ADImageMultiple.</td>
+      <td> NUM_IMAGES_COUNTER</td>
+      <td> $(P)$(R)NumImagesCounter_RBV</td>
+      <td> longin</td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);"> ADTimeRemaining</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynFloat64</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/o</td>
+      <td style="background-color: rgb(153, 153, 153);"> Time remaining
+for current image. Drivers should update this value if they are doing
+the exposure timing internally, rather than in the detector hardware.</td>
+      <td style="background-color: rgb(153, 153, 153);"> TIME_REMAINING</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)TimeRemaining_RBV</td>
+      <td style="background-color: rgb(153, 153, 153);"> ai</td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);"> ADReadStatus</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynInt32</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/w</td>
+      <td style="background-color: rgb(153, 153, 153);"> Write a 1 to
+this parameter to force a read of the detector status. Detector drivers
+normally read the status as required, so this is usually not necessary,
+but there may be some circumstances under which forcing a status read
+may be needed.</td>
+      <td style="background-color: rgb(153, 153, 153);"> READ_STATUS</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)ReadStatus</td>
+      <td style="background-color: rgb(153, 153, 153);"> bo</td>
+    </tr>
+    <tr>
+      <td colspan="7" align="center"> <b>Shutter control</b></td>
+    </tr>
+    <tr>
+      <td> ADShutterMode</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> Shutter mode (None, detector-controlled or EPICS-controlled)
+(ADShutterMode_t) </td>
+      <td> SHUTTER_MODE</td>
+      <td> $(P)$(R)ShutterMode<br>
+$(P)$(R)ShutterMode_RBV</td>
+      <td> mbbo<br>
+mbbi</td>
+    </tr>
+    <tr>
+      <td> ADShutterControl</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> Shutter control for the selected (detector or EPICS) shutter
+(ADShutterStatus_t) </td>
+      <td> SHUTTER_CONTROL</td>
+      <td> $(P)$(R)ShutterControl<br>
+$(P)$(R)ShutterControl_RBV</td>
+      <td> bo<br>
+bi</td>
+    </tr>
+    <tr>
+      <td> ADShutterControlEPICS</td>
+      <td> asynInt32</td>
+      <td> r/w</td>
+      <td> This record processes when it receives a callback from the
+driver to open or close the EPICS shutter. It triggers the records
+below to actually open or close the EPICS shutter.</td>
+      <td> SHUTTER_CONTROL_EPICS</td>
+      <td> $(P)$(R)ShutterControlEPICS</td>
+      <td> bi</td>
+    </tr>
+    <tr>
+      <td><br>
+      </td>
+      <td><br>
+      </td>
+      <td><br>
+      </td>
+      <td><br>
+      </td>
+      <td><br>
+      </td>
+      <td><br>
+      </td>
+      <td><br>
+      </td>
+    </tr>
+    <tr>
+      <td><br>
+      </td>
+      <td><br>
+      </td>
+      <td><br>
+      </td>
+      <td><br>
+      </td>
+      <td><br>
+      </td>
+      <td><br>
+      </td>
+      <td><br>
+      </td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);"> ADShutterStatus</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynInt32</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/o</td>
+      <td style="background-color: rgb(153, 153, 153);"> Status of the
+detector-controlled shutter (ADShutterStatus_t)</td>
+      <td style="background-color: rgb(153, 153, 153);"> SHUTTER_STATUS</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)ShutterStatus_RBV</td>
+      <td style="background-color: rgb(153, 153, 153);"> bi</td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);"> N/A</td>
+      <td style="background-color: rgb(153, 153, 153);"> N/A</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/o</td>
+      <td style="background-color: rgb(153, 153, 153);"> Status of the
+EPICS-controlled shutter. This record should have its input link (INP)
+set to a record that contains the open/close status information for the
+shutter. The link should have the "CP" attribute, so this record
+processes when the input changes. The ZRVL field should be set to the
+value of the input link when the shutter is closed, and the ONVL field
+should be set to the value of the input link when the shutter is open.</td>
+      <td style="background-color: rgb(153, 153, 153);"> N/A</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)ShutterStatusEPICS_RBV</td>
+      <td style="background-color: rgb(153, 153, 153);"> mbbi</td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);">
+ADShutterOpenDelay</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynFloat64</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/w</td>
+      <td style="background-color: rgb(153, 153, 153);"> Time required
+for the shutter to actually open (ADShutterStatus_t)</td>
+      <td style="background-color: rgb(153, 153, 153);">
+SHUTTER_OPEN_DELAY</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)ShutterOpenDelay<br>
+$(P)$(R)ShutterOpenDelay_RBV</td>
+      <td style="background-color: rgb(153, 153, 153);"> ao<br>
+ai</td>
+    </tr>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153);">
+ADShutterCloseDelay</td>
+      <td style="background-color: rgb(153, 153, 153);"> asynFloat64</td>
+      <td style="background-color: rgb(153, 153, 153);"> r/w</td>
+      <td style="background-color: rgb(153, 153, 153);"> Time required
+for the shutter to actually close (ADShutterStatus_t)</td>
+      <td style="background-color: rgb(153, 153, 153);">
+SHUTTER_CLOSE_DELAY</td>
+      <td style="background-color: rgb(153, 153, 153);">
+$(P)$(R)ShutterCloseDelay<br>
+$(P)$(R)ShutterCloseDelay_RBV</td>
+      <td style="background-color: rgb(153, 153, 153);"> ao<br>
+ai</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="Guidelines"><br>
+</h2>
+
+<h2 id="Driver_parameters" style="text-align: left;"><br>
+</h2>
+
+<h2 id="Driver_parameters" style="text-align: left;"><a name="CameraLink_parameters"></a>CameraLink
+parameters</h2>
+
+<p> The ADPCO driver implements the following parameters in addition to
+those in asynNDArrayDriver.h and ADDriver.h.</p>
+
+<br>
+
+<table style="text-align: left; height: 1522px; width: 1106px;" border="1" cellpadding="2" cellspacing="2">
+
+  <tbody>
+    <tr>
+      <td colspan="8" align="center"> <b>Parameter Definitions in
+ADCameraLink.h and EPICS Record Definitions in coreco.template</b> </td>
+    </tr>
+    <tr>
+      <th> Parameter index variable</th>
+      <th> asyn interface</th>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <th> Access</th>
+      <th> Description</th>
+      <th> drvInfo string</th>
+      <th> EPICS record name</th>
+      <th> EPICS record type</th>
+    </tr>
+    <tr>
+      <td>cor_run_counter<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Increments when image grab thread runs. <br>
+      </td>
+      <td>cor_run_counter<br>
+      </td>
+      <td> $(P)$(R)cor_run_counter</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_frame_to_null<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> counts thrown away frames. <br>
+      </td>
+      <td>cor_frame_to_null<br>
+      </td>
+      <td> $(P)$(R)cor_frame_to_null_RBV
+$(P)$(R)cor_frame_to_null</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_is_grab<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 for grab mode, 0 does nothing.<br>
+      </td>
+      <td>cor_is_grab<br>
+      </td>
+      <td> $(P)$(R)cor_is_grab_RBV
+$(P)$(R)cor_is_grab</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_num_coreco_buffers<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Number of buffers on grabber. <br>
+      </td>
+      <td>cor_num_coreco_buffers<br>
+      </td>
+      <td> $(P)$(R)cor_num_coreco_buffers_RBV
+$(P)$(R)cor_num_coreco_buffers</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_check_timestamps<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> check for lost frames by examening time stamps. <br>
+      </td>
+      <td>cor_check_timestamps<br>
+      </td>
+      <td> $(P)$(R)cor_check_timestamps_RBV
+$(P)$(R)cor_check_timestamps</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_check_timestamps<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Descripttion <br>
+      </td>
+      <td>cor_check_timestamps<br>
+      </td>
+      <td> $(P)$(R)cor_num_buffers_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_num_free_buffers<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> have to fix this... <br>
+      </td>
+      <td>cor_num_free_buffers<br>
+      </td>
+      <td> $(P)$(R)cor_num_free_buffers_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_is_abort<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 to abort grab mode. 0 to do nothing. <br>
+      </td>
+      <td>cor_is_abort<br>
+      </td>
+      <td> $(P)$(R)cor_is_abort_RBV
+$(P)$(R)cor_is_abort</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_grabber_type<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Tells which vender made grabber. <br>
+      </td>
+      <td>cor_grabber_type<br>
+      </td>
+      <td> $(P)$(R)cor_grabber_type_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_is_freeze<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 to freeze image grabbing. <br>
+      </td>
+      <td>cor_is_freeze<br>
+      </td>
+      <td> $(P)$(R)cor_is_freeze_RBV
+$(P)$(R)cor_is_freeze</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_is_snap<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 to snap one frame. <br>
+      </td>
+      <td>cor_is_snap<br>
+      </td>
+      <td> $(P)$(R)cor_is_snap_RBV
+$(P)$(R)cor_is_snap</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_is_loadccf<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> write 1 to load grabber config. file. <br>
+      </td>
+      <td>cor_is_loadccf<br>
+      </td>
+      <td> $(P)$(R)cor_is_loadccf</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>cor_use_fpga<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> 1 if we are using fpga on grabber. Only dalsa Andaconda has
+fpga. <br>
+      </td>
+      <td>cor_use_fpga<br>
+      </td>
+      <td> $(P)$(R)cor_use_fpga</td>
+      <td>mbbo</td>
+    </tr>
+    <tr>
+      <td>cor_is_load_fpga_regs<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> Load foga regs from file. <br>
+      </td>
+      <td>cor_is_load_fpga_regs<br>
+      </td>
+      <td> $(P)$(R)cor_is_load_fpga_regs</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>cor_is_read_fpga_regs<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> Dump fpga registers to screen. <br>
+      </td>
+      <td>cor_is_read_fpga_regs<br>
+      </td>
+      <td> $(P)$(R)cor_is_read_fpga_regs</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>cor_ccf_filename<br>
+      </td>
+      <td> asynOctetWrite</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Nema of config. file. <br>
+      </td>
+      <td>cor_ccf_filename<br>
+      </td>
+      <td> $(P)$(R)cor_ccf_filename
+$(P)$(R)cor_ccf_filename_RBV</td>
+      <td>stringout
+stringin</td>
+    </tr>
+    <tr>
+      <td>cor_fpga_command<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Command sent to FPGA. <br>
+      </td>
+      <td>cor_fpga_command<br>
+      </td>
+      <td> $(P)$(R)cor_fpga_command_RBV</td>
+      <td>mbbi</td>
+    </tr>
+    <tr>
+      <td>cor_fpga_num_imgs2ave<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Number of frames for FPGA to average. <br>
+      </td>
+      <td>cor_fpga_num_imgs2ave<br>
+      </td>
+      <td> $(P)$(R)cor_fpga_num_imgs2ave
+$(P)$(R)cor_fpga_num_imgs2ave_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>cor_compression_rate<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Compression rate done on FPGA. <br>
+      </td>
+      <td>cor_compression_rate<br>
+      </td>
+      <td> $(P)$(R)cor_compression_rate
+$(P)$(R)cor_compression_rate_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>cor_fpga__reg_filename<br>
+      </td>
+      <td> asynOctetWrite</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Filename of FPGA register settings. <br>
+      </td>
+      <td>cor_fpga__reg_filename<br>
+      </td>
+      <td> $(P)$(R)cor_fpga_reg_filename
+$(P)$(R)cor_fpga_reg_filename_RBV</td>
+      <td>stringout
+stringin</td>
+    </tr>
+    <tr>
+      <td>cor_is_sleep<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> 1 to sleep every time image grab thread loops. <br>
+      </td>
+      <td>cor_is_sleep<br>
+      </td>
+      <td> $(P)$(R)cor_is_sleep</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>cor_sleep_ms<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> How long image thread sleeps between loops. <br>
+      </td>
+      <td>cor_sleep_ms<br>
+      </td>
+      <td> $(P)$(R)cor_sleep_ms</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>cor_fpga_filename<br>
+      </td>
+      <td> asynOctetWrite</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> name of FPGA firmware to load into FPGA, <br>
+      </td>
+      <td>cor_fpga_filename<br>
+      </td>
+      <td> $(P)$(R)cor_fpga_filename
+$(P)$(R)cor_fpga_filename_RBV</td>
+      <td>stringout
+stringin</td>
+    </tr>
+    <tr>
+      <td>cor_input_filename<br>
+      </td>
+      <td> asynOctetWrite</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> to simulate camera, name if iamge to load into grabber from
+file. <br>
+      </td>
+      <td>cor_input_filename<br>
+      </td>
+      <td> $(P)$(R)cor_input_filename
+$(P)$(R)cor_input_filename_RBV</td>
+      <td>stringout
+stringin</td>
+    </tr>
+    <tr>
+      <td>cor_dark_filename<br>
+      </td>
+      <td> asynOctetWrite</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> name if file to which dark image is saved. <br>
+      </td>
+      <td>cor_dark_filename<br>
+      </td>
+      <td> $(P)$(R)cor_dark_filename
+$(P)$(R)cor_dark_filename_RBV</td>
+      <td>stringout
+stringin</td>
+    </tr>
+    <tr>
+      <td>cor_fpga_save_dark<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> 1 to dave darks. <br>
+      </td>
+      <td>cor_fpga_save_dark<br>
+      </td>
+      <td> $(P)$(R)cor_fpga_save_dark</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>cor_input_from_file<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> 1 to read image from disk into grabber. <br>
+      </td>
+      <td>cor_input_from_file<br>
+      </td>
+      <td> $(P)$(R)cor_input_from_file</td>
+      <td>mbbo</td>
+    </tr>
+    <tr>
+      <td>cor_load_img_file<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> deprecated? <br>
+      </td>
+      <td>cor_load_img_file<br>
+      </td>
+      <td> $(P)$(R)cor_load_img_file</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>cor_make_viewer<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> display debug viewer, from grabber library.&nbsp; <br>
+      </td>
+      <td>cor_make_viewer<br>
+      </td>
+      <td> $(P)$(R)cor_make_viewer</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>cor_sub_flag<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> 1 for FPGA dark subtraction. <br>
+      </td>
+      <td>cor_sub_flag<br>
+      </td>
+      <td> $(P)$(R)cor_sub_flag_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_comp_flag<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> 1 for FPGA compression. <br>
+      </td>
+      <td>cor_comp_flag<br>
+      </td>
+      <td> $(P)$(R)cor_comp_flag_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_acc_flag<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> 1 for FPGA accumulation. <br>
+      </td>
+      <td>cor_acc_flag<br>
+      </td>
+      <td> $(P)$(R)cor_acc_flag_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_store_flag<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> FPGA low level flag <br>
+      </td>
+      <td>cor_store_flag<br>
+      </td>
+      <td> $(P)$(R)cor_store_flag_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_read_flag<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> FPGA low level flag&nbsp; </td>
+      <td>cor_read_flag<br>
+      </td>
+      <td> $(P)$(R)cor_read_flag_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_saw_flag<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> FPGA low level flag&nbsp; </td>
+      <td>cor_saw_flag<br>
+      </td>
+      <td> $(P)$(R)cor_saw_flag_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_dec_flag<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> FPGA low level flag&nbsp; </td>
+      <td>cor_dec_flag<br>
+      </td>
+      <td> $(P)$(R)cor_dec_flag_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_abs_flag<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> FPGA low level flag&nbsp; </td>
+      <td>cor_abs_flag<br>
+      </td>
+      <td> $(P)$(R)cor_abs_flag_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_comp_threshold<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Threshiold for image compression. <br>
+      </td>
+      <td>cor_comp_threshold<br>
+      </td>
+      <td> $(P)$(R)cor_comp_threshold_RBV
+$(P)$(R)cor_comp_threshold</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_frame_dec_rate<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Compression rate. <br>
+      </td>
+      <td>cor_frame_dec_rate<br>
+      </td>
+      <td> $(P)$(R)cor_frame_dec_rate_RBV
+$(P)$(R)cor_frame_dec_rate</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_load_dark_2_fpga<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> Load dark from file into FPGA. <br>
+      </td>
+      <td>cor_load_dark_2_fpga<br>
+      </td>
+      <td> $(P)$(R)cor_load_dark_2_fpga</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>cor_coreco_message<br>
+      </td>
+      <td> asynOctetRead</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Error messages from grabber vendor library. <br>
+      </td>
+      <td>cor_coreco_message<br>
+      </td>
+      <td> $(P)$(R)cor_coreco_message_RBV</td>
+      <td>stringin</td>
+    </tr>
+    <tr>
+      <td>cor_cant_get_ndarray<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 if we can't get ND array. Error condition. <br>
+      </td>
+      <td>cor_cant_get_ndarray<br>
+      </td>
+      <td> $(P)$(R)cor_cant_get_ndarray
+$(P)$(R)cor_cant_get_ndarray_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>cor_num_repeat_timestamp<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 if image timestamp is repeated, meaning repeated frame. <br>
+      </td>
+      <td>cor_num_repeat_timestamp<br>
+      </td>
+      <td> $(P)$(R)cor_num_repeat_timestamp_RBV
+$(P)$(R)cor_num_repeat_timestamp</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_num_missed_timestamp<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 for missed timestamp, for missed frame. If timestamp
+increments longer than sime time, then we missed a stamp. <br>
+      </td>
+      <td>cor_num_missed_timestamp<br>
+      </td>
+      <td> $(P)$(R)cor_num_missed_timestamp_RBV
+$(P)$(R)cor_num_missed_timestamp</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_missed_ts_wait<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> time above which we assume a missed frame. <br>
+      </td>
+      <td>cor_missed_ts_wait<br>
+      </td>
+      <td> $(P)$(R)cor_missed_ts_wait_RBV
+$(P)$(R)cor_missed_ts_wait</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_nd_datasize<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Data size in nd array. <br>
+      </td>
+      <td>cor_nd_datasize<br>
+      </td>
+      <td> $(P)$(R)cor_nd_datasize_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_est_buffers_left<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Estimated ND Arraus left. <br>
+      </td>
+      <td>cor_est_buffers_left<br>
+      </td>
+      <td> $(P)$(R)cor_est_buffers_left_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_max_ndbuffers<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Max ND Arrays we can store. <br>
+      </td>
+      <td>cor_max_ndbuffers<br>
+      </td>
+      <td> $(P)$(R)cor_max_ndbuffers_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_max_ndmemory<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Max ND Arrauy memory. <br>
+      </td>
+      <td>cor_max_ndmemory<br>
+      </td>
+      <td> $(P)$(R)cor_max_ndmemory_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_free_ndbuffers<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Free NDArraus. <br>
+      </td>
+      <td>cor_free_ndbuffers<br>
+      </td>
+      <td> $(P)$(R)cor_free_ndbuffers_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_num_ndbuffers<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Number of created ND Arrauys. <br>
+      </td>
+      <td>cor_num_ndbuffers<br>
+      </td>
+      <td> $(P)$(R)cor_num_ndbuffers_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_alloc_ndmemory<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Amount of created ND Array memory. <br>
+      </td>
+      <td>cor_alloc_ndmemory<br>
+      </td>
+      <td> $(P)$(R)cor_alloc_ndmemory_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_total_missed_frames<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> counts total missed frames forever. <br>
+      </td>
+      <td>cor_total_missed_frames<br>
+      </td>
+      <td> $(P)$(R)cor_total_missed_frames
+$(P)$(R)cor_total_missed_frames_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>cor_recent_missed_frames<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> counts missed frames since last check. <br>
+      </td>
+      <td>cor_recent_missed_frames<br>
+      </td>
+      <td> $(P)$(R)cor_recent_missed_frames
+$(P)$(R)cor_recent_missed_frames_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>cor_num_buff_frames<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Number of buffers on grabber. <br>
+      </td>
+      <td>cor_num_buff_frames<br>
+      </td>
+      <td> $(P)$(R)cor_num_buff_frames_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_num_bad_fpga_headers<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 for bad FPGA data. <br>
+      </td>
+      <td>cor_num_bad_fpga_headers<br>
+      </td>
+      <td> $(P)$(R)cor_num_bad_fpga_headers
+$(P)$(R)cor_num_bad_fpga_headers_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>cor_sap_buffer_count<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Number of buffers in grabber. <br>
+      </td>
+      <td>cor_sap_buffer_count<br>
+      </td>
+      <td> $(P)$(R)cor_sap_buffer_count
+$(P)$(R)cor_sap_buffer_count_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>cor_comp_num_images<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Number of FPGA compressed iamges in one frame. <br>
+      </td>
+      <td>cor_comp_num_images<br>
+      </td>
+      <td> $(P)$(R)cor_comp_num_images_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_comp_pixels0<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Num pixels in comp image. <br>
+      </td>
+      <td>cor_comp_pixels0<br>
+      </td>
+      <td> $(P)$(R)cor_comp_pixels0_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_comp_pixels_error<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Error on compression. <br>
+      </td>
+      <td>cor_comp_pixels_error<br>
+      </td>
+      <td> $(P)$(R)cor_comp_pixels_error_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_max_comp_pixels<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Max num pixels we can put into compressed iamge. <br>
+      </td>
+      <td>cor_max_comp_pixels<br>
+      </td>
+      <td> $(P)$(R)cor_max_comp_pixels_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_compression_error<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Error on compression. <br>
+      </td>
+      <td>cor_compression_error<br>
+      </td>
+      <td> $(P)$(R)cor_compression_error_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>cor_num_thresh_std<br>
+      </td>
+      <td> asynFloat64</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Number of std.deviations of noise for compression threshold.
+      <br>
+      </td>
+      <td>cor_num_thresh_std<br>
+      </td>
+      <td> $(P)$(R)cor_num_thresh_std
+$(P)$(R)cor_num_thresh_std_RBV</td>
+      <td>ao
+ai</td>
+    </tr>
+    <tr>
+      <td>cor_fpga_usr_command<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Command sent to FPGA. <br>
+      </td>
+      <td>cor_fpga_usr_command<br>
+      </td>
+      <td> $(P)$(R)cor_fpga_usr_command
+$(P)$(R)cor_fpga_usr_command_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>cor_filename_in_fpga<br>
+      </td>
+      <td> asynOctetRead</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> FPGA filename. <br>
+      </td>
+      <td>cor_filename_in_fpga<br>
+      </td>
+      <td> $(P)$(R)cor_filename_in_fpga_RBV</td>
+      <td>stringin</td>
+    </tr>
+    <tr>
+      <td>cor_use_image_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Set FPGA algoration. <br>
+      </td>
+      <td>cor_use_image_mode<br>
+      </td>
+      <td> $(P)$(R)cor_use_image_mode_RBV
+$(P)$(R)cor_use_image_mode</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_is_trigpin0<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Set grabber trigger pin 1, 0 <br>
+      </td>
+      <td>cor_is_trigpin0<br>
+      </td>
+      <td> $(P)$(R)cor_is_trigpin0_RBV
+$(P)$(R)cor_is_trigpin0</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_is_trigpin1<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Set grabber trigger pin 1, 0 &nbsp; </td>
+      <td>cor_is_trigpin1<br>
+      </td>
+      <td> $(P)$(R)cor_is_trigpin1_RBV
+$(P)$(R)cor_is_trigpin1</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_is_trigpin2<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Set grabber trigger pin 1, 0 &nbsp; </td>
+      <td>cor_is_trigpin2<br>
+      </td>
+      <td> $(P)$(R)cor_is_trigpin2_RBV
+$(P)$(R)cor_is_trigpin2</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>cor_is_trigpin3<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Set grabber trigger pin 1, 0 &nbsp; </td>
+      <td>cor_is_trigpin3<br>
+      </td>
+      <td> $(P)$(R)cor_is_trigpin3_RBV
+$(P)$(R)cor_is_trigpin3</td>
+      <td>longin
+longout</td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<p><br>
+</p>
+<h2><a name="PCO_Parameters_"></a>PCO Parameters<br>
+</h2>
+<p><br>
+</p>
+<p>The following parameters are found in pco.h.</p>
+<p><br>
+</p>
+
+<br>
+
+<table style="text-align: left; height: 1522px; width: 1106px;" border="1" cellpadding="2" cellspacing="2">
+
+  <tbody>
+    <tr>
+      <td colspan="8" align="center"> <b>Parameter Definitions in
+pco.h and EPICS Record Definitions in pco.template</b> </td>
+    </tr>
+    <tr>
+      <th> Parameter index variable</th>
+      <th> asyn interface</th>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <th> Access</th>
+      <th> Description</th>
+      <th> drvInfo string</th>
+      <th> EPICS record name</th>
+      <th> EPICS record type</th>
+    </tr>
+    <tr>
+      <td>pco_ready2acquire<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 if camera is ready. <br>
+      </td>
+      <td>pco_ready2acquire<br>
+      </td>
+      <td> $(P)$(R)pco_ready2acquire
+$(P)$(R)pco_ready2acquire_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_com_err_max<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> 1 if error on serial port. <br>
+      </td>
+      <td>pco_com_err_max<br>
+      </td>
+      <td> $(P)$(R)pco_com_err_max</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_global_shutter<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 if Edge global shutter mode <br>
+      </td>
+      <td>pco_global_shutter<br>
+      </td>
+      <td> $(P)$(R)pco_global_shutter
+$(P)$(R)pco_global_shutter_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_dimax_nimgs_fudge<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> fudge factor in calc'ing dimax memory size. <br>
+      </td>
+      <td>pco_dimax_nimgs_fudge<br>
+      </td>
+      <td> $(P)$(R)pco_dimax_nimgs_fudge
+$(P)$(R)pco_dimax_nimgs_fudge_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_disable_descramble<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 to disable descramble plugin <br>
+      </td>
+      <td>pco_disable_descramble<br>
+      </td>
+      <td> $(P)$(R)pco_disable_descramble
+$(P)$(R)pco_disable_descramble_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>w_open_com<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> open serial port <br>
+      </td>
+      <td>w_open_com<br>
+      </td>
+      <td> $(P)$(R)w_open_com</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>w_close_com<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> close serial port <br>
+      </td>
+      <td>w_close_com<br>
+      </td>
+      <td> $(P)$(R)w_close_com</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>w_is_com_open<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> 1 if serial port open <br>
+      </td>
+      <td>w_is_com_open<br>
+      </td>
+      <td> $(P)$(R)w_is_com_open</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_run_counter<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> increments when pco thread runs next loop. <br>
+      </td>
+      <td>pco_run_counter<br>
+      </td>
+      <td> $(P)$(R)w_run_counter</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_kill_ioc<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> 1 to call exit() <br>
+      </td>
+      <td>pco_kill_ioc<br>
+      </td>
+      <td> $(P)$(R)pco_kill_ioc</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_is_running<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> 1 if pco thread is runing <br>
+      </td>
+      <td>pco_is_running<br>
+      </td>
+      <td> $(P)$(R)pco_is_running</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>w_is_sleep<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> 1 to make pco thread sleep between loops <br>
+      </td>
+      <td>w_is_sleep<br>
+      </td>
+      <td> $(P)$(R)w_is_sleep</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>w_sleep_ms<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> how long pco thread sleeps. <br>
+      </td>
+      <td>w_sleep_ms<br>
+      </td>
+      <td> $(P)$(R)w_sleep_ms</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_comport_number<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> COM0, 1... the number. <br>
+      </td>
+      <td>pco_comport_number<br>
+      </td>
+      <td> $(P)$(R)pco_comport_number_RBV
+$(P)$(R)pco_comport_number</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>pco_check_time<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> HOw often in ms we check pco camera parameters. <br>
+      </td>
+      <td>pco_check_time<br>
+      </td>
+      <td> $(P)$(R)pco_check_time</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_force_check<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> 1 to force a check of pco camera parameters.&nbsp; <br>
+      </td>
+      <td>pco_force_check<br>
+      </td>
+      <td> $(P)$(R)pco_force_check</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_reset_default_settings<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> reset camera to default <br>
+      </td>
+      <td>pco_reset_default_settings<br>
+      </td>
+      <td> $(P)$(R)pco_reset_default_settings</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_init_selftest<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> self test camera <br>
+      </td>
+      <td>pco_init_selftest<br>
+      </td>
+      <td> $(P)$(R)pco_init_selftest</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_health_warning<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Warning codes from camera. <br>
+      </td>
+      <td>pco_health_warning<br>
+      </td>
+      <td> $(P)$(R)pco_health_warning_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_health_error<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Error codes from camera <br>
+      </td>
+      <td>pco_health_error<br>
+      </td>
+      <td> $(P)$(R)pco_health_error_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_health_status<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Health code from camera <br>
+      </td>
+      <td>pco_health_status<br>
+      </td>
+      <td> $(P)$(R)pco_health_status_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_is_frame_rate_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 for framereate, 0 for exp time/delay&nbsp; mode. <br>
+      </td>
+      <td>pco_is_frame_rate_mode<br>
+      </td>
+      <td> $(P)$(R)pco_is_frame_rate_mode
+$(P)$(R)pco_is_frame_rate_mode_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_sensor_format<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> sensor specs <br>
+      </td>
+      <td>pco_sensor_format<br>
+      </td>
+      <td> $(P)$(R)pco_sensor_format
+$(P)$(R)pco_sensor_format_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_pixelrate<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> sensor readout speed. <br>
+      </td>
+      <td>pco_pixelrate<br>
+      </td>
+      <td> $(P)$(R)pco_pixelrate
+$(P)$(R)pco_pixelrate_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_doub_img_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> camera in doub. corr. iamge mode. <br>
+      </td>
+      <td>pco_doub_img_mode<br>
+      </td>
+      <td> $(P)$(R)pco_doub_img_mode
+$(P)$(R)pco_doub_img_mode_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_adc_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Mode of ADC on camera <br>
+      </td>
+      <td>pco_adc_mode<br>
+      </td>
+      <td> $(P)$(R)pco_adc_mode
+$(P)$(R)pco_adc_mode_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_temp_setpt<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> sensor temp setpoint. <br>
+      </td>
+      <td>pco_temp_setpt<br>
+      </td>
+      <td> $(P)$(R)pco_temp_setpt
+$(P)$(R)pco_temp_setpt_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_offset_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> &nbsp;low level camera setting<br>
+      </td>
+      <td>pco_offset_mode<br>
+      </td>
+      <td> $(P)$(R)pco_offset_mode
+$(P)$(R)pco_offset_mode_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_noise_filt_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> low level camera setting&nbsp;
+      </td>
+      <td>pco_noise_filt_mode<br>
+      </td>
+      <td> $(P)$(R)pco_noise_filt_mode
+$(P)$(R)pco_noise_filt_mode_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_exp_timebase<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> ms, us, ns time base for frame rate and exp time. <br>
+      </td>
+      <td>pco_exp_timebase<br>
+      </td>
+      <td> $(P)$(R)pco_exp_timebase
+$(P)$(R)pco_exp_timebase_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_dly_timebase<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> ms, us, ns time base for frame rate and exp time. &nbsp;
+      </td>
+      <td>pco_dly_timebase<br>
+      </td>
+      <td> $(P)$(R)pco_dly_timebase
+$(P)$(R)pco_dly_timebase_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_fps_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> frame per sec mode <br>
+      </td>
+      <td>pco_fps_mode<br>
+      </td>
+      <td> $(P)$(R)pco_fps_mode
+$(P)$(R)pco_fps_mode_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_trigger_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> trigger mode, low level camera spec.&nbsp; <br>
+      </td>
+      <td>pco_trigger_mode<br>
+      </td>
+      <td> $(P)$(R)pco_trigger_mode
+$(P)$(R)pco_trigger_mode_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_busy<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> 1 of camera bisy <br>
+      </td>
+      <td>pco_busy<br>
+      </td>
+      <td> $(P)$(R)pco_busy_RBV</td>
+      <td>mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_exp_trig_stat<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> trigger status <br>
+      </td>
+      <td>pco_exp_trig_stat<br>
+      </td>
+      <td> $(P)$(R)pco_exp_trig_stat_RBV</td>
+      <td>mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_camera_ram_npages<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Num pages of RAM in dimax <br>
+      </td>
+      <td>pco_camera_ram_npages<br>
+      </td>
+      <td> $(P)$(R)pco_camera_ram_npages_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_camera_ram_page_size<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> page size in dimax <br>
+      </td>
+      <td>pco_camera_ram_page_size<br>
+      </td>
+      <td> $(P)$(R)pco_camera_ram_page_size_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_camera_seg_size0<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> ram segment size in dimax <br>
+      </td>
+      <td>pco_camera_seg_size0<br>
+      </td>
+      <td> $(P)$(R)pco_camera_seg_size0_RBV
+$(P)$(R)pco_camera_seg_size0</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>pco_camera_seg_size1<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> &nbsp; ram segment size in dimax </td>
+      <td>pco_camera_seg_size1<br>
+      </td>
+      <td> $(P)$(R)pco_camera_seg_size1_RBV
+$(P)$(R)pco_camera_seg_size1</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>pco_camera_seg_size2<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> &nbsp; ram segment size in dimax </td>
+      <td>pco_camera_seg_size2<br>
+      </td>
+      <td> $(P)$(R)pco_camera_seg_size2_RBV
+$(P)$(R)pco_camera_seg_size2</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>pco_camera_seg_size3<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> &nbsp; ram segment size in dimax </td>
+      <td>pco_camera_seg_size3<br>
+      </td>
+      <td> $(P)$(R)pco_camera_seg_size3_RBV
+$(P)$(R)pco_camera_seg_size3</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>pco_clear_ram_seg<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> clear current segment in dimax ram <br>
+      </td>
+      <td>pco_clear_ram_seg<br>
+      </td>
+      <td> $(P)$(R)pco_clear_ram_seg</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_active_seg<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> which ram seg is active in dimax <br>
+      </td>
+      <td>pco_active_seg<br>
+      </td>
+      <td> $(P)$(R)pco_active_seg_RBV
+$(P)$(R)pco_active_seg</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>pco_storage_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> fifo or non fifo ram storage mode on dimax <br>
+      </td>
+      <td>pco_storage_mode<br>
+      </td>
+      <td> $(P)$(R)pco_storage_mode
+$(P)$(R)pco_storage_mode_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_rec_submode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> low level param <br>
+      </td>
+      <td>pco_rec_submode<br>
+      </td>
+      <td> $(P)$(R)pco_rec_submode
+$(P)$(R)pco_rec_submode_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_rec_status<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> low level param &nbsp;
+      </td>
+      <td>pco_rec_status<br>
+      </td>
+      <td> $(P)$(R)pco_rec_status
+$(P)$(R)pco_rec_status_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_acq_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> low level param &nbsp;
+      </td>
+      <td>pco_acq_mode<br>
+      </td>
+      <td> $(P)$(R)pco_acq_mode
+$(P)$(R)pco_acq_mode_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_acqen_sig_stat<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> low level param &nbsp;
+      </td>
+      <td>pco_acqen_sig_stat<br>
+      </td>
+      <td> $(P)$(R)pco_acqen_sig_stat_RBV</td>
+      <td>mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_timestamp_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td>put timestmpas into images that can be seen as text.
+      </td>
+      <td>pco_timestamp_mode<br>
+      </td>
+      <td> $(P)$(R)pco_timestamp_mode
+$(P)$(R)pco_timestamp_mode_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_arm_camera<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td>1 to arm camera
+      </td>
+      <td>pco_arm_camera<br>
+      </td>
+      <td> $(P)$(R)pco_arm_camera</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_rec_stop_event_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> low level param &nbsp;
+      </td>
+      <td>pco_rec_stop_event_mode<br>
+      </td>
+      <td> $(P)$(R)pco_rec_stop_event_mode
+$(P)$(R)pco_rec_stop_event_mode_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_rec_stop_event_nimgs<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> low level param &nbsp;
+      </td>
+      <td>pco_rec_stop_event_nimgs<br>
+      </td>
+      <td> $(P)$(R)pco_rec_stop_event_nimgs
+$(P)$(R)pco_rec_stop_event_nimgs_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_stop_record<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> 1 to stop recording <br>
+      </td>
+      <td>pco_stop_record<br>
+      </td>
+      <td> $(P)$(R)pco_stop_record</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_read_which_seg<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> which ram we read in dimax. <br>
+      </td>
+      <td>pco_read_which_seg<br>
+      </td>
+      <td> $(P)$(R)pco_read_which_seg
+$(P)$(R)pco_read_which_seg_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_read_st_img<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> dimax does not support <br>
+      </td>
+      <td>pco_read_st_img<br>
+      </td>
+      <td> $(P)$(R)pco_read_st_img
+$(P)$(R)pco_read_st_img_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_read_end_img<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> dimax does not support &nbsp;
+      </td>
+      <td>pco_read_end_img<br>
+      </td>
+      <td> $(P)$(R)pco_read_end_img
+$(P)$(R)pco_read_end_img_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_do_read_imgs<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> dimax does not support &nbsp;
+      </td>
+      <td>pco_do_read_imgs<br>
+      </td>
+      <td> $(P)$(R)pco_do_read_imgs</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_req_img<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> read one image from dimax <br>
+      </td>
+      <td>pco_req_img<br>
+      </td>
+      <td> $(P)$(R)pco_req_img</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_rpt_img<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> low level param <br>
+      </td>
+      <td>pco_rpt_img<br>
+      </td>
+      <td> $(P)$(R)pco_rpt_img</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_cancel_img<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> low level param &nbsp;
+      </td>
+      <td>pco_cancel_img<br>
+      </td>
+      <td> $(P)$(R)pco_cancel_img</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_bit_alignment<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> low level param &nbsp;
+      </td>
+      <td>pco_bit_alignment<br>
+      </td>
+      <td> $(P)$(R)pco_bit_alignment
+$(P)$(R)pco_bit_alignment_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_num_imgs_seg0<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Number of images in RAM segment <br>
+      </td>
+      <td>pco_num_imgs_seg0<br>
+      </td>
+      <td> $(P)$(R)pco_num_imgs_seg0_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_num_imgs_seg1<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Number of images in RAM segment&nbsp;
+      </td>
+      <td>pco_num_imgs_seg1<br>
+      </td>
+      <td> $(P)$(R)pco_num_imgs_seg1_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_num_imgs_seg2<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Number of images in RAM segment&nbsp;
+      </td>
+      <td>pco_num_imgs_seg2<br>
+      </td>
+      <td> $(P)$(R)pco_num_imgs_seg2_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_num_imgs_seg3<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Number of images in RAM segment&nbsp;
+      </td>
+      <td>pco_num_imgs_seg3<br>
+      </td>
+      <td> $(P)$(R)pco_num_imgs_seg3_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_max_imgs_seg0<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> MAx Number of images in RAM segment&nbsp;
+      </td>
+      <td>pco_max_imgs_seg0<br>
+      </td>
+      <td> $(P)$(R)pco_max_imgs_seg0_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_max_imgs_seg1<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Max Number of images in RAM segment&nbsp;
+      </td>
+      <td>pco_max_imgs_seg1<br>
+      </td>
+      <td> $(P)$(R)pco_max_imgs_seg1_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_max_imgs_seg2<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> Max Number of images in RAM segment&nbsp;
+      </td>
+      <td>pco_max_imgs_seg2<br>
+      </td>
+      <td> $(P)$(R)pco_max_imgs_seg2_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_max_imgs_seg3<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> MAx Number of images in RAM segment&nbsp;
+      </td>
+      <td>pco_max_imgs_seg3<br>
+      </td>
+      <td> $(P)$(R)pco_max_imgs_seg3_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_camlink_pixfreq<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> Camera link clock speed. <br>
+      </td>
+      <td>pco_camlink_pixfreq<br>
+      </td>
+      <td> $(P)$(R)pco_camlink_pixfreq
+$(P)$(R)pco_camlink_pixfreq_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_cclines<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> CC lines on cam link card. <br>
+      </td>
+      <td>pco_cclines<br>
+      </td>
+      <td> $(P)$(R)pco_cclines
+$(P)$(R)pco_cclines_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_camlink_pixperclk<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> pixels per clock. has to do with data format on camera link.
+      <br>
+      </td>
+      <td>pco_camlink_pixperclk<br>
+      </td>
+      <td> $(P)$(R)pco_camlink_pixperclk
+$(P)$(R)pco_camlink_pixperclk_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_camlink_cont<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> add delay between images in camlink interface <br>
+      </td>
+      <td>pco_camlink_cont<br>
+      </td>
+      <td> $(P)$(R)pco_camlink_cont
+$(P)$(R)pco_camlink_cont_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_baudrate<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> baudrate for serial port <br>
+      </td>
+      <td>pco_baudrate<br>
+      </td>
+      <td> $(P)$(R)pco_baudrate
+$(P)$(R)pco_baudrate_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_reset_memory<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> reset dimax memory <br>
+      </td>
+      <td>pco_reset_memory<br>
+      </td>
+      <td> $(P)$(R)pco_reset_memory</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_play_slow<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> not supported by pco <br>
+      </td>
+      <td>pco_play_slow<br>
+      </td>
+      <td> $(P)$(R)pco_play_slow</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_play_stop<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> not supported by pco &nbsp;
+      </td>
+      <td>pco_play_stop<br>
+      </td>
+      <td> $(P)$(R)pco_play_stop</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_dump_counter<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> counts images dumped from camera <br>
+      </td>
+      <td>pco_dump_counter<br>
+      </td>
+      <td> $(P)$(R)pco_dump_counter
+$(P)$(R)pco_dump_counter_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_imgs2dump<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> number of images to red from dimax <br>
+      </td>
+      <td>pco_imgs2dump<br>
+      </td>
+      <td> $(P)$(R)pco_imgs2dump
+$(P)$(R)pco_imgs2dump_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_dump_waitms<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> wait time between readout iamges on dimax <br>
+      </td>
+      <td>pco_dump_waitms<br>
+      </td>
+      <td> $(P)$(R)pco_dump_waitms
+$(P)$(R)pco_dump_waitms_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_check_time2<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> &nbsp;timer for 2nd param check in pco.<br>
+      </td>
+      <td>pco_check_time2<br>
+      </td>
+      <td> $(P)$(R)pco_check_time2</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_dump_camera_memory<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 to dump frames from dimax ram <br>
+      </td>
+      <td>pco_dump_camera_memory<br>
+      </td>
+      <td> $(P)$(R)pco_dump_camera_memory
+$(P)$(R)pco_dump_camera_memory_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_cancel_dump<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> 1 to stop dump. <br>
+      </td>
+      <td>pco_cancel_dump<br>
+      </td>
+      <td> $(P)$(R)pco_cancel_dump</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_live_view<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 for live view from edge and dimax.&nbsp; <br>
+      </td>
+      <td>pco_live_view<br>
+      </td>
+      <td> $(P)$(R)pco_live_view
+$(P)$(R)pco_live_view_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td> N/A <br>
+      </td>
+      <td> None</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> &nbsp;<br>
+      </td>
+      <td> N/A <br>
+      </td>
+      <td> $(P)$(R)pco_lview2_fr_rate</td>
+      <td>scalcout</td>
+    </tr>
+    <tr>
+      <td>pco_frame_rate<br>
+      </td>
+      <td> asynFloat64</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> frame rate register on pco camera <br>
+      </td>
+      <td>pco_frame_rate<br>
+      </td>
+      <td> $(P)$(R)pco_frame_rate_RBV</td>
+      <td>ai</td>
+    </tr>
+    <tr>
+      <td>pco_cdi_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> low level param <br>
+      </td>
+      <td>pco_cdi_mode<br>
+      </td>
+      <td> $(P)$(R)pco_cdi_mode
+$(P)$(R)pco_cdi_mode_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_dnsu_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> low level param &nbsp;
+      </td>
+      <td>pco_dnsu_mode<br>
+      </td>
+      <td> $(P)$(R)pco_dnsu_mode
+$(P)$(R)pco_dnsu_mode_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_dnsu_init_mode<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> low level param &nbsp;
+      </td>
+      <td>pco_dnsu_init_mode<br>
+      </td>
+      <td> $(P)$(R)pco_dnsu_init_mode
+$(P)$(R)pco_dnsu_init_mode_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_reconfig_grabber<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> 1 to reconfig frae grabber.&nbsp; <br>
+      </td>
+      <td>pco_reconfig_grabber<br>
+      </td>
+      <td> $(P)$(R)pco_reconfig_grabber</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_set_frame_rate<br>
+      </td>
+      <td> asynFloat64</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> &nbsp;frame ratge for pco<br>
+      </td>
+      <td>pco_set_frame_rate<br>
+      </td>
+      <td> $(P)$(R)pco_set_frame_rate_RBV
+$(P)$(R)pco_set_frame_rate</td>
+      <td>ai
+ao</td>
+    </tr>
+    <tr>
+      <td>pco_delay_time<br>
+      </td>
+      <td> asynFloat64</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> &nbsp;tiem betwen images on pco exposire<br>
+      </td>
+      <td>pco_delay_time<br>
+      </td>
+      <td> $(P)$(R)pco_delay_time_RBV
+$(P)$(R)pco_delay_time</td>
+      <td>ai
+ao</td>
+    </tr>
+    <tr>
+      <td>pco_dump_maxdatarate<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> max data rate for image memory dump from dimax <br>
+      </td>
+      <td>pco_dump_maxdatarate<br>
+      </td>
+      <td> $(P)$(R)pco_dump_maxdatarate_RBV
+$(P)$(R)pco_dump_maxdatarate</td>
+      <td>longin
+longout</td>
+    </tr>
+    <tr>
+      <td>pco_test_pixels<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> add test pixels to image <br>
+      </td>
+      <td>pco_test_pixels<br>
+      </td>
+      <td> $(P)$(R)pco_test_pixels
+$(P)$(R)pco_test_pixels_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_double_image_error<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 1 if we have repeated frames on dump&nbsp; <br>
+      </td>
+      <td>pco_double_image_error<br>
+      </td>
+      <td> $(P)$(R)pco_double_image_error
+$(P)$(R)pco_double_image_error_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_which_camera<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> R</td>
+      <td> integer for edge or dimax.&nbsp; <br>
+      </td>
+      <td>pco_which_camera<br>
+      </td>
+      <td> $(P)$(R)pco_which_camera_RBV</td>
+      <td>longin</td>
+    </tr>
+    <tr>
+      <td>pco_hotpix_corr<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> low level <br>
+      </td>
+      <td>pco_hotpix_corr<br>
+      </td>
+      <td> $(P)$(R)pco_hotpix_corr
+$(P)$(R)pco_hotpix_corr_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_1612_lookup<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> low level <br>
+      </td>
+      <td>pco_1612_lookup<br>
+      </td>
+      <td> $(P)$(R)pco_1612_lookup
+$(P)$(R)pco_1612_lookup_RBV</td>
+      <td>longout
+longin</td>
+    </tr>
+    <tr>
+      <td>pco_edge_fastscan<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> fast or slow scan for edge sensor <br>
+      </td>
+      <td>pco_edge_fastscan<br>
+      </td>
+      <td> $(P)$(R)pco_edge_fastscan
+$(P)$(R)pco_edge_fastscan_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_conv_12to16<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> 12 bit to 16 bit format comversion for edge <br>
+      </td>
+      <td>pco_conv_12to16<br>
+      </td>
+      <td> $(P)$(R)pco_conv_12to16
+$(P)$(R)pco_conv_12to16_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_descramble<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> enavle SW descramble of iamges.&nbsp; <br>
+      </td>
+      <td>pco_descramble<br>
+      </td>
+      <td> $(P)$(R)pco_descramble
+$(P)$(R)pco_descramble_RBV</td>
+      <td>mbbo
+mbbi</td>
+    </tr>
+    <tr>
+      <td>pco_dbg_serprint<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> debugging serial port. deprecated <br>
+      </td>
+      <td>pco_dbg_serprint<br>
+      </td>
+      <td> $(P)$(R)pco_dbg_serprint</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_do_camcontrol<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> deprecated <br>
+      </td>
+      <td>pco_do_camcontrol<br>
+      </td>
+      <td> $(P)$(R)pco_do_camcontrol</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_ser_waitms<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> wait time for serial port <br>
+      </td>
+      <td>pco_ser_waitms<br>
+      </td>
+      <td> $(P)$(R)pco_ser_waitms</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_dbg_serwrite<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> debrecated&nbsp; <br>
+      </td>
+      <td>pco_dbg_serwrite<br>
+      </td>
+      <td> $(P)$(R)pco_dbg_serwrite</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_dbg_serread<br>
+      </td>
+      <td> asynInt32</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> debrecated&nbsp;
+      </td>
+      <td>pco_dbg_serread<br>
+      </td>
+      <td> $(P)$(R)pco_dbg_serread</td>
+      <td>longout</td>
+    </tr>
+    <tr>
+      <td>pco_dbg_serstr<br>
+      </td>
+      <td> asynOctetWrite</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> debrecated&nbsp;
+      </td>
+      <td>pco_dbg_serstr<br>
+      </td>
+      <td> $(P)$(R)pco_dbg_serstr
+$(P)$(R)pco_dbg_serstr_RBV</td>
+      <td>waveform
+waveform</td>
+    </tr>
+    <tr>
+      <td> N/A <br>
+      </td>
+      <td> None</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> W</td>
+      <td> &nbsp;<br>
+      </td>
+      <td> N/A <br>
+      </td>
+      <td> $(P)$(R)pco_dumpcanceller</td>
+      <td>calcout</td>
+    </tr>
+    <tr>
+      <td>pco_grab_waittime<br>
+      </td>
+      <td> asynFloat64</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> wait tiem between image grabs <br>
+      </td>
+      <td>pco_grab_waittime<br>
+      </td>
+      <td> $(P)$(R)pco_grab_waittime_RBV
+$(P)$(R)pco_grab_waittime</td>
+      <td>ai
+ao</td>
+    </tr>
+    <tr>
+      <td>pco_rollshut_mcfname<br>
+      </td>
+      <td> asynOctetWrite</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> rolling shutter edge config file name <br>
+      </td>
+      <td>pco_rollshut_mcfname<br>
+      </td>
+      <td> $(P)$(R)pco_rollshut_mcfname
+$(P)$(R)pco_rollshut_mcfname_RBV</td>
+      <td>waveform
+waveform</td>
+    </tr>
+    <tr>
+      <td>pco_globshut_mcfname<br>
+      </td>
+      <td> asynOctetWrite</td>
+      <td style="vertical-align: top;"><br>
+      </td>
+      <td> WR</td>
+      <td> global chutter edge config file name <br>
+      </td>
+      <td>pco_globshut_mcfname<br>
+      </td>
+      <td> $(P)$(R)pco_globshut_mcfname
+$(P)$(R)pco_globshut_mcfname_RBV</td>
+      <td>waveform
+waveform</td>
+    </tr>
+  </tbody>
+</table>
+
+<br>
+
+<p><br>
+</p>
+
+<br>
+<h2 id="Configuration">Configuration</h2>
+When using ADPCO, first open the serial port on the frame grabber using
+drvCamlinkSerial. The two arguments are the name of the asyn port,
+"SERIAL," and the name of the serial port, "COM2." The com port name
+depends on the type of grabber. The Dalsa grabber maps its serial port
+to a COM port in the Windows system. The Silicon Software grabber does
+no such mapping, and the com port name "COM2" below is actually
+ignored. The reason is that when the driver is built, it is linked
+against the grabber vendor libraries. <br>
+<br>
+<br>
+drvCamlinkSerialConfigure("SERIAL","COM2");<br>
+<br>
+Once the serial port is configured, its asyn port is passed to the PCO
+driver. Below, "PCOIOC" is the asyn port of the PCO camera, while
+"SERIAL," the serial port is passed to the driver. <br>
+<br>
+PCOConfig("PCOIOC", "SERIAL",$(QSIZE), -1,50,100)<br>
+<br>
+The other parameters are <br>
+3) QSIZE, max number of NDArrays in the queue.<br>
+4) Max memory, -1, for no max limit. <br>
+5) thread priority between 0 and 100. 50 is in the middle.<br>
+6) stack size for asynPort thread in "Can block mode." See ADDriver docs for more info. <br>
+<h2 id="MEDM_screens" style="text-align: left;"><br>
+</h2>
+<h2 id="MEDM_screens" style="text-align: left;">MEDM screens</h2>
+Screens are shown below. Main screens exist for Edge and Dimax.
+Generally only main screens are used. Other screens are for debugging
+or for parameters rarely tweaked by users.<br>
+<br>
+<div style="text-align: center;"><img style="width: 407px; height: 857px;" alt="" src="dimax.png"><br>
+<h3>Dimax Control Screen- <br>
+</h3>
+User generally needs only this screen for Dimax. Memory control at botton of screen.<br>
+<br>
+<br>
+</div>
+<br>
+<br>
+<div style="text-align: center;"><img style="width: 405px; height: 854px;" alt="" src="pco_edgeadl.png"><br>
+<h2>Edge Control Screen</h2>
+User generally only uses this screen.<br>
+</div>
+<br>
+<br>
+<br>
+Little used screens are below.<br>
+<br>
+<br>
+<img style="width: 405px; height: 700px;" alt="" src="grabberadl.png">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img style="width: 486px; height: 590px;" alt="" src="pcoparams.png"><br>
+Above are the grabber control screen, and special PCO parameters
+screen. Both screens are rarely used in general data acquisition.<br>
+<br>
+<br>
+<br>
+<img style="width: 530px; height: 461px;" alt="" src="pcomem.png">&nbsp;&nbsp; <img style="width: 393px; height: 721px;" alt="" src="edgeplugadl.png"><br>
+Above are screens for Dimax memory low level parameters, and Edge
+plugin controls. Neither screen is used on a routine basis. The Edge
+plugin is used for descrambling and reformatting images, and is
+controlled not by the MEDM screen, but by attributes attached to the
+images sent from ADPCO driver.<br>
+<br>
+<br>
+<br>
+<br>
+</body></html>
