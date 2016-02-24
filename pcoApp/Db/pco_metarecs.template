@@ -1,0 +1,288 @@
+
+
+
+
+
+#Add FLINK to liveview.. this rec is alrady created in another DB. we just add FLNK
+
+#record(mbbo, "$(P)$(C)pco_live_view")
+#{
+#    field(FLNK,"$(P)$(R)file_liveviewmon.PROC")
+#}
+
+
+# ADD FLNK to this rec.. it is readly defined..
+record(bi, "$(P)$(R)Capture_RBV")
+{
+    field(FLNK,"$(P)$(R)file_CaptureDoner.PROC")
+}
+
+
+
+
+record(bi, "$(P)$(C)Acquire_RBV") {
+
+    field(FLNK,"$(P)$(R)file_DropFramesZeroer.PROC")
+
+}
+
+
+
+
+
+
+
+record(scalcout, "$(P)$(R)file_saveRenumberer")
+{
+    
+    field(INPA, "$(P)$(R)file_savetypeint")
+    field(INPB, "$(P)$(C)pco_dump_counter")
+    field(INPC, "$(P)$(C)pco_imgs2dump")
+    
+    
+    field(CALC, "C-B+1")
+    field(OOPT, "On Change")
+    field(DOPT,"Use OCAL")
+#    field(OCAL,"(A=0)?\"NoSaving\":(A=1)?\"1 ShotPerFile\":(A=2)?\"N ShotsManyFiles\":\"AllShotsOneFile\"")
+    field(OCAL,"A")
+    field(OUT,  "$(P)$(R)file_savetypeint PP NMS")
+  
+      
+    field(SCAN, "1 second")
+}
+
+
+
+record(mbbo, "$(P)$(R)file_savetype")
+{
+   field(PINI, "1")
+  
+   field(OUT,  "$(P)$(R)file_savetypeint")
+   field(ZRST, "NoSaving")
+   field(ZRVL, "0")
+   field(ONST, "1 ShotPerFile")
+   field(ONVL, "1")
+     field(TWST, "N ShotsManyFiles")
+   field(TWVL, "2")
+     field(THST, "AllShotsOneFile")
+   field(THVL, "3")
+ 
+
+field(FLNK,"$(P)$(R)file_savetypeint.PROC PP")
+}
+
+
+
+
+record(longout, "$(P)$(R)file_savetypeint")
+{
+field(FLNK,  "$(P)$(R)file_NCapture.PROC PP")
+
+}
+
+
+
+record(longout, "$(P)$(R)file_shots_per_file")
+{
+  field(FLNK,  "$(P)$(R)file_NCapture.PROC PP")
+}
+
+
+
+
+
+
+record(longout, "$(P)$(R)file_retrigger_saving")
+{
+field(FLNK,  "$(P)$(R)file_dimax_dumper.PROC PP")
+  
+}
+
+
+
+
+
+
+
+#
+record(scalcout, "$(P)$(R)file_DropFramesZeroer")
+{
+   field(INPA, "$(P)$(C)Acquire_RBV")
+   
+   field(CALC, "A=0")
+    field(OOPT, "Transition To Zero")
+
+   field(OUT,  "$(P)$(C)cor_total_missed_frames PP ")
+  
+   field(SCAN, "Passive")
+}
+
+
+
+#A=1 for edge, so no blocking filesave.  a=0 for dimax, use blocking
+#disabled  OOPT should be When Zero, but we set to Never
+#Setup to just trigger PVs when liveview changes.
+#Tthis setup is to simply trigger the PVs when liveview chagnes.
+record(scalcout, "$(P)$(R)file_liveviewmon")
+{
+   field(INPA, "$(P)$(C)pco_live_view_RBV")
+   field(INPB, "$(P)$(R)file_savetypeint")
+   
+
+   field(CALC, "A")
+
+    field(OOPT, "On Change")
+field(DOPT,"Use OCAL")
+
+    field(OCAL,"B")
+   field(OUT,  "$(P)$(R)file_savetypeint PP ")
+  
+   field(SCAN, "1 second")
+}
+
+
+
+
+#dbpr "PCOIOC:TIFF1:file_CaptureDoner"
+#dbpf "PCOIOC:TIFF1:file_CaptureDoner.DOPT","Use CALC"
+#dbpf "PCOIOC:TIFF1:file_CaptureDoner.OOPT","Transition to Zero"
+#dbpf "PCOIOC:TIFF1:file_CaptureDoner.SCAN","Passive"
+#dbpf "PCOIOC:TIFF1:file_CaptureDoner.PROC",1
+#dbpf "PCOIOC:TIFF1:file_CaptureDoner.TPRO",1
+
+#A=1 for edge, so no blocking filesave.  a=0 for dimax, use blocking
+
+record(scalcout, "$(P)$(R)file_CaptureDoner")
+{
+    field(INPA, "$(P)$(R)Capture_RBV")
+    field(INPB, "$(P)$(R)file_savetypeint")
+   
+    field(CALC, "A")
+    field(OOPT, "Transition To Zero")
+    field(DOPT,"Use OCAL")
+    field(OCAL,"B")
+    field(OUT,  "$(P)$(R)file_savetypeint PP NMS")
+  
+    field(SCAN, "Passive")
+}
+
+
+
+#A=1 for edge, so no blocking filesave.  a=0 for dimax, use blocking
+record(scalcout, "$(P)$(R)file_Blocker")
+{
+    field(INPA, "$(P)$(C)pco_which_camera_RBV")
+   
+    field(CALC, "A=0 ? \"Yes\" : \"No\"")
+    field(OOPT, "Every Time")
+ 
+    field(OUT,  "$(P)$(R)BlockingCallbacks PP NMS")
+  
+    field(SCAN, "1 second")
+}
+
+#
+#  "D>0 ? (D=1 ? 1:(D=2 ? E : (A=1 ? B:C  )  ))  : 0 "
+#   "D>0 ? (D=1 ? 1 : B ) : 0  "
+#   "D>0 ? (D=1 ? 1 : 234)  : 122"
+#
+
+#A=1 for edge,  a=0 for dimax, 
+  record(calcout, "$(P)$(R)file_NCapture")
+{
+    field(INPC, "$(P)$(C)pco_num_imgs_seg0_RBV")
+    field(INPB, "$(P)$(C)NumImages_RBV")
+    field(INPA, "$(P)$(C)pco_which_camera_RBV")
+    field(INPD, "$(P)$(R)file_savetypeint")
+
+    field(INPE, "$(P)$(R)file_shots_per_file")
+    
+    field(INPF, "$(P)$(C)pco_dump_counter_RBV")
+    field(INPG, "$(P)$(C)pco_imgs2dump_RBV")
+
+    field(CALC, "D>0?(D=1?1:(D=2?E:(A=0?(G-F+1):B))):0 ")
+    field(OOPT, "Every Time")
+ 
+    field(OUT,  "$(P)$(R)NumCapture PP NMS")
+   field(FLNK,  "$(P)$(R)file_WriteModer.PROC PP")
+    field(SCAN, "Passive")
+}
+
+
+  
+
+record(scalcout, "$(P)$(R)file_WriteModer")
+{
+    field(INPA, "$(P)$(R)file_savetypeint")
+   #A = 1 for single mode. 
+    field(CALC, "A=1 ? \"Single\" : \"Stream\"")
+    field(OOPT, "Every Time")
+ 
+    field(OUT,  "$(P)$(R)FileWriteMode PP NMS")
+  
+  field(FLNK,  "$(P)$(R)file_ReCapturer.PROC PP")
+    field(SCAN, "passive")
+}
+
+  
+record(scalcout, "$(P)$(R)file_ReCapturer")
+{
+   field(INPA, "$(P)$(R)file_savetypeint")
+   #A=2 for recapture mode
+    field(CALC, "A=2 ? \"YES\" : \"NO\"")
+    field(OOPT, "Never")
+ 
+    field(OUT,  "$(P)$(R)NDFileTinyTIFF_is_recapture PP NMS")
+  field(FLNK,  "$(P)$(R)file_ASaver.PROC PP")
+    field(SCAN, "passive")
+}
+  
+  
+record(scalcout, "$(P)$(R)file_ASaver")
+{
+   field(INPA, "$(P)$(R)file_savetypeint")
+   field(INPB, "$(P)$(C)pco_live_view_RBV")
+   #A=1 for single mode
+    field(CALC, "((B=\"No\") && (A=1)) ? \"Yes\" : \"No\"")
+    field(OOPT, "Every Time")
+ 
+    field(OUT,  "$(P)$(R)AutoSave PP NMS")
+  field(FLNK,  "$(P)$(R)file_Capturer.PROC PP")
+    field(SCAN, "passive")
+}
+
+
+
+record(scalcout, "$(P)$(R)file_Capturer")
+{
+    field(INPA, "$(P)$(R)file_savetypeint")
+    field(INPB, "$(P)$(C)pco_live_view_RBV")
+    
+    #A==2 or 3 for capture mode
+    field(CALC, "((B=\"No\")&&(A>1)) ? \"Capture\" : \"Done\"")
+    field(OOPT, "Every Time")
+ 
+    field(OUT,  "$(P)$(R)Capture PP NMS")
+    
+     
+    field(SCAN, "passive")
+}
+
+
+ record(calcout, "$(P)$(R)file_dimax_dumper")
+{
+    
+    field(INPA, "$(P)$(C)pco_which_camera_RBV")
+  
+#A = 0 for dimax
+    field(CALC, "A=0")
+    field(OOPT, "Every Time")
+ 
+    field(OUT,  "$(P)$(C)pco_dump_camera_memory")
+    
+  
+    field(SCAN, "passive")
+}
+
+
+

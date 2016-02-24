@@ -1,0 +1,1904 @@
+# Database for the records specific to the simulated detector driver
+# Mark Rivers
+# March 23, 2008
+
+
+record(longout, "$(P)$(R)pco_ready2acquire")
+{
+  field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_ready2acquire")
+   
+  
+}
+
+record(longout, "$(P)$(R)pco_com_err_max")
+{
+  field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_com_err_max")
+   
+  
+}
+
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_global_shutter")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_global_shutter")
+   field(ZRST, "Rolling")
+   field(ZRVL, "0")
+   field(ONST, "Global")
+   field(ONVL, "1")
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_global_shutter_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_global_shutter")
+   field(ZRST, "Rolling")
+   field(ZRVL, "0")
+   field(ONST, "Global")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+record(longout, "$(P)$(R)pco_dimax_nimgs_fudge")
+{
+  field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dimax_nimgs_fudge")
+   
+  
+}
+
+
+
+
+record(longin, "$(P)$(R)pco_dimax_nimgs_fudge_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dimax_nimgs_fudge")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+record(longout, "$(P)$(R)pco_disable_descramble")
+{
+  field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_disable_descramble")
+   
+  
+}
+
+
+
+
+record(longin, "$(P)$(R)pco_disable_descramble_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_disable_descramble")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(longin, "$(P)$(R)pco_ready2acquire_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_ready2acquire")
+   field(SCAN, "I/O Intr")
+}
+record(longout, "$(P)$(R)w_open_com")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))w_open_com")
+}
+
+record(longout, "$(P)$(R)w_close_com")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))w_close_com")
+}
+
+record(longin, "$(P)$(R)w_is_com_open")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))w_is_com_open")
+   field(SCAN, "I/O Intr")
+}
+
+record(longin, "$(P)$(R)w_run_counter")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_run_counter")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longout, "$(P)$(R)pco_kill_ioc")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_kill_ioc")
+}
+
+
+record(longout, "$(P)$(R)pco_is_running")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_is_running")
+}
+
+record(longout, "$(P)$(R)w_is_sleep")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))w_is_sleep")
+}
+
+
+record(longout, "$(P)$(R)w_sleep_ms")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))w_sleep_ms")
+}
+
+
+
+
+record(longin, "$(P)$(R)pco_comport_number_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_comport_number")
+   field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P)$(R)pco_comport_number")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_comport_number")
+}
+
+
+
+
+record(longout, "$(P)$(R)pco_check_time")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_check_time")
+}
+
+
+
+record(longout, "$(P)$(R)pco_force_check")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_force_check")
+
+}
+
+
+
+record(longout, "$(P)$(R)pco_reset_default_settings")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_reset_default_settings")
+}
+
+
+
+record(longout, "$(P)$(R)pco_init_selftest")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_init_selftest")
+}
+
+
+
+record(longin, "$(P)$(R)pco_health_warning_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_health_warning")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(longin, "$(P)$(R)pco_health_error_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_health_error")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(longin, "$(P)$(R)pco_health_status_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_health_status")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_is_frame_rate_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_is_frame_rate_mode")
+   field(ZRST, "DelayExp")
+   field(ZRVL, "0")
+   field(ONST, "FrateExp")
+   field(ONVL, "1")
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_is_frame_rate_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_is_frame_rate_mode")
+   field(ZRST, "DelayExp")
+   field(ZRVL, "0")
+   field(ONST, "FrateExp")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(mbbo, "$(P)$(R)pco_sensor_format")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_sensor_format")
+   field(ZRST, "Standard")
+   field(ZRVL, "0")
+   field(ONST, "Extended")
+   field(ONVL, "1")
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_sensor_format_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_sensor_format")
+  field(ZRST, "Standard")
+   field(ZRVL, "0")
+   field(ONST, "Extended")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+#in Hz
+
+record(longout, "$(P)$(R)pco_pixelrate")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_pixelrate")
+}
+
+
+
+record(longin, "$(P)$(R)pco_pixelrate_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_pixelrate")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_doub_img_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_doub_img_mode")
+   field(ZRST, "OFF")
+   field(ZRVL, "0")
+   field(ONST, "ON")
+   field(ONVL, "1")
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_doub_img_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_doub_img_mode")
+  field(ZRST, "OFF")
+   field(ZRVL, "0")
+   field(ONST, "ON")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+# 1 or 2 for 1 or 2 adcs
+record(longout, "$(P)$(R)pco_adc_mode")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_adc_mode")
+}
+
+
+
+record(longin, "$(P)$(R)pco_adc_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_adc_mode")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+#signed int in degree C
+record(longout, "$(P)$(R)pco_temp_setpt")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_temp_setpt")
+}
+
+
+
+record(longin, "$(P)$(R)pco_temp_setpt_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_temp_setpt")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_offset_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_offset_mode")
+   field(ZRST, "Auto")
+   field(ZRVL, "0")
+   field(ONST, "Off")
+   field(ONVL, "1")
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_offset_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_offset_mode")
+  field(ZRST, "Auto")
+   field(ZRVL, "0")
+   field(ONST, "Off")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_noise_filt_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_noise_filt_mode")
+   field(ZRST, "Off")
+   field(ZRVL, "0")
+   field(ONST, "On")
+   field(ONVL, "1")
+   field(THST, "HotPix")
+   field(THVL, "5")
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_noise_filt_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_noise_filt_mode")
+  field(ZRST, "Off")
+   field(ZRVL, "0")
+   field(ONST, "On")
+   field(ONVL, "1")
+   field(THST, "HotPix")
+   field(THVL, "5")   
+   field(SCAN, "I/O Intr")
+}
+
+
+record(mbbo, "$(P)$(R)pco_exp_timebase")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_exp_timebase")
+   field(ZRST, "ns")
+   field(ZRVL, "0")
+   field(ONST, "us")
+   field(ONVL, "1")
+   field(TWST, "ms")
+   field(TWVL, "2")
+ 
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_exp_timebase_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_exp_timebase")
+   field(ZRST, "ns")
+   field(ZRVL, "0")
+   field(ONST, "us")
+   field(ONVL, "1")
+   field(TWST, "ms")
+   field(TWVL, "2")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(mbbo, "$(P)$(R)pco_dly_timebase")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dly_timebase")
+   field(ZRST, "ns")
+   field(ZRVL, "0")
+   field(ONST, "us")
+   field(ONVL, "1")
+   field(TWST, "ms")
+   field(TWVL, "2")
+ 
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_dly_timebase_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dly_timebase")
+   field(ZRST, "ns")
+   field(ZRVL, "0")
+   field(ONST, "us")
+   field(ONVL, "1")
+   field(TWST, "ms")
+   field(TWVL, "2")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_fps_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_fps_mode")
+   field(ZRST, "Off")
+   field(ZRVL, "0")
+   field(ONST, "On")
+   field(ONVL, "1")
+ 
+}
+
+
+
+
+
+
+record(mbbi, "$(P)$(R)pco_fps_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_fps_mode")
+  field(ZRST, "Off")
+   field(ZRVL, "0")
+   field(ONST, "On")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(mbbo, "$(P)$(R)pco_trigger_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_trigger_mode")
+   field(ZRST, "Auto")
+   field(ZRVL, "0")
+   field(ONST, "Software")
+   field(ONVL, "1")
+   field(TWST, "Soft/Ext")
+   field(TWVL, "2") 
+      field(THST, "External")
+   field(THVL, "3")
+}
+
+
+
+
+
+
+record(mbbi, "$(P)$(R)pco_trigger_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_trigger_mode")
+   field(ZRST, "Auto")
+   field(ZRVL, "0")
+   field(ONST, "Software")
+   field(ONVL, "1")
+   field(TWST, "Soft/Ext")
+   field(TWVL, "2") 
+      field(THST, "External")
+   field(THVL, "3")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(mbbi, "$(P)$(R)pco_busy_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_busy")
+  field(ZRST, "IDLE")
+   field(ZRVL, "0")
+   field(ONST, "BUSY")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+        
+
+
+
+
+record(mbbi, "$(P)$(R)pco_exp_trig_stat_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_exp_trig_stat")
+  field(ZRST, "FALSE")
+   field(ZRVL, "0")
+   field(ONST, "TRUE")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+#ram size in num pages
+record(longin, "$(P)$(R)pco_camera_ram_npages_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camera_ram_npages")
+   field(SCAN, "I/O Intr")
+}
+
+#size in pixels of one page
+record(longin, "$(P)$(R)pco_camera_ram_page_size_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camera_ram_page_size")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+#size in pages of seg0
+record(longin, "$(P)$(R)pco_camera_seg_size0_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camera_seg_size0")
+   field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P)$(R)pco_camera_seg_size0")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camera_seg_size0")
+}
+
+
+#size in pages of seg1
+record(longin, "$(P)$(R)pco_camera_seg_size1_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camera_seg_size1")
+   field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P)$(R)pco_camera_seg_size1")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camera_seg_size1")
+}
+
+
+
+#size in pages of seg2
+record(longin, "$(P)$(R)pco_camera_seg_size2_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camera_seg_size2")
+   field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P)$(R)pco_camera_seg_size2")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camera_seg_size2")
+}
+
+
+
+#size in pages of seg3
+record(longin, "$(P)$(R)pco_camera_seg_size3_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camera_seg_size3")
+   field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P)$(R)pco_camera_seg_size3")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camera_seg_size3")
+}
+
+
+
+#0 or 1, 1 to clear active ram segment
+record(longout, "$(P)$(R)pco_clear_ram_seg")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_clear_ram_seg")
+}
+
+#set or get the active segment 0 to 3
+record(longin, "$(P)$(R)pco_active_seg_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_active_seg")
+   field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P)$(R)pco_active_seg")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_active_seg")
+}
+
+
+
+record(mbbo, "$(P)$(R)pco_storage_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_storage_mode")
+   field(ZRST, "Recorder")
+   field(ZRVL, "0")
+   field(ONST, "FIFO")
+   field(ONVL, "1")
+ 
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_storage_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_storage_mode")
+  field(ZRST, "Recorder")
+   field(ZRVL, "0")
+   field(ONST, "FIFO")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(mbbo, "$(P)$(R)pco_rec_submode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_rec_submode")
+   field(ZRST, "Sequence")
+   field(ZRVL, "0")
+   field(ONST, "RingBuffer")
+   field(ONVL, "1")
+ 
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_rec_submode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_rec_submode")
+  field(ZRST, "Sequence")
+   field(ZRVL, "0")
+   field(ONST, "RingBuffer")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_rec_status")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_rec_status")
+   field(ZRST, "Idle")
+   field(ZRVL, "0")
+   field(ONST, "Run")
+   field(ONVL, "1")
+ 
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_rec_status_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_rec_status")
+  field(ZRST, "Idle")
+   field(ZRVL, "0")
+   field(ONST, "Run")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(mbbo, "$(P)$(R)pco_acq_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_acq_mode")
+   field(ZRST, "Auto")
+   field(ZRVL, "0")
+   field(ONST, "External")
+   field(ONVL, "1")
+ 
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_acq_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_acq_mode")
+  field(ZRST, "Auto")
+   field(ZRVL, "0")
+   field(ONST, "External")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(mbbi, "$(P)$(R)pco_acqen_sig_stat_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_acqen_sig_stat")
+  field(ZRST, "FALSE")
+   field(ZRVL, "0")
+   field(ONST, "TRUE")
+   field(ONVL, "1")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_timestamp_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_timestamp_mode")
+   field(ZRST, "NoStamp")
+   field(ZRVL, "0")
+   field(ONST, "BCD_14Pix")
+   field(ONVL, "1")
+     field(TWST, "BCD14_ASCII")
+   field(TWVL, "2")
+     field(THST, "ASCII")
+   field(THVL, "3")
+ 
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_timestamp_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_timestamp_mode")
+   field(ZRST, "NoStamp")
+   field(ZRVL, "0")
+   field(ONST, "BCD_14Pix")
+   field(ONVL, "1")
+     field(TWST, "BCD14_ASCII")
+   field(TWVL, "2")
+     field(THST, "ASCII")
+   field(THVL, "3")
+   field(SCAN, "I/O Intr")
+}
+
+
+#1 to arm camera
+record(longout, "$(P)$(R)pco_arm_camera")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_arm_camera")
+}
+
+
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_rec_stop_event_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_rec_stop_event_mode")
+   field(ZRST, "None")
+   field(ZRVL, "0")
+   field(ONST, "Software")
+   field(ONVL, "1")
+     field(TWST, "ExtTrig")
+   field(TWVL, "2")
+
+ 
+}
+
+
+
+record(mbbi, "$(P)$(R)pco_rec_stop_event_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_rec_stop_event_mode")
+   field(ZRST, "None")
+   field(ZRVL, "0")
+   field(ONST, "Software")
+   field(ONVL, "1")
+     field(TWST, "ExtTrig")
+   field(TWVL, "2")
+   field(SCAN, "I/O Intr")
+}
+
+#num of images to record on stop event.
+record(longout, "$(P)$(R)pco_rec_stop_event_nimgs")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_rec_stop_event_nimgs")
+}
+
+
+record(longin, "$(P)$(R)pco_rec_stop_event_nimgs_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_rec_stop_event_nimgs")
+   field(SCAN, "I/O Intr")
+}
+
+#1 to stop recording
+record(longout, "$(P)$(R)pco_stop_record")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_stop_record")
+}
+
+
+
+# which seg to read
+record(longout, "$(P)$(R)pco_read_which_seg")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_read_which_seg")
+}
+
+record(longin, "$(P)$(R)pco_read_which_seg_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_read_which_seg")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longout, "$(P)$(R)pco_read_st_img")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_read_st_img")
+}
+
+record(longin, "$(P)$(R)pco_read_st_img_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_read_st_img")
+   field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P)$(R)pco_read_end_img")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_read_end_img")
+}
+
+
+record(longin, "$(P)$(R)pco_read_end_img_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_read_end_img")
+   field(SCAN, "I/O Intr")
+}
+
+#start the read images in above 3 pvs...1 to read
+
+
+record(longout, "$(P)$(R)pco_do_read_imgs")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_do_read_imgs")
+}
+
+
+
+#1 to req image whilst recording
+record(longout, "$(P)$(R)pco_req_img")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_req_img")
+}
+
+#1 ro repeat img xfer
+record(longout, "$(P)$(R)pco_rpt_img")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_rpt_img")
+}
+
+#1 to cancel image xfer
+record(longout, "$(P)$(R)pco_cancel_img")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_cancel_img")
+}
+
+
+
+
+record(mbbo, "$(P)$(R)pco_bit_alignment")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_bit_alignment")
+   field(ZRST, "LSB")
+   field(ZRVL, "0")
+   field(ONST, "MSB")
+   field(ONVL, "1")
+  
+
+ 
+}
+
+
+record(mbbi, "$(P)$(R)pco_bit_alignment_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_bit_alignment")
+    field(ZRST, "LSB")
+   field(ZRVL, "0")
+   field(ONST, "MSB")
+   field(ONVL, "1")
+  
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+
+record(longin, "$(P)$(R)pco_num_imgs_seg0_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_num_imgs_seg0")
+   field(SCAN, "I/O Intr")
+   
+}
+
+
+record(longin, "$(P)$(R)pco_num_imgs_seg1_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_num_imgs_seg1")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longin, "$(P)$(R)pco_num_imgs_seg2_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_num_imgs_seg2")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longin, "$(P)$(R)pco_num_imgs_seg3_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_num_imgs_seg3")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longin, "$(P)$(R)pco_max_imgs_seg0_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_max_imgs_seg0")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longin, "$(P)$(R)pco_max_imgs_seg1_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_max_imgs_seg1")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longin, "$(P)$(R)pco_max_imgs_seg2_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_max_imgs_seg2")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longin, "$(P)$(R)pco_max_imgs_seg3_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_max_imgs_seg3")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(longout, "$(P)$(R)pco_camlink_pixfreq")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camlink_pixfreq")
+}
+
+record(longin, "$(P)$(R)pco_camlink_pixfreq_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camlink_pixfreq")
+   field(SCAN, "I/O Intr")
+}
+
+    
+    
+
+
+record(longout, "$(P)$(R)pco_cclines")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_cclines")
+}
+
+record(longin, "$(P)$(R)pco_cclines_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_cclines")
+   field(SCAN, "I/O Intr")
+}
+
+
+    
+
+
+record(longout, "$(P)$(R)pco_camlink_pixperclk")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camlink_pixperclk")
+}
+
+record(longin, "$(P)$(R)pco_camlink_pixperclk_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camlink_pixperclk")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(longout, "$(P)$(R)pco_camlink_cont")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camlink_cont")
+}
+
+record(longin, "$(P)$(R)pco_camlink_cont_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_camlink_cont")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+record(longout, "$(P)$(R)pco_baudrate")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_baudrate")
+}
+
+record(longin, "$(P)$(R)pco_baudrate_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_baudrate")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(longout, "$(P)$(R)pco_reset_memory")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_reset_memory")
+}
+
+
+
+  
+
+
+record(longout, "$(P)$(R)pco_play_slow")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_play_slow")
+}
+
+
+
+
+record(longout, "$(P)$(R)pco_play_stop")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_play_stop")
+}
+
+
+
+record(longout, "$(P)$(R)pco_dump_counter")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dump_counter")
+}
+
+
+record(longin, "$(P)$(R)pco_dump_counter_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dump_counter")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(longout, "$(P)$(R)pco_imgs2dump")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_imgs2dump")
+}
+
+
+record(longin, "$(P)$(R)pco_imgs2dump_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_imgs2dump")
+   field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P)$(R)pco_dump_waitms")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dump_waitms")
+}
+
+
+
+record(longin, "$(P)$(R)pco_dump_waitms_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dump_waitms")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(longout, "$(P)$(R)pco_check_time2")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_check_time2")
+}
+
+
+
+record(longout, "$(P)$(R)pco_dump_camera_memory")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dump_camera_memory")
+  
+  
+}
+
+record(longin, "$(P)$(R)pco_dump_camera_memory_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dump_camera_memory")
+   field(SCAN, ".1 second")
+}
+
+record(longout, "$(P)$(R)pco_cancel_dump")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_cancel_dump")
+ field(FLNK,  "$(P)$(R)pco_dumpcanceller.PROC PP NMS")
+    
+}
+
+
+  
+  
+
+record(mbbo, "$(P)$(R)pco_live_view")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_live_view")
+   field(ZRST, "No")
+   field(ZRVL, "0")
+   field(ONST, "Yes")
+   field(ONVL, "1")
+   
+#    field(FLNK,"$(P)TIFF1:file_liveviewmon.PROC PP")
+    
+ 
+}
+
+
+record(mbbi, "$(P)$(R)pco_live_view_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_live_view")
+   field(ZRST, "No")
+   field(ZRVL, "0")
+   field(ONST, "Yes")
+   field(ONVL, "1")
+  
+   field(SCAN, "I/O Intr")
+   
+   field(FLNK,"$(P)$(R)pco_lview2_fr_rate.PROC PP")
+}
+
+
+
+#sets frame rate to 10Hz in live view
+#OOPT shgould be Transition To Zero
+##we set OOPT to Never to disable
+record(scalcout, "$(P)$(R)pco_lview2_fr_rate")
+{
+   field(INPA, "$(P)$(R)pco_live_view_RBV")
+   
+   field(CALC, "A==\"No\"")
+    field(OOPT, "Never")
+    field(DOPT,"Use OCAL")
+    field(OCAL,"10")
+
+   field(OUT,  "$(P)$(R)pco_set_frame_rate PP ")
+  
+   field(SCAN, "Passive")
+}
+
+
+
+
+record(ai, "$(P)$(R)pco_frame_rate_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_frame_rate")
+   field(PREC, "3")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_cdi_mode")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_cdi_mode")
+   field(ZRST, "No")
+   field(ZRVL, "0")
+   field(ONST, "Yes")
+   field(ONVL, "1")
+  
+
+ 
+}
+
+
+record(mbbi, "$(P)$(R)pco_cdi_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_cdi_mode")
+   field(ZRST, "No")
+   field(ZRVL, "0")
+   field(ONST, "Yes")
+   field(ONVL, "1")
+  
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+record(longout, "$(P)$(R)pco_dnsu_mode")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dnsu_mode")
+}
+
+
+
+record(longin, "$(P)$(R)pco_dnsu_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dnsu_mode")
+   field(SCAN, "I/O Intr")
+}
+
+
+record(longout, "$(P)$(R)pco_dnsu_init_mode")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dnsu_init_mode")
+}
+
+
+
+record(longin, "$(P)$(R)pco_dnsu_init_mode_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dnsu_init_mode")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(longout, "$(P)$(R)pco_reconfig_grabber")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_reconfig_grabber")
+}
+
+
+
+
+record(ai, "$(P)$(R)pco_set_frame_rate_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_set_frame_rate")
+   field(PREC, "3")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(ao, "$(P)$(R)pco_set_frame_rate")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_set_frame_rate")
+   field(PREC, "3")
+}
+
+
+record(ai, "$(P)$(R)pco_delay_time_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_delay_time")
+   field(PREC, "3")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(ao, "$(P)$(R)pco_delay_time")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_delay_time")
+   field(PREC, "3")
+}
+
+
+
+
+
+record(longin, "$(P)$(R)pco_dump_maxdatarate_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dump_maxdatarate")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(longout, "$(P)$(R)pco_dump_maxdatarate")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dump_maxdatarate")
+}
+
+
+
+
+
+record(longout, "$(P)$(R)pco_test_pixels")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_test_pixels")
+}
+
+record(longin, "$(P)$(R)pco_test_pixels_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_test_pixels")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(longout, "$(P)$(R)pco_double_image_error")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_double_image_error")
+}
+
+record(longin, "$(P)$(R)pco_double_image_error_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_double_image_error")
+   field(SCAN, "I/O Intr")
+}
+
+
+#    enum whichPCOCam
+#        {
+#            pco_dimax,
+#            pco_edge,
+#            pco_other,
+#            pco_undef
+#
+#        };
+
+
+
+record(longin, "$(P)$(R)pco_which_camera_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_which_camera")
+   field(SCAN, "I/O Intr")
+  
+}
+
+
+
+
+
+
+record(longout, "$(P)$(R)pco_hotpix_corr")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_hotpix_corr")
+}
+
+record(longin, "$(P)$(R)pco_hotpix_corr_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_hotpix_corr")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(longout, "$(P)$(R)pco_1612_lookup")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_1612_lookup")
+}
+
+record(longin, "$(P)$(R)pco_1612_lookup_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_1612_lookup")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_edge_fastscan")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_edge_fastscan")
+   field(ZRST, "Normal")
+   field(ZRVL, "0")
+   field(ONST, "Fast")
+   field(ONVL, "1")
+  
+   field(TWST, "Fastest")
+   field(TWVL, "2")
+ 
+ 
+}
+
+
+record(mbbi, "$(P)$(R)pco_edge_fastscan_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_edge_fastscan")
+   field(ZRST, "Normal")
+   field(ZRVL, "0")
+   field(ONST, "Fast")
+   field(ONVL, "1")
+   field(TWST, "Fastest")
+   field(TWVL, "2")
+  
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_conv_12to16")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_conv_12to16")
+   field(ZRST, "Off")
+   field(ZRVL, "0")
+   field(ONST, "On")
+   field(ONVL, "1")
+  
+
+ 
+}
+
+
+record(mbbi, "$(P)$(R)pco_conv_12to16_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_conv_12to16")
+   field(ZRST, "Off")
+   field(ZRVL, "0")
+   field(ONST, "On")
+   field(ONVL, "1")
+  
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+
+record(mbbo, "$(P)$(R)pco_descramble")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_descramble")
+   field(ZRST, "Off")
+   field(ZRVL, "0")
+   field(ONST, "On")
+   field(ONVL, "1")
+  
+
+ 
+}
+
+
+record(mbbi, "$(P)$(R)pco_descramble_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_descramble")
+   field(ZRST, "Off")
+   field(ZRVL, "0")
+   field(ONST, "On")
+   field(ONVL, "1")
+  
+   field(SCAN, "I/O Intr")
+}
+
+record(longout, "$(P)$(R)pco_dbg_serprint")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dbg_serprint")
+}
+record(longout, "$(P)$(R)pco_do_camcontrol")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_do_camcontrol")
+}
+
+
+
+record(longout, "$(P)$(R)pco_ser_waitms")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_ser_waitms")
+}
+
+
+record(longout, "$(P)$(R)pco_dbg_serwrite")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dbg_serwrite")
+}
+
+record(longout, "$(P)$(R)pco_dbg_serread")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dbg_serread")
+}
+
+record(waveform, "$(P)$(R)pco_dbg_serstr")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dbg_serstr")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+record(waveform, "$(P)$(R)pco_dbg_serstr_RBV")
+{
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_dbg_serstr")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+    field(SCAN, "I/O Intr")
+}
+
+
+
+record(calcout, "$(P)$(R)pco_dumpcanceller")
+{
+    field(INPA, "$(P)$(R)pco_cancel_dump")
+   
+    field(CALC, "0")
+    field(OOPT, "Every Time")
+ 
+    field(OUT,  "$(P)$(R)pco_dump_camera_memory PP NMS")
+ 
+    field(SCAN, "Passive")
+}
+
+
+record(ai, "$(P)$(R)pco_grab_waittime_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_grab_waittime")
+   field(PREC, "3")
+   field(SCAN, "I/O Intr")
+}
+
+
+
+
+record(ao, "$(P)$(R)pco_grab_waittime")
+{
+   field(PINI, "1")
+   field(DTYP, "asynFloat64")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_grab_waittime")
+   field(PREC, "3")
+}
+
+
+
+
+
+record(waveform, "$(P)$(R)pco_rollshut_mcfname")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_rollshut_mcfname")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+record(waveform, "$(P)$(R)pco_rollshut_mcfname_RBV")
+{
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_rollshut_mcfname")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+    field(SCAN, "I/O Intr")
+}
+
+
+record(waveform, "$(P)$(R)pco_globshut_mcfname")
+{
+    field(PINI, "YES")
+    field(DTYP, "asynOctetWrite")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_globshut_mcfname")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+}
+
+record(waveform, "$(P)$(R)pco_globshut_mcfname_RBV")
+{
+    field(DTYP, "asynOctetRead")
+    field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))pco_globshut_mcfname")
+    field(FTVL, "CHAR")
+    field(NELM, "256")
+    field(SCAN, "I/O Intr")
+}

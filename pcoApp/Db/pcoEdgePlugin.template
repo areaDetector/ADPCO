@@ -1,0 +1,175 @@
+# Database for NDFileNexus driver, which saves files for NDArray data.
+
+
+
+
+record(longin, "$(P)$(R)is_descramble_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))is_descramble")
+   field(SCAN, "I/O Intr")
+}
+record(longout, "$(P)$(R)is_descramble")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))is_descramble")
+}
+
+
+
+record(longin, "$(P)$(R)is_decompress_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))is_decompress")
+   field(SCAN, "I/O Intr")
+}
+record(longout, "$(P)$(R)is_decompress")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))is_decompress")
+}
+
+
+
+
+
+record(longin, "$(P)$(R)print_attr_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))print_attr")
+   field(SCAN, "I/O Intr")
+}
+record(longout, "$(P)$(R)print_attr")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))print_attr")
+}
+
+
+
+
+
+record(longin, "$(P)$(R)is_use_attr_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))is_use_attr")
+   field(SCAN, "I/O Intr")
+}
+record(longout, "$(P)$(R)is_use_attr")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))is_use_attr")
+}
+
+
+
+record(longin, "$(P)$(R)is_pr_pco_attr_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))is_pr_pco_attr")
+   field(SCAN, "I/O Intr")
+}
+record(longout, "$(P)$(R)is_pr_pco_attr")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))is_pr_pco_attr")
+}
+
+
+
+
+
+
+record(longin, "$(P)$(R)is_enable_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))is_enable")
+   field(SCAN, "I/O Intr")
+}
+record(longout, "$(P)$(R)is_enable")
+{
+   field(DTYP, "asynInt32")
+   field(OUT,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))is_enable")
+}
+
+
+
+
+
+
+
+    
+record(longin, "$(P)$(R)edge_nd_datasize_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_nd_datasize")
+   field(SCAN, "I/O Intr")
+}
+    
+    
+record(longin, "$(P)$(R)edge_max_ndbuffers_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_max_ndbuffers")
+   field(SCAN, "I/O Intr")
+}
+    
+    
+record(longin, "$(P)$(R)edge_num_ndbuffers_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_num_ndbuffers")
+   field(SCAN, "I/O Intr")
+}
+    
+    
+record(longin, "$(P)$(R)edge_max_ndmemory_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_max_ndmemory")
+   field(SCAN, "I/O Intr")
+}
+    
+    
+record(longin, "$(P)$(R)edge_alloc_ndmemory_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_alloc_ndmemory")
+   field(SCAN, "I/O Intr")
+}
+    
+    
+record(longin, "$(P)$(R)edge_free_ndbuffers_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_free_ndbuffers")
+   field(SCAN, "I/O Intr")
+}
+    
+    
+record(longin, "$(P)$(R)edge_est_buffers_left_RBV")
+{
+   field(PINI, "1")
+   field(DTYP, "asynInt32")
+   field(INP,  "@asyn($(PORT),$(ADDR),$(TIMEOUT))edge_est_buffers_left")
+   field(SCAN, "I/O Intr")
+}
+    
+    
+    
+    
+    
+    
+    
