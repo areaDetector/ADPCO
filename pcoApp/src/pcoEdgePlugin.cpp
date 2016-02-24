@@ -44,6 +44,12 @@ static const char *driverName = "pcoEdgePlugin";
  * which we define here. */
 #define MAX_ATTRIBUTE_STRING_SIZE 256
 
+
+ /*
+  * Does nothing. 
+  */
+  
+
 asynStatus pcoEdgePlugin::openFile(const char *fileName,
                                    NDFileOpenMode_t openMode, NDArray *pArray) {
   /*    nc_type ncType=NC_NAT;*/
@@ -59,9 +65,9 @@ asynStatus pcoEdgePlugin::openFile(const char *fileName,
   return (asynSuccess);
 }
 
-/** This is called to write data a single NDArray to the file.  It can be called
- * multiple times
- *  to add arrays to a single file in stream or capture mode */
+/**
+ * does nothing.
+ */
 asynStatus pcoEdgePlugin::writeFile(NDArray *pArray) {
   unsigned long int stripsize;
   static const char *functionName = "writeFile";
@@ -75,6 +81,11 @@ asynStatus pcoEdgePlugin::writeFile(NDArray *pArray) {
   return (asynSuccess);
 }
 
+ /*
+  * Helper function for getIntegerParam, to return an int.
+  */
+  
+
 int pcoEdgePlugin::getIntParam(int param) {
   int saveparamx;
   getIntegerParam(param, &saveparamx);
@@ -82,11 +93,14 @@ int pcoEdgePlugin::getIntParam(int param) {
   return (saveparamx);
 }
 
-/*******************************************************************************************
- *
- *
- *
- ******************************************************************************************/
+ /*
+  * Called whenever we get new NDArray to plugin. It will do several functions:
+  * 1) Reads attributes attached to images, and does calcs based on those attributes. 
+  * 2) Descrambles using code copied from the PCO company.
+  * 3) converts 12 bit format to 16 bit format if necessary.
+  * 4) spits out descrambled images to other plugins. Edge needs descrambling generally.
+  */
+  
 
 void pcoEdgePlugin::processCallbacks(NDArray *pArray) {
   double elapsed_time;
@@ -411,12 +425,21 @@ void pcoEdgePlugin::processCallbacks(NDArray *pArray) {
   NDPluginFile::processCallbacks(pArray);
 }
 
+ /*
+  * Does nothing.
+  */
+  
+
 asynStatus pcoEdgePlugin::readFile(NDArray **pArray) {
   // static const char *functionName = "readFile";
 
   return asynError;
 }
 
+ /*
+  * Does nothing.
+  */
+  
 asynStatus pcoEdgePlugin::closeFile() {
   static const char *functionName = "closeFile";
   int fnx;

@@ -1,4 +1,11 @@
-
+/**
+ * Code for creating serial binary commands and parsing binary responses from 
+ * PCO Cameras. Also has defines and a struct for long responses from the cameras.
+ *
+ *@author Timothy Madden
+ *@date 2010
+ */
+ 
 
 // ------------------------------------------------------------------------ //
 // -- Defines for Get Camera Type Command: -------------------------------- //
@@ -13,17 +20,26 @@
 
 // pco.1300 types
 
-/**********************************************************************
+/**
+ * Inline class  to create a binary command to be sent to pco cameras over serial port.
  *
  *
  *
- *
- ************************************************************************/
+ */
 
 class pco_command {
  public:
+ 
+ /*
+  * Constructor for a new single binary command to camera.
+  */
+  
   pco_command() { setCode(0); };
 
+ /*
+  * Set command code, as defined in PCO documentation. this is main command word.
+  */
+  
   void setCode(unsigned short cx) {
     addr = 0;
     code = cx;
@@ -33,6 +49,10 @@ class pco_command {
     calcCheckSum();
   }
 
+ /*
+  * commands are created by adding data one word at a time. Add unsigned short to command.
+  */
+  
   void addUShort(unsigned short msg) {
     unsigned short *ptr;
     ptr = (unsigned short *)(data + addr);
@@ -41,6 +61,10 @@ class pco_command {
     calcCheckSum();
   };
 
+ /*
+  * add unsigned char to command
+  */
+  
   void addUChar(unsigned char msg) {
     unsigned char *ptr;
     ptr = (unsigned char *)(data + addr);
@@ -49,6 +73,10 @@ class pco_command {
     calcCheckSum();
   };
 
+ /*
+  * Add signed short to command.
+  */
+  
   void addShort(short msg) {
     short *ptr;
     ptr = (short *)(data + addr);
@@ -57,6 +85,10 @@ class pco_command {
     calcCheckSum();
   };
 
+ /*
+  * Add 32 but signed int to command.
+  */
+  
   void addLong(long msg) {
     long *ptr;
     ptr = (long *)(data + addr);
@@ -64,6 +96,11 @@ class pco_command {
     addr += 4;
     calcCheckSum();
   };
+
+ /*
+  * Add unsigned int to the command.
+  */
+  
   void addULong(unsigned long msg) {
     unsigned long *ptr;
     ptr = (unsigned long *)(data + addr);
@@ -72,8 +109,23 @@ class pco_command {
     calcCheckSum();
   };
 
+
+ /*
+  * Get raw data string into provided memory.
+  */
+  
   unsigned char *getData(void) { return ((unsigned char *)data); };
+
+ /*
+  * Get length of command in bytes. Return in provided memory.
+  */
+  
   unsigned short getLen(void) { return (*length); };
+
+ /*
+  * Get main command code from the binary command.
+  */
+  
   unsigned short getCode(void) { return (code); };
 
  protected:
@@ -84,6 +136,13 @@ class pco_command {
   unsigned char *checksum;
 
   char data[256];
+
+
+
+ /*
+  * Calc checksum to command to make it valid.
+  */
+  
   void calcCheckSum(void) {
     int i;
     int codelo;
@@ -106,13 +165,19 @@ class pco_command {
   int addr;
   int totalsum;
 };
-/*************************************************************************************
-*
-*
-***************************************************************************************/
+
+/**
+ * Class to define a single binary response from pco cameras, received over serial port.
+ *
+ */
 
 class pco_response {
  public:
+
+ /*
+  * Create a new empty response message to be filled by camera serial port data.
+  */
+  
   pco_response() {
     addr = 0;
     code = 0;
@@ -121,23 +186,49 @@ class pco_response {
     addUShort(5);
   };
 
+ /*
+  * Set main command code in the response.
+  */
+  
   void setCode(unsigned short cx) { code = cx; };
 
+ /*
+  * Set expected return resp. code from camera. camera should send this back.
+  */
+  
   void setExpCode(unsigned short cx) { exp_code = cx; };
+
+ /*
+  * Set error code in this response. camera will send back this code on err condition. 
+  */
+  
   void setErrCode(unsigned short cx) { error_code = cx; };
 
+ /*
+  * Set length of response.
+  */
+  
   void setLength(unsigned short lx) {
     *length = lx;
     addr = *length - 2;
     checksum = (unsigned char *)data + addr - 1;
   };
 
+ /*
+  * Take binary string from serial port, and copy into this response obj for parsing.
+  */
+  
   void copy2Obj(unsigned char *obj, int len) {
     int k;
     for (k = 0; k < len; k++) {
       obj[k] = data[k];
     }
   }
+
+ /*
+  * add unsigned char to message.
+  */
+  
   void addUChar(unsigned char msg) {
     unsigned char *ptr;
     ptr = (unsigned char *)(data + addr);
@@ -145,17 +236,30 @@ class pco_response {
     addr += 1;
   };
 
+ /*
+  * add string of uchars of len to this message.
+  */
+  
   void addUChar(unsigned char *msg, int len) {
     int i;
     for (i = 0; i < len; i++) addUChar(*(msg + i));
   };
 
+ /*
+  * add single ushort to this message.
+  */
+  
   void addUShort(unsigned short msg) {
     unsigned short *ptr;
     ptr = (unsigned short *)(data + addr);
     *ptr = msg;
     addr += 2;
   };
+
+ /*
+  * Add signed short to this message.
+  */
+  
   void addShort(short msg) {
     short *ptr;
     ptr = (short *)(data + addr);
@@ -163,12 +267,21 @@ class pco_response {
     addr += 2;
   };
 
+ /*
+  * Add signed 32 bit int to this message. 
+  */
+  
   void addLong(long msg) {
     long *ptr;
     ptr = (long *)(data + addr);
     *ptr = msg;
     addr += 4;
   };
+
+ /*
+  * Add unsigned int 32 bit to this message. 
+  */
+  
   void addULong(unsigned long msg) {
     unsigned long *ptr;
     ptr = (unsigned long *)(data + addr);
@@ -176,6 +289,11 @@ class pco_response {
     addr += 4;
   };
 
+ /*
+  * Get a ushort out of message, and inc. internal counter, so we can get each part of message
+  * in sequence. 
+  */
+  
   unsigned short getUShort(int adx) {
     unsigned short *ptr;
 
@@ -183,6 +301,11 @@ class pco_response {
     return (*ptr);
   };
 
+
+ /*
+  * get short out of message, inc. internal counter.
+  */
+  
   short getShort(int adx) {
     short *ptr;
 
@@ -190,6 +313,11 @@ class pco_response {
     return (*ptr);
   };
 
+
+ /*
+  * get unsigned char from message.
+  */
+  
   unsigned char getUChar(int adx) {
     unsigned char *ptr;
 
@@ -197,6 +325,10 @@ class pco_response {
     return (*ptr);
   };
 
+ /*
+  * Get unsigned long from message.
+  */
+  
   unsigned long getULong(int adx) {
     unsigned long *ptr;
 
@@ -204,20 +336,52 @@ class pco_response {
     return (*ptr);
   };
 
+ /*
+  * Print the contants of the message to screen. 
+  */
+  
   void sprintHeader(char *strg) {
     verifyCheckSum();
     sprintf(strg, "code: 0x%x  length: %d cks: 0x%x verified cks: 0x%x \n",
             getCode(), getLen(), *checksum, verified_chksm);
   };
 
+ /*
+  * Get raw data string from message.
+  */
+  
   unsigned char *getData(void) { return ((unsigned char *)data); };
   // data excluding length word
+ /*
+  *Get data string from message, starting 2 bytes from beginning. 1st 2 bytes are not useful.
+  */
+  
   unsigned char *getData2(void) { return (2 + (unsigned char *)data); };
+ /*
+  * get len of messave.
+  */
+  
   unsigned short getLen(void) { return (*length); };
+ /*
+  * Get comand code from message.
+  */
+  
   unsigned short getCode(void) { return (code); };
+ /*
+  * Get expected return code from message.
+  */
+  
   unsigned short getExpCode(void) { return (exp_code); };
+ /*
+  * Get any error code message. 
+  */
+  
   unsigned short getErrCode(void) { return (error_code); };
 
+ /*
+  * Make sure checksum from camera is correct. 
+  */
+  
   int verifyCheckSum(void) {
     int i, codelo, codehi;
     // checksum and length is included in address. not code.
@@ -275,7 +439,9 @@ class pco_response {
 
 #endif
 
-// aps designed struct based on PCO SDK
+/**
+ *aps designed struct based on PCO SDK. Holds camera info structure.
+ */
 struct xPCO_Description {
   WORD wSize;                 // Sizeof this struct
   WORD wSensorTypeDESC;       // Sensor type
