@@ -1,0 +1,16 @@
+epicsEnvSet("ARCH","windows-x64")
+epicsEnvSet("IOC","iocPCO")
+epicsEnvSet("TOP","d:/EPICS/ADEpics/SynApps_5_5/support/ADIOCs")
+epicsEnvSet("ASYN","D:/EPICS/ADEpics/SynApps_5_5/support/asyn4-20")
+epicsEnvSet("CALC","D:/EPICS/ADEpics/SynApps_5_5/support/calc-2-8")
+epicsEnvSet("BUSY","D:/EPICS/ADEpics/SynApps_5_5/support/busy-1-3")
+epicsEnvSet("SSCAN","D:/EPICS/ADEpics/SynApps_5_5/support/sscan-2-6-6")
+epicsEnvSet("MCA","D:/EPICS/ADEpics/SynApps_5_5/support/mca-7-0")
+epicsEnvSet("AUTOSAVE","D:/EPICS/ADEpics/SynApps_5_5/support/autosave-4-7")
+epicsEnvSet("AREA_DETECTOR","D:/EPICS/ADEpics/SynApps_5_5/support/areaDetector-1-8b1")
+epicsEnvSet("EPICS_BASE","D:/EPICS/ADEpics/baseR12.1")
+epicsEnvSet("SUPPORT","D:/EPICS/ADEpics/SynApps_5_5/support")
+
+epicsEnvSet("CAPUTRECORDER","D:/EPICS/ADEpics/synApps_5_5/support/caputRecorder-1-4-2")
+
+epicsEnvSet("ADIOCs","D:/EPICS/ADEpics/SynApps_5_5/support/ADIOCs")
