@@ -63,6 +63,12 @@
 #include <math.h>
 #include "time.h"
 
+
+#ifndef _WIN32
+#define FALSE false
+#define TRUE true
+#endif
+
 /** 
  *PCO Driver. Serial port functions. 
  */
