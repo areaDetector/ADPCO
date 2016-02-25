@@ -1,5 +1,10 @@
-// AncDemoRotationExpDlg.cpp : implementation file
-//
+/**
+ * Class derived from grabberInterface that hides all vendor api calls to grabber.
+ * This is for silicon softare inc. grabber.
+ * 
+ *@author Tim Madden
+ *@date 2012
+ */
 
 #ifdef USE_SISW
 
@@ -24,8 +29,11 @@ volatile long siSoftware::recent_missed_frames = 0;
 
 siSoftware *siSoftware::mycard = 0;
 
-/////////////////////////////////////////////////////////////////////////////
-// siSoftwareFPGA dialog
+/**
+ * Constrict SISW grabber object and do partial set up of card.
+ * is_use_fpga- some grabbers have user-prog. fpga. True to use it.
+ * SISW has no fpga.
+ */
 
 siSoftware::siSoftware(bool is_use_fpga) : lf("sisoGrabber.log") {
   //    m_bEnableRtPro = is_use_fpga;
@@ -73,7 +81,19 @@ siSoftware::siSoftware(bool is_use_fpga) : lf("sisoGrabber.log") {
   totalBufferSize = 0;
 }
 
+/**
+ *
+ * Return enum defining which vendor made grabber.
+ *
+ */
+
 int siSoftware::getGrabberType() { return ((int)gSISW); }
+
+/**
+ * Put display on screen disp. grabber images. Most vendor libs have 
+ * GUI display for debugging. This is for debuggin only. 
+ *
+ */
 
 void siSoftware::makeView(void) {
   //*2 becuse we have 8bit data for 16bit images- 10tap camlink
@@ -82,7 +102,19 @@ void siSoftware::makeView(void) {
   SetBufferWidth(dispId0, sensor_width * 2, sensor_height);
   is_display = true;
 }
+/**
+ * Set num mem buffers to store in grabber mem. 
+ *
+ *
+ */
+
 void siSoftware::setNumBuffers(int b) { num_buffers = b; }
+
+/**
+ * Retrun T/F if new frame is available in grabber. 
+ *
+ *
+ */
 
 bool siSoftware::isFrameAvailable(void) {
   frame_count = Fg_getLastPicNumberEx(fg, camPort, (dma_mem *)ptrMem);
@@ -109,7 +141,19 @@ bool siSoftware::isFrameAvailable(void) {
   return false;
 }
 
+/**
+ * Return T/F if we missed a frame. 
+ *
+ *
+ */
+
 bool siSoftware::isMissedFrame(void) { return (is_missed_frame); }
+
+/**
+ * Clear missed frames flags, counters. 
+ *
+ *
+ */
 
 void siSoftware::clearMissedFrames(void) {
   frame_count = Fg_getLastPicNumberEx(fg, camPort, (dma_mem *)ptrMem);
@@ -118,25 +162,69 @@ void siSoftware::clearMissedFrames(void) {
   is_missed_frame = false;
   recent_missed_frames = 0;
 }
+/**
+ * Git num missed frames since grabber was last init. 
+ *
+ *
+ */
+
 long siSoftware::getTotalMissedFrames(void) { return (missed_frames); }
 
+/**
+ * Get num missed frames since last time we checked for missed frames. 
+ *
+ *
+ */
+
 long siSoftware::getRecentMissedFrames(void) { return (recent_missed_frames); }
+
+/**
+ * Deprecrated
+ *
+ *
+ */
 
 void siSoftware::setCamController(void *cc) {
   // cam_control=cc;
 }
 
+/**
+ * Get grabber img width.
+ *
+ *
+ */
+
 int siSoftware::getWidth(void) { return (sensor_width); }
+
+/**
+ * Get grabber img hieght in pixels. 
+ *
+ *
+ */
 
 int siSoftware::getHeight(void) { return (sensor_height); }
 
 //
+
+/**
+ * Get image from grabber into user supplied mem pointer.
+ * copy_memory- place to put new image.
+ * timestamp - place to put HW timestamp
+ *
+ */
 
 bool siSoftware::getFrame(void *copy_memory,
                           unsigned int *siSoftware_timestamp) {
   return (getFrame(copy_memory, siSoftware_timestamp,
                    (sensor_height * sensor_width * sizeof(unsigned short))));
 }
+
+/**
+ * Get frame from grabber
+ * copy_memory- place to put image
+ * timestamp - place to put hw timestamp
+ * nbytes= max num butes in mem to copy. 
+ */
 
 bool siSoftware::getFrame(void *copy_memory, unsigned int *siSoftware_timestamp,
                           int nbytes) {
@@ -213,12 +301,24 @@ bool siSoftware::getFrame(void *copy_memory, unsigned int *siSoftware_timestamp,
   return false;
 }
 
+/**
+ * Get frame into copy_memory. 
+ *
+ *
+ */
+
 bool siSoftware::getFrame(void *copy_memory) {
   unsigned int ts;
 
   return (getFrame(copy_memory, &ts,
                    (sensor_height * sensor_width * sizeof(unsigned short))));
 }
+
+/**
+ * Set double width mode. Needed for SISW Camera Link 10 tap mode for Edge.
+ *
+ *
+ */
 
 void siSoftware::setDoubleWidth(int isdw) {
   is_doub_width = 1.0;
@@ -228,19 +328,22 @@ void siSoftware::setDoubleWidth(int isdw) {
   if (isdw == 2) is_doub_width = 1.5;
 }
 
-/////////////////////////////////////////////////////////////////////////////
-// siSoftwareFPGA message handlers
+/**
+ * Init grabber to size x and y image sizes. 
+ *
+ *
+ */
 
-//***********************************************************************************
-// Initialize Demo Dialog based application
-//***********************************************************************************
 bool siSoftware::initialize(int size_x, int size_y) {
   return (initialize(size_x, size_y, false));
 }
 
-//***********************************************************************************
-// Initialize Demo Dialog based application
-//***********************************************************************************
+/**
+ * Init grabber to x and y size. force size means to ignore img size in config file. 
+ *
+ *
+ */
+
 bool siSoftware::initialize(int size_x, int size_y, bool is_force_size) {
   char mesx[256];
 
@@ -627,6 +730,12 @@ bool siSoftware::initialize(int size_x, int size_y, bool is_force_size) {
   return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
+/**
+ *	Set path/filename as string for vendor config file w/ grabber settings. 
+ *
+ *
+ */
+
 void siSoftware::setConfigFileName(char *name) {
   char mesx[256];
   sprintf(mesx, "siSoftware::setConfigFileName use %s", name);
@@ -634,6 +743,12 @@ void siSoftware::setConfigFileName(char *name) {
 
   strcpy(camera_format_file, name);
 }
+
+/**
+ * Create vendor spec. objects to set up grabber. 
+ *
+ *
+ */
 
 bool siSoftware::CreateObjects() {
   //        if (is_force_size)
@@ -656,6 +771,12 @@ bool siSoftware::CreateObjects() {
   return TRUE;
 }
 
+/**
+ * Destroy vendor objects to shut down grabber. 
+ *
+ *
+ */
+
 bool siSoftware::DestroyObjects() {
   if (is_display) CloseDisplay(dispId0);
 
@@ -664,24 +785,42 @@ bool siSoftware::DestroyObjects() {
   return TRUE;
 }
 
+/**
+ *
+ * Does nothing. 
+ *
+ */
+
 bool siSoftware::DestroyObjectsNoDelete() { return TRUE; }
 
-//*****************************************************************************************
-//
-//                    Acquisition Control
-//
-//*****************************************************************************************
+/** 
+ * Stop image grabbing. 
+ *
+ *
+ */
 
 void siSoftware::abort() {
   Fg_stopAcquireEx(fg, camPort, (dma_mem *)ptrMem, STOP_SYNC);
   // UpdateMenu();
 }
 
+/**
+ * Stop image grabbing, similar to abort. depend on vendor. 
+ *
+ *
+ */
+
 void siSoftware::freeze() {
   Fg_stopAcquireEx(fg, camPort, (dma_mem *)ptrMem, STOP_SYNC);
 
   //    UpdateMenu();
 }
+
+/**
+ * Start grabbign images. 
+ *
+ *
+ */
 
 void siSoftware::grab() {
   char mesx[256];
@@ -706,6 +845,12 @@ void siSoftware::grab() {
   clearMissedFrames();
   // UpdateMenu();
 }
+/**
+ *
+ *Grab ONE iamge to grabber. 
+ *
+ */
+
 
 void siSoftware::snap() {
   char mesx[256];
@@ -720,36 +865,49 @@ void siSoftware::snap() {
   // UpdateMenu();
 }
 
+/**
+ * Get num free mem buffers ingrabber. 
+ *
+ *
+ */
+
 int siSoftware::getNumFreeBuffers(void) {
   return (sap_buffer_count - (frame_count - frames_to_cpu));
 }
+
+/**
+ * Get total num mem buffers created in grabber. 
+ *
+ *
+ */
+
 int siSoftware::getNumBuffers(void) { return (sap_buffer_count); }
 
-// inc missed frames counter
+/**
+ * Inc missed frames counter. 
+ *
+ *
+ */
+
 void siSoftware::incMissedFrames(void) {
   missed_frames++;
   recent_missed_frames++;
 }
 
-//*****************************************************************************************
-//
-//                    Acquisition Options
-//
-//*****************************************************************************************
 
-//*****************************************************************************************
-//
-//                    File Options
-//
-//*****************************************************************************************
-
-//**************************************************************************************
-//
-//            Processing Options
-//
-//**************************************************************************************
+/**
+ * Does nothing. 
+ *
+ *
+ */
 
 void siSoftware::GetSignalStatus() {}
+
+/**
+ *
+ * Does nothing 
+ *
+ */
 
 void siSoftware::setPin(char *pinstr, int val) {
   int status, status2;

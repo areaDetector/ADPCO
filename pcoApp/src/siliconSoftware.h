@@ -1,5 +1,10 @@
-// AncDemoRotationExpDlg.h : header file
-//
+/**
+ * Class derived from grabberInterface that hides all vendor api calls to grabber.
+ * This is for silicon softare inc. grabber.
+ * 
+ *@author Tim Madden
+ *@date 2012
+ */
 #ifdef USE_SISW
 
 #ifndef _siSoftware_H
@@ -28,8 +33,13 @@
 
 #endif
 
-/////////////////////////////////////////////////////////////////////////////
-// CAncDemoRotationExpDlg dialog
+/**
+ * Class derived from grabberInterface that hides all vendor api calls to grabber.
+ * This is for silicon softare inc. grabber.
+ * 
+ *@author Tim Madden
+ *@date 2012
+ */
 
 class siSoftware : public grabberInterface {
   // Construction

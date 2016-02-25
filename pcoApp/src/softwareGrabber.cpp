@@ -1,3 +1,9 @@
+ /**
+ * Virtual grabber. If no hardware grabber in system, build with this grabber SW.
+ * Software pretends there is a grabber and sends fake images. 
+ *@author Tim Madden 
+ * @date 2010
+ */
 
 #include <stdlib.h>
 #include <stdio.h>

@@ -1,3 +1,10 @@
+/**
+ * Class derived from interface comportInterface to hide all vendor api calls
+ * to the serial port on grabber. 
+ * 
+ *@author Tim Madden
+ *@date 2012
+ */
 
 #include "siswSerialPort.h"
 //#include <windows.h>
@@ -47,6 +54,10 @@ static int (*clGetSupportedBaudRates)(void* serialRef, unsigned int* baudRates);
 static int (*clSetBaudRate)(void* serialRef, unsigned int baudRate);
 static int (*clGetErrorText)(int errorCode, char* errorText,
                              unsigned int* errorTextSize);
+
+ /**
+ * Read vendor dll for serial port functions. In linux it is an so file. 
+ */
 
 void siswSerialPort::readDll(void) {
 #ifndef _WIN32
@@ -121,15 +132,33 @@ void siswSerialPort::readDll(void) {
   }
 }
 
-siswSerialPort::siswSerialPort(char* name) {
+ /**
+ * Make serial port obhect. name is like "COM1" but not used.  
+ */
+
+ siswSerialPort::siswSerialPort(char* name) {
   is_open = false;
   readDll();
 }
-siswSerialPort::~siswSerialPort() {
+
+ /**
+ *  close serial port and destrpy objhect. 
+ */
+
+ siswSerialPort::~siswSerialPort() {
   if (is_open) close();
 }
 
-void siswSerialPort::open(int baud, int parity, int nbits, int nstop,
+ /**
+ *  open serial port
+ * baud- baud rate.
+ * parity - 1/0
+ * nbuts -7/8
+ * nstop - 0/1
+ * rdtimeout- millisec for port to time out on reading. 
+ */
+
+ void siswSerialPort::open(int baud, int parity, int nbits, int nstop,
                           int rdtimeout) {
   this->open(baud, parity, nbits, nstop);
 }
@@ -201,14 +230,24 @@ void siswSerialPort::open(int baud, int parity, int nbits, int nstop) {
   is_open = true;
 }
 
+ /**
+ *  open serial port to default settings
+ */
 void siswSerialPort::open(void) { open(115200, 0, 8, 1); }
 
+ /**
+ * Write one byte to ser port. 
+ */
 void siswSerialPort::write(unsigned char c) {
   char buffer[10];
 
   buffer[0] = c;
   write((unsigned char*)buffer, 1);
 }
+
+ /**
+ * Write buffer of chars of length to serial port.  
+ */
 
 void siswSerialPort::write(unsigned char* buffer, int length) {
   int l;
@@ -234,6 +273,10 @@ void siswSerialPort::write(unsigned char* buffer, int length) {
   }
 }
 
+ /**
+ * read one byte from ser port and ret. 
+ */
+ 
 unsigned char siswSerialPort::read(void) {
   char buffer[10];
   if (is_open) {
@@ -247,6 +290,11 @@ unsigned char siswSerialPort::read(void) {
   }
   return (buffer[0]);
 }
+
+ /**
+ * read buffer of length from serial port and ret to supplied pointer.  
+ */
+
 void siswSerialPort::read(unsigned char* buffer, int length) {
   char errmess[128];
   DWORD errcode;
@@ -318,9 +366,10 @@ void siswSerialPort::close() {
 #endif
   }
 }
-/*
-*
-*/
+
+ /**
+ *  read ser port until no chars left. for clearing errors. 
+ */
 
 void siswSerialPort::clearPipe(void) {
   char ret;
@@ -333,11 +382,9 @@ void siswSerialPort::clearPipe(void) {
   }
 }
 
-/**************************************************************************
- *
- * wait x us
- *
- **************************************************************************/
+ /**
+ *  Wait so many microsec, don in for loop and not sleep.
+ */
 void siswSerialPort::wait(int us) {
   int t0, t1;
 
@@ -349,20 +396,17 @@ void siswSerialPort::wait(int us) {
   }
 }
 
-/**************************************************************************
- *
- * stat stop watch
- *
- **************************************************************************/
+ /**
+ * Start a stop watch, like matlab tic.
+ */
 void siswSerialPort::tic() {
   currenttime = (double)clock() / (double)CLOCKS_PER_SEC;
 }
 
-/**************************************************************************
- *
- * read stop watch
- *
- **************************************************************************/
+ /**
+ *  Read back stop watch in sec. Like matlab toc.
+ */
+ 
 double siswSerialPort::toc() {
   elapsedtime = ((double)clock() / (double)CLOCKS_PER_SEC) - currenttime;
   return (elapsedtime);

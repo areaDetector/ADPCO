@@ -1,25 +1,32 @@
-// softwareCam.cpp : Defines the entry point for the DLL application.
-//
-
+/**
+ * Send/Receive all serial commands to pco camera. Several functions called by 
+ * writeInt32, write Double etc. that send commands to camera. 
+ * Function that runs in own thread that keeps track of status on camera, reads
+ * camera serial port to get cam status.  All serial transactions here.
+ * 
+ *@author Tim Madden
+ *@date 2012
+ */
+ 
 //#include "stdafx.h"
 
 #include "pco.h"
 #include <stdio.h>
 
-
+// define if building for silicon softwarwe grabber.
 #ifdef USE_SISW
 #include "siswSerialPort.h"
 
 #endif
 
-// using namespace genCamControllerEnum;
-
+// define dimax image size to 1800 for certain modes
 #define _LIMITIMGSIZE
+// limit image size no less than 600 for edge, y size.
 //!!#define _LIMITIMGSIZE600
 
-/** This thread controls acquisition, reads TIFF files to get the image data,
- * and
- * does the callbacks to send it to higher layers */
+/** 
+ * Run on thread, monitor camera status over serial port. 
+ */
 void pco::pcoTask() {
   char mesx[256];
 
@@ -118,10 +125,17 @@ void pco::pcoTask() {
   }  // while true
 }
 
-/** This thread controls acquisition, reads TIFF files to get the image data,
- * and
- * does the callbacks to send it to higher layers */
-void pco::pcoTask2() {}
+
+/**
+ * Deprecated.
+ */
+
+ void pco::pcoTask2() {}
+
+
+/**
+ * Read serial port until nothing in pipe. For clearing errors etc.
+ */
 
 void pco::clearPipe(FILE *fp) {
   int ret;
@@ -132,6 +146,16 @@ void pco::clearPipe(FILE *fp) {
     if (counter > 100) break;
   }
 }
+
+/**
+ * Called by asyn writeInt32, , wruteDouble. Passes the asynUser value.
+ * BAcause so many parameters, the param settign is split into many functions.
+ * paramtype not used. 
+ * pasynUser- passed from asynDriver to writeInt32 like functions.
+ * ivalue- param val if an int.
+ * dvalue- param val if a double.
+ * paramtype- enuym for double or int. not used I think.
+ */
 
 int pco::updateParameters(asynUser *pasynUser, epicsInt32 ivalue,
                           epicsFloat64 dvalue, int paramtype) {
@@ -157,6 +181,15 @@ int pco::updateParameters(asynUser *pasynUser, epicsInt32 ivalue,
 
   return (0);
 }
+
+/**
+ * Main called by updateParams, and ultimately writeInt32, writeDouble.
+ * also called by pcoTask periodically. 
+ * function- param num.
+ * ivalue- param val if int.
+ * dvalue= param val if double
+ * paramtype- enum if doubl or int. not used I think.
+ */
 
 int pco::doSerialTransactions(int function, int ivalue, double dvalue,
                               int paramtype) {
@@ -297,13 +330,11 @@ int pco::doSerialTransactions(int function, int ivalue, double dvalue,
   return (0);
 }  // main
 
-//
-//
-// We assume we have Serial Mutex when we enter this function
-// we must release serial mutex to mess w./ grabber so we only have one mutex at
-// a time
-// then we must regrab serial mutex
-//
+/**
+ * Reconfig grabber on the pco serial thread. It must grab the grabber mutex from the
+ * grabber thread before messing w./ grabber. we assume we already have the
+ * serial port mutex. Yes- there are 2 mutexes. Serial port and grabber.
+ */
 void pco::reconfigGrabber(void) {
   setIntegerParam(pco_reconfig_grabber, 0);
 
@@ -364,6 +395,10 @@ void pco::reconfigGrabber(void) {
 
   setIntegerParam(ADStatus, ADStatusIdle);
 }
+
+/**
+ * Debugging function- Deprecated.
+ */
 
 void pco::dbgSerial(void) {
   char serstr[256];
@@ -430,6 +465,14 @@ void pco::dbgSerial(void) {
 
   releaseSerialMutex();
 }
+
+/**
+ * Send pco command, and recv. serial command from seriao port. 
+ * cmd- command to pco.
+ * rsp- response to pco. It is filled in by this funciton.
+ * obj- any raw binary data returned
+ * len- len of raw binary data.
+ */
 
 int pco::doSerialCommand(pco_command &cmd, pco_response &rsp,
                          unsigned char *obj, int len) {
@@ -650,10 +693,9 @@ int pco::doSerialCommand(pco_command &cmd, pco_response &rsp,
   return (8);
 }
 
-/*****************************************************************************
- *
- *
- *****************************************************************************/
+/**
+ * See if there are any messages pending from camera. 
+ */
 
 int pco::checkCameraMessages(void) {
   pco_response rsp;
@@ -725,19 +767,15 @@ int pco::checkCameraMessages(void) {
   return (0);
 }
 
-/*****************************************************************************
- *
- * Load DLL for PCO Cam. copied from PCO example...
- *
- *****************************************************************************/
+/**
+ * Deprecated.
+ */
 
 int pco::getlib(void) { return FALSE; }
 
-/*****************************************************************************
- *
- * Load DLL for PCO Cam. copied from PCO example...
- *
- *****************************************************************************/
+/**
+ * report error from camera. Prob. deprecated. 
+ */
 
 int pco::ReportError(int code, char *usrmsg) {
   char mesgx[256];
@@ -750,11 +788,9 @@ int pco::ReportError(int code, char *usrmsg) {
   return (0);
 }
 
-/*****************************************************************************
- *
- * Load DLL for PCO Cam. copied from PCO example...
- *
- *****************************************************************************/
+/**
+ * Close serial port. 
+ */
 
 int pco::Disconnected(int code, char *usrmsg) {
   ReportError(code, usrmsg);
@@ -769,11 +805,9 @@ int pco::Disconnected(int code, char *usrmsg) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
+/**
+ * Open serial port to camera, set up serial port. 
+ */
 
 int pco::OpenCamera(void) {
   pco_command cmd;
@@ -802,11 +836,14 @@ int pco::OpenCamera(void) {
   return 0;
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
+/**
+ * Get function from writeInt32, which param. Read that param from camera. 
+ * PCO settings are defined in PCO docs. Because so many, we group them as
+ * categories folling the pco docs. The param defined in fucntion will be 
+ * set from camera settings, or sent to camera settings on hardware ,depending on
+ * if the functino is named ReadParams, or WriteParams. 
+ * function -param number.
+ */
 
 int pco::setPcoImageReadParams(int function) {
   pco_command cmd;
@@ -919,11 +956,13 @@ int pco::setPcoImageReadParams(int function) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
+/**
+ * PCO settings are defined in PCO docs. Because so many, we group them as
+ * categories folling the pco docs. If  functino is called get, we read 
+ * serial port from camera and set a param. If function called set, we read a param
+ * from asyn param list and send its value to the camera. 
+ */
+
 int pco::getPcoStatusParams(void) {
   unsigned short val1;
   char msgx[256];
@@ -1048,11 +1087,12 @@ int pco::getPcoStatusParams(void) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
+/**
+ * PCO settings are defined in PCO docs. Because so many, we group them as
+ * categories folling the pco docs. If  functino is called get, we read 
+ * serial port from camera and set a param. If function called set, we read a param
+ * from asyn param list and send its value to the camera. 
+ */
 
 int pco::getPcoImageReadParams(void) {
   unsigned short val1;
@@ -1138,11 +1178,12 @@ int pco::getPcoImageReadParams(void) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
+/**
+ * PCO settings are defined in PCO docs. Because so many, we group them as
+ * categories folling the pco docs. If  functino is called get, we read 
+ * serial port from camera and set a param. If function called set, we read a param
+ * from asyn param list and send its value to the camera. 
+ */
 
 int pco::getPcoCameraLinkParams(void) {
   unsigned short val1;
@@ -1170,11 +1211,13 @@ int pco::getPcoCameraLinkParams(void) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
+/**
+ * PCO settings are defined in PCO docs. Because so many, we group them as
+ * categories folling the pco docs. If  functino is called get, we read 
+ * serial port from camera and set a param. If function called set, we read a param
+ * from asyn param list and send its value to the camera. 
+ * function - param from writeInt32.
+ */
 
 int pco::setPcoCameraLinkParams(int function) {
   unsigned short val1;
@@ -1209,11 +1252,9 @@ int pco::setPcoCameraLinkParams(int function) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
+/**
+ * Set pco baud rate. 
+ */
 
 int pco::setPcoBaudrate(int function) {
   unsigned short val1;
@@ -1366,11 +1407,13 @@ int pco::setPcoBaudrate(int function) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
+/**
+ * PCO settings are defined in PCO docs. Because so many, we group them as
+ * categories folling the pco docs. If  functino is called get, we read 
+ * serial port from camera and set a param. If function called set, we read a param
+ * from asyn param list and send its value to the camera. 
+ * function- param number from writeInt32.
+ */
 
 int pco::setPcoRecordingParams(int function) {
   pco_command cmd;
@@ -1515,12 +1558,12 @@ int pco::setPcoRecordingParams(int function) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
-
+/**
+ * PCO settings are defined in PCO docs. Because so many, we group them as
+ * categories folling the pco docs. If  functino is called get, we read 
+ * serial port from camera and set a param. If function called set, we read a param
+ * from asyn param list and send its value to the camera. 
+ */
 int pco::getPcoRecordingParams(void) {
   unsigned short val1;
   char msgx[256];
@@ -1594,12 +1637,13 @@ int pco::getPcoRecordingParams(void) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
-
+/**
+ * PCO settings are defined in PCO docs. Because so many, we group them as
+ * categories folling the pco docs. If  functino is called get, we read 
+ * serial port from camera and set a param. If function called set, we read a param
+ * from asyn param list and send its value to the camera. 
+ * function- param number from writeInt32.
+ */
 int pco::setPcoStorageParams(int function) {
   pco_command cmd;
   pco_response rsp;
@@ -1670,12 +1714,13 @@ int pco::setPcoStorageParams(int function) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
-
+/**
+ * PCO settings are defined in PCO docs. Because so many, we group them as
+ * categories folling the pco docs. If  functino is called get, we read 
+ * serial port from camera and set a param. If function called set, we read a param
+ * from asyn param list and send its value to the camera. 
+ */
+ 
 int pco::getPcoStorageParams(void) {
   unsigned short val1;
   char msgx[256];
@@ -1733,11 +1778,13 @@ int pco::getPcoStorageParams(void) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
+/**
+ * PCO settings are defined in PCO docs. Because so many, we group them as
+ * categories folling the pco docs. If  functino is called get, we read 
+ * serial port from camera and set a param. If function called set, we read a param
+ * from asyn param list and send its value to the camera. 
+ * function- param number from writeInt32.
+ */
 
 int pco::setPcoTimingParams(int function) {
   pco_command cmd;
@@ -1943,11 +1990,12 @@ int pco::setPcoTimingParams(int function) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
+/**
+ * High level parameters are things like ADAcquire. The idea of a high level param is that
+ * when set, it will set many low level params in the camera. To Acquire for example, about 5
+ * low level settins in the camera must be tweaked. 
+ * function- from writeInt32, the parm numb. 
+ */
 
 int pco::doHighLevelParams(int function) {
   int edx, k;
@@ -2156,12 +2204,13 @@ int pco::doHighLevelParams(int function) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
-
+/**
+ * Read out all images from dimax RAM over CL grabber. We must run on a thread, the seriao port thread,
+ * which is separate from the asynDriver thread on which writeInt32 runs. This function sends commmand via
+ * serial port to camera to get ONE image. Then it waits for image to show uip on grabber. then it does 
+ *again and again in a loop until all iamges read out. It must be on separate thread so the writeInt32 does
+  * not block for minutes. 
+ */
 void pco::dumpCameraMemory(void) {
   int edx, k;
   stopWatch timex;
@@ -2336,12 +2385,9 @@ void pco::dumpCameraMemory(void) {
 
 }  // if dump mem
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
-
+/**
+ * Get ONE frame from dimax RAM. Just send the serial message to pco dimax to send next frame.
+ */
 int pco::dumpOneFrame(int k) {
   pco_response rsp;
   pco_command cmd;
@@ -2365,11 +2411,11 @@ int pco::dumpOneFrame(int k) {
   return (0);
 }
 
-/*********************************************************************************************
+/**
+ * Reset Dimax memory to default settings, erasing all frames and segment sizes. 
  *
  *
- *
- *********************************************************************************************/
+ */
 
 void pco::resetDimaxMemory(void) {
   double npixels;
@@ -2432,7 +2478,13 @@ void pco::resetDimaxMemory(void) {
   }
 }
 
-int pco::getPcoTimingParams(void) {
+/**
+ * Read PCO image timing params from camera. set asyn params appropriately.
+ *
+ *
+ */
+
+ int pco::getPcoTimingParams(void) {
   unsigned short val1;
   char msgx[256];
   unsigned long lval1;
@@ -2564,13 +2616,13 @@ int pco::getPcoTimingParams(void) {
   return (0);
 }
 
-/*********************************************************************************************
+/**
+ * Get pco general settings, as defined in pco docs. 
+ * set asyn params accordingly. 
  *
- *
- *
- *********************************************************************************************/
+ */
 
-int pco::getPcoGeneralParams(void) {
+ int pco::getPcoGeneralParams(void) {
   unsigned short val1;
   char msgx[256];
   unsigned long lval1;
@@ -2679,11 +2731,11 @@ int pco::getPcoGeneralParams(void) {
   return (0);
 }
 
-/*********************************************************************************************
- *
- *
- *
- *********************************************************************************************/
+/**
+ * given functino from writeInt32, the param number, write pco general param
+ * according to function.
+ * function - asyn param. 
+ */
 
 int pco::setPcoGeneralParams(int function) {
   // Reset Settings to Default
@@ -2832,11 +2884,11 @@ int pco::setPcoGeneralParams(int function) {
   return (0);
 }
 
-/*********************************************************************************************
+/**
+ *  set pco sensor param defined in functino, the asyn param from writeInt32
+ * send setting via serial port. 
  *
- *
- *
- *********************************************************************************************/
+ */
 
 int pco::setPcoSensorParams(int function) {
   char mesgxx[256];
@@ -3158,11 +3210,11 @@ int pco::setPcoSensorParams(int function) {
   return (0);
 }
 
-/*********************************************************************************************
+/**
+ * Read many sensor params from camera via serial port. 
+ * update asyn params accordingly. 
  *
- *
- *
- *********************************************************************************************/
+ */
 
 int pco::getPcoSensorParams(void) {
   pco_command cmd;

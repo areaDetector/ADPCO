@@ -1,13 +1,10 @@
-/*******************************************************************************
- *
- *    siswSerialPort.h
- *
- *    Author: Tim Madden
- *    Date:    8/01/06
- *    Project: CCD Detector DAQ.
- *
- *
- ******************************************************************************/
+/**
+ * Class derived from interface comportInterface to hide all vendor api calls
+ * to the serial port on grabber. 
+ * 
+ *@author Tim Madden
+ *@date 2012
+ */
 
 /*
  * Include files.
