@@ -12,6 +12,8 @@ include $(TOP)/configure/CONFIG
 
 INC += pco.h
 
+USR_INCLUDES += $(ADCAMERALINK)
+
 LIBRARY_IOC = pco
 
 #LIB_SRCS    +=legacystubs.c
@@ -20,17 +22,6 @@ LIB_SRCS    += PCOSerial.cpp
 LIB_SRCS    += pco.cpp
 LIB_SRCS    +=  drvPcoEpics.c
 
-LIB_SRCS    += camLinkSerial.cpp
-
-LIB_SRCS += ccd_exception.cpp
-LIB_SRCS    += coreco.cpp
-LIB_SRCS    += siswSerialPort.cpp
-LIB_SRCS    += stopWatch.cpp
-LIB_SRCS    += siliconSoftware.cpp
-LIB_SRCS    += softwareGrabber.cpp
-LIB_SRCS    += cl_com_port2.cpp
-LIB_SRCS    += logfile.cpp
-LIB_SRCS    += ADCameralink.cpp
 
 LIB_SRCS +=drvpcoEdgePluginEpics.c
 LIB_SRCS +=pcoEdgePlugin.cpp
@@ -80,11 +71,10 @@ PROD_LDFLAGS_WIN32 += /VERBOSE:LIB
 #!!DBD += PCOApp.dbd
 #DBD += PCOAppInclude.dbd
 
-DBD += camLinkSerialSupport.dbd
 DBD += PCOSupport.dbd
 DBD += pcoEdgePluginSupport.dbd
 
-
+LIB_LIBS += cameralink
 
 include $(ADCORE)/ADApp/commonLibraryMakefile
 
