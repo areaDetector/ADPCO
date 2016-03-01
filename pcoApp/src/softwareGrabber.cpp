@@ -13,7 +13,6 @@
 
 #include <epicsTime.h>
 #include <epicsThread.h>
-
 softwareGrabber::softwareGrabber() {
   m_grab = 0;
 
