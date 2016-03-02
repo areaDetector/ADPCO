@@ -12,7 +12,7 @@ include $(TOP)/configure/CONFIG
 
 INC += pco.h
 
-USR_INCLUDES += $(ADCAMERALINK)
+#USR_INCLUDES += $(ADCAMERALINK)
 
 LIBRARY_IOC = pco
 

@@ -27,6 +27,7 @@ PROD_SRCS_DEFAULT += $(PROD_NAME)_registerRecordDeviceDriver.cpp $(PROD_NAME)Mai
 # Add locally compiled object code
 PROD_LIBS += pco clsersis display_lib fglib5 gbelib iolibrt 
 
+PROD_LIBS += cameralink
 
 #!!$(foreach v, $(.VARIABLES), $(info $(v) = $($(v))))
 
