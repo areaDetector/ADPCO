@@ -11,7 +11,6 @@ include $(TOP)/configure/CONFIG
 # Create and install (or just install)
 # databases, templates, substitutions like this
 
-DB += coreco.template
 DB += pco.template
 DB += pco_metarecs.template
 DB += pcoEdgePlugin.template
