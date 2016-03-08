@@ -142,7 +142,7 @@ void pcoEdgePlugin::processCallbacks(NDArray *pArray) {
   if (getIntParam(print_attr) == 1) {
     numAttributes = pArray->pAttributeList->count();
 
-    printf("Num Attributes %i \n", numAttributes);
+    asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"Num Attributes %i \n", numAttributes);
     pAttribute = pArray->pAttributeList->next(NULL);
     for (attrCount = 0; attrCount < numAttributes; attrCount++) {
       pAttribute->getValueInfo(&attrDataType, &attrSize);
@@ -151,7 +151,7 @@ void pcoEdgePlugin::processCallbacks(NDArray *pArray) {
       // pAttribute->getDescription(description, sizeof(description));
       // pAttribute->getValue(attrDataType, void *pValue, attrSize);
 
-      printf("Attr Name %s, Addr Disc %s\n", pAttribute->getName(),
+      asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"Attr Name %s, Addr Disc %s\n", pAttribute->getName(),
              pAttribute->getDescription());
 
       pAttribute = pArray->pAttributeList->next(pAttribute);
@@ -173,9 +173,9 @@ void pcoEdgePlugin::processCallbacks(NDArray *pArray) {
         setIntegerParam(is_descramble, pco_descramble);
 
       if (getIntParam(is_pr_pco_attr))
-        printf("pco_descramble = %d\n", pco_descramble);
+        asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"pco_descramble = %d\n", pco_descramble);
     } else if (getIntParam(is_pr_pco_attr))
-      printf("pco edge plugin: Could not get pcodescramble attr\n");
+      asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"pco edge plugin: Could not get pcodescramble attr\n");
 
     atrx = pArray->pAttributeList->find("pco_conv_12to16");
 
@@ -189,10 +189,10 @@ void pcoEdgePlugin::processCallbacks(NDArray *pArray) {
       }
 
       if (getIntParam(is_pr_pco_attr))
-        printf("pco_conv_12to16 = %d\n", pco_conv_12to16);
+        asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"pco_conv_12to16 = %d\n", pco_conv_12to16);
 
     } else if (getIntParam(is_pr_pco_attr))
-      printf("pco edge plugin: Could not get pco_conv_12to16 attr\n");
+      asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"pco edge plugin: Could not get pco_conv_12to16 attr\n");
 
     atrx = pArray->pAttributeList->find("pco_disable_descramble");
 
@@ -206,10 +206,10 @@ void pcoEdgePlugin::processCallbacks(NDArray *pArray) {
       }
 
       if (getIntParam(is_pr_pco_attr))
-        printf("pco_disable_descramble = %d\n", pco_disable_descramble);
+        asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"pco_disable_descramble = %d\n", pco_disable_descramble);
 
     } else if (getIntParam(is_pr_pco_attr))
-      printf("pco edge plugin: Could not get pco_disable_descramble attr\n");
+      asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"pco edge plugin: Could not get pco_disable_descramble attr\n");
 
     // if (getIntParam(is_decompress)==1 || getIntParam(is_descramble)==1)
 
@@ -224,7 +224,7 @@ void pcoEdgePlugin::processCallbacks(NDArray *pArray) {
     rowbytes = xs * 2;
 
     if (xs > 2560 || xs < 0 || ys > 2160 || ys < 0) {
-      printf("ERROR: pco plugin: SIZEX or SizeY Illegal\n");
+      asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,"ERROR: pco plugin: SIZEX or SizeY Illegal\n");
     }
 
     //
@@ -259,7 +259,7 @@ void pcoEdgePlugin::processCallbacks(NDArray *pArray) {
     NDArray *nimg = mypool->alloc(2, (size_t *)dims, NDInt16, (size_t)0, NULL);
 
     if (nimg == 0) {
-      printf("ERROR: pco plugin could not alloc nd array\n");
+      asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"ERROR: pco plugin could not alloc nd array\n");
       return;
     }
 
@@ -279,7 +279,7 @@ void pcoEdgePlugin::processCallbacks(NDArray *pArray) {
       unsigned short shortpix;
 
       if ((shorts_in - floor(shorts_in)) > 0.0001) {
-        printf("ERROR- Decompression shorts in= %f,   img size= %d", shorts_in,
+        asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,"ERROR- Decompression shorts in= %f,   img size= %d", shorts_in,
                xs);
       }
 

@@ -122,7 +122,7 @@ asynStatus pco::writeFloat64(asynUser *pasynUser, epicsFloat64 value) {
   * \param[in] details If >0 then driver details are printed.
   */
 void pco::report(FILE *fp, int details) {
-  fprintf(fp, "MAR-CCD detector %s\n", this->portName);
+  fprintf(fp, "PCO detector %s\n", this->portName);
   if (details > 0) {
     int nx, ny;
     getIntegerParam(ADSizeX, &nx);
@@ -568,7 +568,7 @@ pco::pco(const char *portName, const char *serverPort, int maxBuffers,
                                      (const char *)NULL);
 
   if (status != asynSuccess) {
-    printf("ERROR---Could not connect to serial port asyn driver %s\n",
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,"ERROR---Could not connect to serial port asyn driver %s\n",
            serverPort);
     exit(-1);
   }
@@ -606,7 +606,7 @@ pco::pco(const char *portName, const char *serverPort, int maxBuffers,
                               epicsThreadGetStackSize(epicsThreadStackMedium),
                               (EPICSTHREADFUNC)pcoTaskC, this) == NULL);
   if (status) {
-    printf("pco construct epicsThreadCreate failure for serial port task\n");
+    asynPrint(this->pasynUserSelf, ASYN_TRACE_ERROR,"pco construct epicsThreadCreate failure for serial port task\n");
     return;
   }
 }
@@ -684,7 +684,7 @@ void pco::processNewImage(void *img_ptr) {
       rowa = 0;
 
       if (xs != lastxsize || ys != lastysize) {
-        printf("pcoImgCam, descramble, img size changed: %d %d\n", xs, ys);
+        asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"pcoImgCam, descramble, img size changed: %d %d\n", xs, ys);
       }
 
       lastxsize = xs;
@@ -695,7 +695,7 @@ void pco::processNewImage(void *img_ptr) {
       rowbytes = xs * 2;
 
       if (xs > 2560 || xs < 0 || ys > 2160 || ys < 0) {
-        printf(
+        asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,
             "ERROR: PCOImgCam::processNewImage() ADSIZEX or ADSizeY Illegal\n");
         return;
       }
@@ -802,7 +802,7 @@ void pco::processNewImage(void *img_ptr) {
   // shut off camera if ADAcquire was turned off
   if (getIntParam(pco_which_camera) == pco_edge) {
     if (getIntParam(ADAcquire) == 0) {
-      printf("Turning off camera, \n");
+      asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"Turning off camera, \n");
       // we already have the grabber mutex-- we may interlock if we atempt to
       // get both...
       releaseGrabberMutex();
@@ -898,6 +898,6 @@ void pco::checkEdgeDescramble(NDArray *img_ptr) {
   dftsum = abs(dftsum);
 
   if (dftsum > 600) {
-    printf("Probable descrambling error\n");
+    asynPrint(this->pasynUserSelf, ASYN_TRACEIO_DRIVER,"Probable descrambling error\n");
   }
 }
