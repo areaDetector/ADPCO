@@ -22,6 +22,7 @@ extern "C" int pco_pr_mutex2 = 0;
 
 /**
  * runs on thread for seding and receiving serial port message. 
+ * @param drvPvt    Pointer to pco object, and ADDriver.
  */
  
 static void pcoTaskC(void *drvPvt) {
@@ -40,6 +41,11 @@ static void pcoTaskC2(void *drvPvt) {
   pPvt->pcoTask2();
 }
 
+
+/**
+ * Set debugging message level. deprecated as we use asyn to do this
+ */
+ 
 void pco::setDebuggingMessage(int level) { dbg_msg_level = level; }
 
 /** Called when asyn clients call pasynInt32->write().
@@ -135,6 +141,12 @@ void pco::report(FILE *fp, int details) {
 
 /**
  * Called in IOC shell to start PCO
+ *@param portName       Cstring like "PCOIOC", the asyn port name.
+ *@param serverPort     C string to the serial port asyn port driver.
+ *@param maxBuffers     Max num NDArrays to create
+ *@param maxMemory      max bytes of NDArray space to create. 0 for infinite.
+ *@param priority       thread priority, 50 is typical value.
+ *@param stackSize      Stack size for asynPortDriver, use 0.
  */
  
 
@@ -615,6 +627,7 @@ pco::pco(const char *portName, const char *serverPort, int maxBuffers,
  * Called when new image comes from grabber. 
  * can descramble if enabled for Edge camera. Can test pixels for repeated images. It takes a line of pixels
  * whcih shoudl be noise, and compares to previous image. if same, then noise is not noise, and we have repeated frames.
+ * @param   img_ptr A void to an NDArray. It gets cast to NDArray, so that is what we pass.
  */
  
 void pco::processNewImage(void *img_ptr) {
@@ -849,6 +862,7 @@ int pco::intFlEndian(unsigned int in) {
 
 /**
  * Check image to see if edge descrambling work correctly.
+ * @param img_ptr       Pointer to NDArray to descramble.
  */
  
 void pco::checkEdgeDescramble(NDArray *img_ptr) {

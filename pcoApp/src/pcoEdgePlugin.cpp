@@ -83,6 +83,8 @@ asynStatus pcoEdgePlugin::writeFile(NDArray *pArray) {
 
  /*
   * Helper function for getIntegerParam, to return an int.
+  * @param  param   Integer for asyn parameter library id.
+  * @return         Returns the parameter value from asyn param. library.
   */
   
 
@@ -99,6 +101,8 @@ int pcoEdgePlugin::getIntParam(int param) {
   * 2) Descrambles using code copied from the PCO company.
   * 3) converts 12 bit format to 16 bit format if necessary.
   * 4) spits out descrambled images to other plugins. Edge needs descrambling generally.
+  *
+  * @param  pArray  NDarray pointer on which to perform processing.
   */
   
 
@@ -530,7 +534,17 @@ extern "C" int drvpcoEdgePluginConfigure(const char *portName, int queueSize,
   return (asynSuccess);
 }
 
-/* The constructor for this class */
+/**
+ *  The constructor for pco Edge plugin 
+ *
+ *  @param portName                 asynDriver port name for this plugin, C string.
+ *  @param queueSize                Use a large number, the number of images to be queued up to plugin.
+ *  @param blockingCallbacks        Use 0. 0 means that this plugin won't block the PCO camera driver but runs own thread.
+ *  @param NDArrayPort              asynDriver c string for port name of PCO camera drivber.
+ *  @param NDArrayAddr              Use 0. Only have one address for asyn.
+ *  @param priority                 Set to 50.
+ *  @param stackSize                Set to 0.
+ */
 pcoEdgePlugin::pcoEdgePlugin(const char *portName, int queueSize,
                              int blockingCallbacks, const char *NDArrayPort,
                              int NDArrayAddr, int priority, int stackSize)
@@ -573,6 +587,15 @@ pcoEdgePlugin::pcoEdgePlugin(const char *portName, int queueSize,
   this->pAttributeId = NULL;
 }
 
+/**
+ * A descrmabling algorithm for the Edge camera. One of many algs. from PCO inc.
+ * 
+ * @param width     Widgn of image in pixels
+ * @param height    Height of image in pixels
+ * @param adr_out   Pointer to input scrambled image from Edge camera
+ * @param adr_in    Pointer to memory where new descrambled is written.
+ */
+
 void pcoEdgePlugin::sort_lines_A(int width, int height, void *adr_out,
                                  void *adr_in) {
   unsigned short *line_1;
@@ -594,6 +617,15 @@ void pcoEdgePlugin::sort_lines_A(int width, int height, void *adr_out,
     line_n -= width;
   }
 }
+
+/**
+ * A descrmabling algorithm for the Edge camera. One of many algs. from PCO inc.
+ * 
+ * @param width     Widgn of image in pixels
+ * @param height    Height of image in pixels
+ * @param adr_out   Pointer to input scrambled image from Edge camera
+ * @param adr_in    Pointer to memory where new descrambled is written.
+ */
 
 void pcoEdgePlugin::sort_lines_B(int width, int height, void *adr_out,
                                  void *adr_in) {
@@ -618,6 +650,15 @@ void pcoEdgePlugin::sort_lines_B(int width, int height, void *adr_out,
   }
 }
 
+/**
+ * A descrmabling algorithm for the Edge camera. One of many algs. from PCO inc.
+ * 
+ * @param width     Widgn of image in pixels
+ * @param height    Height of image in pixels
+ * @param adr_out   Pointer to input scrambled image from Edge camera
+ * @param adr_in    Pointer to memory where new descrambled is written.
+ */
+
 void pcoEdgePlugin::sort_lines_C(int width, int height, void *adr_out,
                                  void *adr_in) {
   unsigned short *line_1;
@@ -640,6 +681,16 @@ void pcoEdgePlugin::sort_lines_C(int width, int height, void *adr_out,
     line_n -= width;
   }
 }
+
+
+/**
+ * A descrmabling algorithm for the Edge camera. One of many algs. from PCO inc.
+ * 
+ * @param width     Widgn of image in pixels
+ * @param height    Height of image in pixels
+ * @param adr_out   Pointer to input scrambled image from Edge camera
+ * @param adr_in    Pointer to memory where new descrambled is written.
+ */
 
 void pcoEdgePlugin::sort_lines_D(int width, int height, void *adr_out,
                                  void *adr_in) {

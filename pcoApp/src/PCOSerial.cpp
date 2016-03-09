@@ -135,6 +135,9 @@ void pco::pcoTask() {
 
 /**
  * Read serial port until nothing in pipe. For clearing errors etc.
+ * Deprecated function.
+ *
+ *@param    fp  Pointer to serial port, assuming it is opened w/ fopen. 
  */
 
 void pco::clearPipe(FILE *fp) {
@@ -148,13 +151,12 @@ void pco::clearPipe(FILE *fp) {
 }
 
 /**
- * Called by asyn writeInt32, , wruteDouble. Passes the asynUser value.
- * BAcause so many parameters, the param settign is split into many functions.
- * paramtype not used. 
- * pasynUser- passed from asynDriver to writeInt32 like functions.
- * ivalue- param val if an int.
- * dvalue- param val if a double.
- * paramtype- enuym for double or int. not used I think.
+ * Called by asyn writeInt32 and writeDouble, which pass the pasynuser and vales etc. to this function.
+ * Because so many parameters, the param setting is split into many functions.
+ * @param   pasynUser   The standard pasynUser pointer from asyn.
+ * @param ivalue- param val if an int.
+ * @param dvalue- param val if a double.
+ * @param paramtype- enum  for double or int. Deprecated and not used.
  */
 
 int pco::updateParameters(asynUser *pasynUser, epicsInt32 ivalue,
@@ -185,10 +187,10 @@ int pco::updateParameters(asynUser *pasynUser, epicsInt32 ivalue,
 /**
  * Main called by updateParams, and ultimately writeInt32, writeDouble.
  * also called by pcoTask periodically. 
- * function- param num.
- * ivalue- param val if int.
- * dvalue= param val if double
- * paramtype- enum if doubl or int. not used I think.
+ * @param function- param num.
+ * @param ivalue- param val if int.
+ * @param dvalue= param val if double
+ * @param paramtype- enum if doubl or int. not used I think.
  */
 
 int pco::doSerialTransactions(int function, int ivalue, double dvalue,
@@ -467,11 +469,11 @@ void pco::dbgSerial(void) {
 }
 
 /**
- * Send pco command, and recv. serial command from seriao port. 
- * cmd- command to pco.
- * rsp- response to pco. It is filled in by this funciton.
- * obj- any raw binary data returned
- * len- len of raw binary data.
+ * Send pco command, and recv. serial command from serial port. 
+ * @param cmd- command to pco.
+ * @param rsp- response to pco. It is filled in by this funciton.
+ * @param obj- any raw binary data returned
+ * @param len- len of raw binary data.
  */
 
 int pco::doSerialCommand(pco_command &cmd, pco_response &rsp,
@@ -695,6 +697,7 @@ int pco::doSerialCommand(pco_command &cmd, pco_response &rsp,
 
 /**
  * See if there are any messages pending from camera. 
+ *
  */
 
 int pco::checkCameraMessages(void) {
@@ -775,6 +778,9 @@ int pco::getlib(void) { return FALSE; }
 
 /**
  * report error from camera. Prob. deprecated. 
+ *
+ * @param code      returned code from pco camera
+ * @param usrmsg    C string for a user defined error message.
  */
 
 int pco::ReportError(int code, char *usrmsg) {
@@ -790,6 +796,8 @@ int pco::ReportError(int code, char *usrmsg) {
 
 /**
  * Close serial port. 
+ ** @param  code    Not used
+ *  @param  usrmsg  Not used
  */
 
 int pco::Disconnected(int code, char *usrmsg) {
@@ -842,7 +850,7 @@ int pco::OpenCamera(void) {
  * categories folling the pco docs. The param defined in fucntion will be 
  * set from camera settings, or sent to camera settings on hardware ,depending on
  * if the functino is named ReadParams, or WriteParams. 
- * function -param number.
+ * @param function -asyn parameter number.
  */
 
 int pco::setPcoImageReadParams(int function) {
@@ -1216,7 +1224,7 @@ int pco::getPcoCameraLinkParams(void) {
  * categories folling the pco docs. If  functino is called get, we read 
  * serial port from camera and set a param. If function called set, we read a param
  * from asyn param list and send its value to the camera. 
- * function - param from writeInt32.
+ * @param function - asyn Parameter number from writeInt32.
  */
 
 int pco::setPcoCameraLinkParams(int function) {
@@ -1254,6 +1262,7 @@ int pco::setPcoCameraLinkParams(int function) {
 
 /**
  * Set pco baud rate. 
+ * @param function  asyn param number, should be pco_baudrate or pco_setallparams
  */
 
 int pco::setPcoBaudrate(int function) {
@@ -1412,7 +1421,7 @@ int pco::setPcoBaudrate(int function) {
  * categories folling the pco docs. If  functino is called get, we read 
  * serial port from camera and set a param. If function called set, we read a param
  * from asyn param list and send its value to the camera. 
- * function- param number from writeInt32.
+ * @param   function- param number from writeInt32.
  */
 
 int pco::setPcoRecordingParams(int function) {
@@ -1642,7 +1651,7 @@ int pco::getPcoRecordingParams(void) {
  * categories folling the pco docs. If  functino is called get, we read 
  * serial port from camera and set a param. If function called set, we read a param
  * from asyn param list and send its value to the camera. 
- * function- param number from writeInt32.
+ * @param   function- param number from writeInt32.
  */
 int pco::setPcoStorageParams(int function) {
   pco_command cmd;
@@ -1783,7 +1792,7 @@ int pco::getPcoStorageParams(void) {
  * categories folling the pco docs. If  functino is called get, we read 
  * serial port from camera and set a param. If function called set, we read a param
  * from asyn param list and send its value to the camera. 
- * function- param number from writeInt32.
+ * @param function- param number from writeInt32.
  */
 
 int pco::setPcoTimingParams(int function) {
@@ -1994,7 +2003,7 @@ int pco::setPcoTimingParams(int function) {
  * High level parameters are things like ADAcquire. The idea of a high level param is that
  * when set, it will set many low level params in the camera. To Acquire for example, about 5
  * low level settins in the camera must be tweaked. 
- * function- from writeInt32, the parm numb. 
+ * @param function from writeInt32, the parm numb. 
  */
 
 int pco::doHighLevelParams(int function) {
@@ -2387,6 +2396,7 @@ void pco::dumpCameraMemory(void) {
 
 /**
  * Get ONE frame from dimax RAM. Just send the serial message to pco dimax to send next frame.
+ * @param k which frame number to return.
  */
 int pco::dumpOneFrame(int k) {
   pco_response rsp;
@@ -2732,9 +2742,9 @@ void pco::resetDimaxMemory(void) {
 }
 
 /**
- * given functino from writeInt32, the param number, write pco general param
+ * Given asyn param number from writeInt32, the param number, write pco general param
  * according to function.
- * function - asyn param. 
+ * @param function - asyn param. 
  */
 
 int pco::setPcoGeneralParams(int function) {
@@ -2887,7 +2897,7 @@ int pco::setPcoGeneralParams(int function) {
 /**
  *  set pco sensor param defined in functino, the asyn param from writeInt32
  * send setting via serial port. 
- *
+ *  @param  function    asyn param number
  */
 
 int pco::setPcoSensorParams(int function) {
