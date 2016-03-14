@@ -14,7 +14,7 @@ drvCamlinkSerialConfigure("SERIAL","COM2");
 
 PCOConfig("PCOIOC", "SERIAL",$(QSIZE), -1,50,100)
 
-dbLoadRecords("$(PCO_APP)/Db/coreco.template","P=PCOIOC2:,R=cam1:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")
+dbLoadRecords("$(ADCAMERALINK)/db/coreco.template","P=PCOIOC2:,R=cam1:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")
 
 
 dbLoadRecords("$(ADAPP)/Db/ADBase.template",     "P=PCOIOC2:,R=cam1:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")

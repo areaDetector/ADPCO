@@ -18,4 +18,5 @@ epicsEnvSet("PCO_IOC","C:/EPICS/GitHub/areaDetector-R2-4/ADPCO/iocs/pcoIOC")
 epicsEnvSet("PCO_APP","C:/EPICS/GitHub/areaDetector-R2-4/ADPCO/pcoApp")
 epicsEnvSet("ADAPP","C:/EPICS/GitHub/areaDetector-R2-4/ADCore/ADApp")
 epicsEnvSet("ADCORE","C:/EPICS/GitHub/areaDetector-R2-4/ADCore")
+epicsEnvSet("ADCAMERALINK","C:/EPICS/GitHub/areaDetector-R2-4/ADCameralink")
 
