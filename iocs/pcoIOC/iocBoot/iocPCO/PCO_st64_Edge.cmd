@@ -1,7 +1,7 @@
 # Must have loaded envPaths via st.cmd.linux or st.cmd.win32
 < envPaths64
 
-epicsEnvSet("PREFIX",  "$(PREFIX)")
+epicsEnvSet("PREFIX",  "PCOIOC2:")
 
 
 epicsEnvSet("QSIZE",  "5000")
@@ -68,7 +68,7 @@ dbLoadRecords("$(CAPUTRECORDER)/caputRecorderApp/Db/caputPoster.db","P=$(PREFIX)
 # This file does not require modification for standard use, but...
 save_restoreSet_status_prefix("$(PREFIX)")
 
-dbLoadRecords("D:/EPICS/ADEpics/synApps_5_5/support/autosave-4-7/asApp/Db/save_restoreStatus.db", "P=$(PREFIX), DEAD_SECONDS=5")
+dbLoadRecords("$(SUPPORT)/autosave-4-7/asApp/Db/save_restoreStatus.db", "P=$(PREFIX), DEAD_SECONDS=5")
 
 # Ok to save/restore save sets with missing values (no CA connection to PV)?
 save_restoreSet_IncompleteSetsOk(1)
@@ -83,7 +83,7 @@ save_restoreSet_NumSeqFiles(3)
 save_restoreSet_SeqPeriodInSeconds(300)
 
 # specify where save files should be
-set_savefile_path("D:/EPICS/ADEpics/iocs/PCOEdge", "autosave")
+set_savefile_path("$(REQPATH)/PCOEdge", "autosave")
 
 ###
 # specify what save files should be restored.  Note these files must be
@@ -100,11 +100,11 @@ set_pass1_restoreFile("auto_settings.sav")
 # specify directories in which to to search for included request files
 set_requestfile_path("./")
 set_requestfile_path("../")
-set_requestfile_path("D:/EPICS/ADEpics/iocs/PCOEdge", "")
-set_requestfile_path("D:/EPICS/ADEpics/iocs/PCOEdge", "autosave")
+set_requestfile_path("$(REQPATH)/PCOEdge", "")
+set_requestfile_path("$(REQPATH)/PCOEdge", "autosave")
 
-set_requestfile_path("D:/EPICS/ADEpics/iocs/PCO", "")
-set_requestfile_path("D:/EPICS/ADEpics/iocs/PCO", "autosave")
+set_requestfile_path("$(REQPATH)/PCO", "")
+set_requestfile_path("$(REQPATH)/PCO", "autosave")
 set_requestfile_path("$(ADAPP)/", "Db")
 set_requestfile_path("$(AUTOSAVE)", "asApp/Db")
 
