@@ -18,6 +18,8 @@ DBD += $(PROD_NAME).dbd
 $(PROD_NAME)_DBD += PCOSupport.dbd
 $(PROD_NAME)_DBD  += camLinkSerialSupport.dbd
 $(PROD_NAME)_DBD  += pcoEdgePluginSupport.dbd
+$(PROD_NAME)_DBD  += caputRecorder.dbd
+
 
 
 # <name>_registerRecordDeviceDriver.cpp will be created from <name>.dbd
@@ -27,7 +29,7 @@ PROD_SRCS_DEFAULT += $(PROD_NAME)_registerRecordDeviceDriver.cpp $(PROD_NAME)Mai
 # Add locally compiled object code
 PROD_LIBS += pco clsersis display_lib fglib5 gbelib iolibrt 
 
-PROD_LIBS += cameralink
+PROD_LIBS += cameralink caputRecorder
 
 #!!$(foreach v, $(.VARIABLES), $(info $(v) = $($(v))))
 

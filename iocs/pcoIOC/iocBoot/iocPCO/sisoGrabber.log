@@ -1,0 +1,25 @@
+Thu May 19 08:47:36 2016
+  -CCD Camera Log file opened. 
+Thu May 19 08:47:36 2016
+  -siSoftware::setConfigFileName use D:/timmaddenedge.mcf 
+Thu May 19 08:47:36 2016
+  -siSoftware::setConfigFileName use edgeGlobShutter.mcf 
+Thu May 19 08:47:36 2016
+  -siSoftware::initialize sizex = 480, sizey=300 
+ 
+Thu May 19 08:47:37 2016
+  -siSoftware::initialize: HAP_PCOGLSH version 12 
+Thu May 19 08:47:37 2016
+  -set_actual_size_global_shutter: Get ID's 
+Thu May 19 08:47:37 2016
+  -siSoftware::initialize: global shutter  Single parameter OK 
+Thu May 19 08:47:37 2016
+  -siSoftware::initialize: global shutter: Idsplitter OK 
+Thu May 19 08:47:37 2016
+  -siSoftware::initialize: global shutter: LG Mult 128 (32.00) 
+Thu May 19 08:47:37 2016
+  -siSoftware::initialize: global shutter: HG Mult 13 (3.25) 
+Thu May 19 08:47:37 2016
+  -siSoftware::initialize: global shutter: done without error 
+Thu May 19 08:47:37 2016
+  -To Allocate 16 buffers for total of 4608000 bytes 

@@ -74,7 +74,7 @@ PROD_LDFLAGS_WIN32 += /VERBOSE:LIB
 DBD += PCOSupport.dbd
 DBD += pcoEdgePluginSupport.dbd
 
-LIB_LIBS += cameralink
+LIB_LIBS += cameralink caputRecorder
 
 include $(ADCORE)/ADApp/commonLibraryMakefile
 

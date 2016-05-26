@@ -1,81 +1,63 @@
 # Must have loaded envPaths via st.cmd.linux or st.cmd.win32
 < envPaths64
 
-epicsEnvSet("QSIZE",  "300000")
+epicsEnvSet("PREFIX",  "$(PREFIX)")
+
+
+epicsEnvSet("QSIZE",  "5000")
+
 errlogInit(20000)
 
-dbLoadDatabase("$(TOP)/dbd/pcoApp.dbd")
-PCOApp_registerRecordDeviceDriver(pdbbase)
+dbLoadDatabase("$(PCO_IOC)/dbd/pcoApp.dbd")
+pcoApp_registerRecordDeviceDriver(pdbbase)
+
+dbLoadRecords("$(PCO_APP)/Db/debug.template",     "P=$(PREFIX),R=cam1:")
+
+
 
 
 drvCamlinkSerialConfigure("SERIAL","COM2");
 
-# port, serialport, num arryas, max memory , priority, stacksize
-#
-#we now have in latest version, you puit mem max in MB not bytes.92000 for 92GB
-PCOConfig("PCOIOC", "SERIAL",$(QSIZE), 0,50,0)
-
-
-dbLoadRecords("$(ADIOCs)/Db/coreco.template","P=PCOIOC3:,R=cam1:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")
-
-
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/ADBase.template",     "P=PCOIOC3:,R=cam1:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")
-dbLoadRecords("$(ADIOCs)/Db/pco.template",     "P=PCOIOC3:,R=cam1:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDFile.template",      "P=PCOIOC3:,R=cam1:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")
+PCOConfig("PCOIOC", "SERIAL",$(QSIZE), -1,50,100)
+dbLoadRecords("$(ADCAMERALINK)/db/coreco.template","P=$(PREFIX),R=cam1:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")
+dbLoadRecords("$(ADAPP)/Db/ADBase.template",     "P=$(PREFIX),R=cam1:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")
+dbLoadRecords("$(PCO_APP)/Db/pco.template",     "P=$(PREFIX),R=cam1:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")
+dbLoadRecords("$(ADAPP)/Db/NDFile.template",      "P=$(PREFIX),R=cam1:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")
 
 
 
 
 drvpcoEdgePluginConfigure("EDGEDSC",$(QSIZE),0,"PCOIOC",0,50,0);
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDPluginBase.template","P=PCOIOC3:,R=EDGEDSC:,PORT=EDGEDSC,ADDR=0,TIMEOUT=1,NDARRAY_PORT=PCOIOC,NDARRAY_ADDR=0")
-dbLoadRecords("$(ADIOCs)/Db/pcoEdgePlugin.template",     "P=PCOIOC3:,R=EDGEDSC:,PORT=EDGEDSC,ADDR=0,TIMEOUT=1")
+dbLoadRecords("$(ADAPP)/Db/NDPluginBase.template","P=$(PREFIX),R=EDGEDSC:,PORT=EDGEDSC,ADDR=0,TIMEOUT=1,NDARRAY_PORT=PCOIOC,NDARRAY_ADDR=0")
+dbLoadRecords("$(PCO_APP)/Db/pcoEdgePlugin.template",     "P=$(PREFIX),R=EDGEDSC:,PORT=EDGEDSC,ADDR=0,TIMEOUT=1")
+
 
 
 # Create a standard arrays plugin, set it to get data from first PCO driver.
-NDStdArraysConfigure("PCOIOCImage", 3, 0, "EDGEDSC", 0, 30000000)
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDPluginBase.template","P=PCOIOC3:,R=image1:,PORT=PCOIOCImage,ADDR=0,TIMEOUT=1,NDARRAY_PORT=EDGEDSC,NDARRAY_ADDR=0")
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDStdArrays.template", "P=PCOIOC3:,R=image1:,PORT=PCOIOCImage,ADDR=0,TIMEOUT=1,SIZE=16,TYPE=Int16,FTVL=SHORT,NELEMENTS=6000000")
-
-
-
-drvNDFileTinyTIFFConfigure("TIFF1", $(QSIZE), 0,"EDGEDSC",0)
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDPluginBase.template","P=PCOIOC3:,R=TIFF1:,PORT=TIFF1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=EDGEDSC,NDARRAY_ADDR=0")
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDFile.template",      "P=PCOIOC3:,R=TIFF1:,PORT=TIFF1,ADDR=0,TIMEOUT=1")
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDFileTIFF.template",  "P=PCOIOC3:,R=TIFF1:,PORT=TIFF1,ADDR=0,TIMEOUT=1")
-dbLoadRecords("$(ADIOCs)/Db/NDFileTinyTIFF.template",  "P=PCOIOC3:,R=TIFF1:,PORT=TIFF1,ADDR=0,TIMEOUT=1")
-
-#dbLoadRecords("$(ADIOCs)/Db/pco_metarecs.template",     "P=PCOIOC3:,C=cam1:,R=TIFF1:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")
-
-
-
-
-# Create a NeXus file saving plugin
-drvNDFileHDF5XMLConfigure("HDF5", $(QSIZE), 0, "EDGEDSC", 0)
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDPluginBase.template","P=PCOIOC3:,R=HDF5:,PORT=HDF5,ADDR=0,TIMEOUT=1,NDARRAY_PORT=EDGEDSC,NDARRAY_ADDR=0")
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDFile.template",      "P=PCOIOC3:,R=HDF5:,PORT=HDF5,ADDR=0,TIMEOUT=1")
-#dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDFileNexus.template", "P=PCOIOC3:,R=HDF5:,PORT=HDF5,ADDR=0,TIMEOUT=1")
-dbLoadRecords("$(ADIOCs)/Db/NDFileHDF5XML.template", "P=PCOIOC3:,R=HDF5:,PORT=HDF5,ADDR=0,TIMEOUT=1")
-
-
-
-
-#dbLoadRecords("$(ADIOCs)/Db/pco_metarecs.template",     "P=PCOIOC3:,C=cam1:,R=HDF5:,PORT=PCOIOC,ADDR=0,TIMEOUT=1")
+NDStdArraysConfigure("PCOIOCImage", 3, 0, "PCOIOC", 0, 30000000)
+dbLoadRecords("$(ADAPP)/Db/NDPluginBase.template","P=$(PREFIX),R=image1:,PORT=PCOIOCImage,ADDR=0,TIMEOUT=1,NDARRAY_PORT=PCOIOC,NDARRAY_ADDR=0")
+dbLoadRecords("$(ADAPP)/Db/NDStdArrays.template", "P=$(PREFIX),R=image1:,PORT=PCOIOCImage,ADDR=0,TIMEOUT=1,NDARRAY_PORT=PCOIOC,SIZE=16,TYPE=Int16,FTVL=SHORT,NELEMENTS=6000000")
 
 
 
 # Create 4 ROI plugins
-NDROIConfigure("ROI1", 20, 0, "EDGEDSC", 0, -1, -1)
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDPluginBase.template","P=PCOIOC3:,R=ROI1:,  PORT=ROI1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=EDGEDSC,NDARRAY_ADDR=0")
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDROI.template",       "P=PCOIOC3:,R=ROI1:,  PORT=ROI1,ADDR=0,TIMEOUT=1")
+NDROIConfigure("ROI1", 20, 0, "PCOIOC", 0, -1, -1)
+dbLoadRecords("$(ADAPP)/Db/NDPluginBase.template","P=$(PREFIX),R=ROI1:,  PORT=ROI1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=PCOIOC,NDARRAY_ADDR=0")
+dbLoadRecords("$(ADAPP)/Db/NDROI.template",       "P=$(PREFIX),R=ROI1:,  PORT=ROI1,ADDR=0,TIMEOUT=1,NDARRAY_PORT=PCOIOC")
+
+NDFileHDF5Configure("HDF5",10000,0,"PCOIOC",0,50,0)
+dbLoadRecords("$(ADAPP)/Db/NDPluginBase.template","P=$(PREFIX),R=HDF5:,  PORT=HDF5,ADDR=0,TIMEOUT=1,NDARRAY_PORT=PCOIOC,NDARRAY_ADDR=0")
+dbLoadRecords("$(ADAPP)/Db/NDFileHDF5.template",       "P=$(PREFIX),R=HDF5:,  PORT=HDF5,ADDR=0,TIMEOUT=1,NDARRAY_PORT=PCOIOC")
 
 
 
-#this is a debugging plugin that acts like a file writer but is actully just a time delay to sumuylate slow disks
-drvSimPluginConfigure("DUM", $(QSIZE), 0,"EDGEDSC",0)
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDPluginBase.template","P=PCOIOC3:,R=DUM:,PORT=DUM,ADDR=0,TIMEOUT=1,NDARRAY_PORT=EDGEDSC,NDARRAY_ADDR=0")
-dbLoadRecords("$(AREA_DETECTOR)/ADApp/Db/NDFile.template",      "P=PCOIOC3:,R=DUM:,PORT=DUM,ADDR=0,TIMEOUT=1")
-dbLoadRecords("$(ADIOCs)/Db/simPlugin.template",      "P=PCOIOC3:,R=DUM:,PORT=DUM,ADDR=0,TIMEOUT=1")
 
+#
+# caput recorder stuff
+#
+
+asSetFilename("$(PCO_IOC)/iocBoot/iocPCO/accessSecurity.acf")
+dbLoadRecords("$(CAPUTRECORDER)/caputRecorderApp/Db/caputPoster.db","P=$(PREFIX),N=300")
 
 
 
@@ -84,12 +66,9 @@ dbLoadRecords("$(ADIOCs)/Db/simPlugin.template",      "P=PCOIOC3:,R=DUM:,PORT=DU
 ### save_restore setup
 #
 # This file does not require modification for standard use, but...
+save_restoreSet_status_prefix("$(PREFIX)")
 
-# status PVs
-#save_restoreSet_UseStatusPVs(1)
-save_restoreSet_status_prefix("PCOIOC3:")
-
-dbLoadRecords("D:/EPICS/ADEpics/synApps_5_5/support/autosave-4-7/asApp/Db/save_restoreStatus.db", "P=PCOIOC3:, DEAD_SECONDS=5")
+dbLoadRecords("D:/EPICS/ADEpics/synApps_5_5/support/autosave-4-7/asApp/Db/save_restoreStatus.db", "P=$(PREFIX), DEAD_SECONDS=5")
 
 # Ok to save/restore save sets with missing values (no CA connection to PV)?
 save_restoreSet_IncompleteSetsOk(1)
@@ -126,127 +105,147 @@ set_requestfile_path("D:/EPICS/ADEpics/iocs/PCOEdge", "autosave")
 
 set_requestfile_path("D:/EPICS/ADEpics/iocs/PCO", "")
 set_requestfile_path("D:/EPICS/ADEpics/iocs/PCO", "autosave")
-set_requestfile_path("D:/EPICS/ADEpics/synApps_5_5/support/areaDetector-1-6", "ADApp/Db")
-set_requestfile_path("D:/EPICS/ADEpics/synApps_5_5/support/areaDetector-1-6", "iocBoot")
-set_requestfile_path("D:/EPICS/ADEpics/synApps_5_5/support/autosave-4-7", "asApp/Db")
-#set_requestfile_path("$(CALC)", "calcApp/Db")
-#set_requestfile_path("$(MCA)", "mcaApp/Db")
-#set_requestfile_path("$(SSCAN)", "sscanApp/Db")
-#set_requestfile_path("$(STD)", "stdApp/Db")
-#set_requestfile_path("D:/EPICS/ADEpics", "SIMx86App/Db")
+set_requestfile_path("$(ADAPP)/", "Db")
+set_requestfile_path("$(AUTOSAVE)", "asApp/Db")
 
 # Debug-output level
 save_restoreSet_Debug(0) 
 
 
-
-
-#
-# caput recorder stuff
-#
-
-asSetFilename("$(TOP)/iocBoot/accessSecurity.acf")
-dbLoadRecords("$(CAPUTRECORDER)/caputRecorderApp/Db/caputPoster.db","P=PCOIOC3:,N=300")
-
-
-
 iocInit()
 
-registerCaputRecorderTrapListener("PCOIOC3:caputRecorderCommand")
-
-create_monitor_set("auto_settings.req", 30, "P=PCOIOC3:")
+create_monitor_set("auto_settings.req", 30, "P=$(PREFIX)")
 
 
-dbpf "PCOIOC3:cam1:EnableCallbacks","Yes"
-dbpf "PCOIOC3:cam1:ArrayCallbacks","Enable"
-dbpf "PCOIOC3:image1:EnableCallbacks","Yes"
-dbpf "PCOIOC3:image1:MinCallbackTime","0.2"
+registerCaputRecorderTrapListener("$(PREFIX)caputRecorderCommand")
+
+
+dbpf "$(PREFIX)cam1:EnableCallbacks","Yes"
+dbpf "$(PREFIX)cam1:ArrayCallbacks","Enable"
+dbpf "$(PREFIX)image1:EnableCallbacks","Yes"
+dbpf "$(PREFIX)image1:MinCallbackTime","0.2"
 
 
 
 
 
-dbpf "PCOIOC3:cam1:pco_comport_number","2"
- 
+dbpf "$(PREFIX)cam1:pco_comport_number","2"
+
 
 epicsThreadSleep 5
-dbpf "PCOIOC3:cam1:pco_reset_default_settings","1"
-#dbpf "PCOIOC3:cam1:cor_ccf_filename","D:/corecofiles/pcoEdge.ccf"
-dbpf "PCOIOC3:cam1:cor_ccf_filename","D:/corecofiles/timmaddenedge.mcf"
+
+
+
+dbpf "$(PREFIX)cam1:pco_reset_default_settings","1"
+#dbpf "$(PREFIX)cam1:cor_ccf_filename","pcoEdge.ccf"
+dbpf "$(PREFIX)cam1:cor_ccf_filename","timmaddenedge.mcf"
 
 #needed for edge- for rolling / global shutter mode
-dbpf "PCOIOC3:cam1:pco_rollshut_mcfname","D:/corecofiles/timmaddenedge.mcf"
-dbpf "PCOIOC3:cam1:pco_globshut_mcfname","D:/corecofiles/edgeGlobShutter.mcf"
+dbpf "$(PREFIX)cam1:pco_rollshut_mcfname","timmaddenedge.mcf"
+dbpf "$(PREFIX)cam1:pco_globshut_mcfname","edgeGlobShutter.mcf"
 
 
-
-#dbpf "PCOIOC3:cam1:cor_ccf_filename","D:/corecofiles/dimaxSISW.mcf"
 
 #needed for sisw grabber . set to 0 for coreco grabber. hasto do with successive calls to serial_port->write
-dbpf "PCOIOC3:cam1:pco_ser_waitms","10"
+dbpf "$(PREFIX)cam1:pco_ser_waitms","10"
 
 
 
 
 
-
-
-
-
-dbpf "PCOIOC3:cam1:w_is_sleep","1"
- dbpf "PCOIOC3:cam1:w_sleep_ms","50"
+dbpf "$(PREFIX)cam1:w_is_sleep","1"
+ dbpf "$(PREFIX)cam1:w_sleep_ms","50"
  
-dbpf "PCOIOC3:cam1:pco_grab_waittime","5.0"
+dbpf "$(PREFIX)cam1:pco_grab_waittime","5.0"
 
 
-dbpf "PCOIOC3:cam1:pco_baudrate","9600"
+dbpf "$(PREFIX)cam1:pco_baudrate","9600"
 
-dbpf "PCOIOC3:cam1:w_open_com","1"
+dbpf "$(PREFIX)cam1:w_open_com","1"
 
-dbpf "PCOIOC3:cam1:cor_num_coreco_buffers","16"
+dbpf "$(PREFIX)cam1:cor_num_coreco_buffers","16"
+
+dbpf "$(PREFIX)cam1:cor_use_image_mode","1"
+
+dbpf "$(PREFIX)cam1:pco_reconfig_grabber","1"
 
 
-#dbpf "PCOIOC3:cam1:SizeX","1000"
-#dbpf "PCOIOC3:cam1:SizeY","1000"
-dbpf "PCOIOC3:cam1:cor_use_image_mode","1"
 
-dbpf "PCOIOC3:cam1:pco_reconfig_grabber","1"
+
+
+
+dbpf "$(PREFIX)cam1:AcquireTime_RBV.PREC","6"
+dbpf "$(PREFIX)cam1:AcquireTime.PREC","6"
+
+dbpf "$(PREFIX)cam1:AcquirePeriod_RBV.PREC","6"
+dbpf "$(PREFIX)cam1:AcquirePeriod.PREC","6"
+
+dbpf "$(PREFIX)cam1:pco_delay_time.PREC","6"
+dbpf "$(PREFIX)cam1:pco_delay_time_RBV.PREC","6"
+
+dbpf "$(PREFIX)cam1:pco_set_frame_rate.PREC","6"
+dbpf "$(PREFIX)cam1:pco_set_frame_rate_RBV.PREC","6"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+dbpf "$(PREFIX)cam1:w_is_sleep","1"
+ dbpf "$(PREFIX)cam1:w_sleep_ms","50"
+ 
+dbpf "$(PREFIX)cam1:pco_grab_waittime","5.0"
+
+
+dbpf "$(PREFIX)cam1:pco_baudrate","9600"
+
+dbpf "$(PREFIX)cam1:w_open_com","1"
+
+dbpf "$(PREFIX)cam1:cor_num_coreco_buffers","16"
+
+
+
+dbpf "$(PREFIX)cam1:pco_reconfig_grabber","1"
 
 
 #epicsThreadSleep(10.0)
 #set global shutter
-dbpf "PCOIOC3:cam1:pco_global_shutter","Global"
+dbpf "$(PREFIX)cam1:pco_global_shutter","Global"
 
 
-dbpf "PCOIOC3:EDGEDSC:EnableCallbacks","Enable"
+dbpf "$(PREFIX)EDGEDSC:EnableCallbacks","Enable"
 
 #enable plugin to do descrambling
-dbpf "PCOIOC3:EDGEDSC:is_enable","1"
+dbpf "$(PREFIX)EDGEDSC:is_enable","1"
 # handle descrambling in a plugin and not driver.
-dbpf "PCOIOC3:cam1:pco_disable_descramble","1"
+dbpf "$(PREFIX)cam1:pco_disable_descramble","1"
 #tell plugin to get control settings from img atrrubutes, from driver. if you control driver
 # you control plugin
-dbpf "PCOIOC3:cam1:is_use_attr","1"
+dbpf "$(PREFIX)cam1:is_use_attr","1"
 
-dbpf "PCOIOC3:cam1:AcquireTime_RBV.PREC","6"
-dbpf "PCOIOC3:cam1:AcquireTime.PREC","6"
+dbpf "$(PREFIX)cam1:AcquireTime_RBV.PREC","6"
+dbpf "$(PREFIX)cam1:AcquireTime.PREC","6"
 
-dbpf "PCOIOC3:cam1:AcquirePeriod_RBV.PREC","6"
-dbpf "PCOIOC3:cam1:AcquirePeriod.PREC","6"
+dbpf "$(PREFIX)cam1:AcquirePeriod_RBV.PREC","6"
+dbpf "$(PREFIX)cam1:AcquirePeriod.PREC","6"
 
-dbpf "PCOIOC3:cam1:pco_delay_time.PREC","6"
-dbpf "PCOIOC3:cam1:pco_delay_time_RBV.PREC","6"
+dbpf "$(PREFIX)cam1:pco_delay_time.PREC","6"
+dbpf "$(PREFIX)cam1:pco_delay_time_RBV.PREC","6"
 
-dbpf "PCOIOC3:cam1:pco_set_frame_rate.PREC","6"
-dbpf "PCOIOC3:cam1:pco_set_frame_rate_RBV.PREC","6"
-
-dbpf "PCOIOC3:HDF5:EZ_is_makedirs","1"
-
-dbpf "PCOIOC3:TIFF1:EZ_is_makedirs","1"
+dbpf "$(PREFIX)cam1:pco_set_frame_rate.PREC","6"
+dbpf "$(PREFIX)cam1:pco_set_frame_rate_RBV.PREC","6"
 
 
-dbpf "PCOIOC3:TIFF1:NDArrayPort","EDGEDSC"
-dbpf "PCOIOC3:HDF5:NDArrayPort","EDGEDSC"
-dbpf "PCOIOC3:image1:NDArrayPort","EDGEDSC"
+dbpf "$(PREFIX)HDF5:NDArrayPort","EDGEDSC"
+dbpf "$(PREFIX)image1:NDArrayPort","EDGEDSC"
+
 
 
