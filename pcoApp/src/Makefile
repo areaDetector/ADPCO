@@ -12,11 +12,9 @@ include $(TOP)/configure/CONFIG
 
 INC += pco.h
 
-#USR_INCLUDES += $(ADCAMERALINK)
 
 LIBRARY_IOC = pco
 
-#LIB_SRCS    +=legacystubs.c
 
 LIB_SRCS    += PCOSerial.cpp
 LIB_SRCS    += pco.cpp
@@ -30,9 +28,9 @@ LIB_SRCS +=pcoEdgePlugin.cpp
 
 #one or the other
 #USR_CXXFLAGS += /D USE_SAP
-USR_CXXFLAGS_Linux += -DUSE_SISW
+#USR_CXXFLAGS_Linux += -DUSE_SISW
 
-USR_CXXFLAGS_WIN32 += /D USE_SISW
+#USR_CXXFLAGS_WIN32 += /D USE_SISW
 #USR_CXXFLAGS_WIN32 += /D USE_SAP
 
 #to use internal serial port code, do not define this

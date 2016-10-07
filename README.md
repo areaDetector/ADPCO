@@ -4,19 +4,36 @@
 
 ##PCO Driver
 
-The PCO Driver has three parts:
+This driver is for PCO cameras. Though PCO cameras have generally the same software interface,
+this driver is intended for Cameralink-based Dimax and Edge cameras. It should work for
+any PCO Cameralink camera however.
 
-1. Camera Link driver for Area Detector (cameraLinkSrc2)
-2. Camera Link serial port (camLinkSerialSrc)
-3. PCO camera source (PCO2src)
+The PCO driver depends on ADCameralink for support of the camera link frame grabbers. To get ADPCO to 
+build, the ADCameralink driver must be successfully built first. Please see the Readme.md in ADCameralink.
+Because ADCameralink can support multiple commercial grabbers, and depends on commercial software
+libraries, there are several steps to building ADCameralink. ADCameralink hides any grabber-specific
+issues from the ADPCO driver.
 
-Pars 1 and 2 are stored in the ADCameralink repository and inherited by the PCO driver.
-To build:
+To build ADPCO
+1) Configure and build ADCAmeralink.
+2) Build ADPCO.
 
-1. Make ADCameralink
-2. Make ADPCO
-3. You need the siliconSoftware driver installed in your computer before the software will build or work.
-Download  that from Silicon Software at https://silicon.software/
+ADPCO must build an application library in pcoApp, and also the IOC in iocs.
+In building the iocs, the proper commercial library from the grabber must be included.
+See the Makefile in iocs/pcoIOC/pcoApp/src. The commercial libraries must be linked against
+for building the exe file.
+
+
+Though ADCameralink supports multiple frame grabbers, PCOrequires silocon Software because there
+are special firmwares in the grabber the PCO Edge needs. Dimax can run with either
+Silocon software or Dalsa. 
+
+
+
+
+
+
+
 
 
 

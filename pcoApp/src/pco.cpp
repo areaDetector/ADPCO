@@ -574,7 +574,6 @@ pco::pco(const char *portName, const char *serverPort, int maxBuffers,
 
   setIntegerParam(ADAcquirePeriod, 1000000);
 
-#ifdef USEASYNSERIAL
 
   status = pasynOctetSyncIO->connect(serverPort, 0, &this->pasynUserSerial,
                                      (const char *)NULL);
@@ -585,13 +584,6 @@ pco::pco(const char *portName, const char *serverPort, int maxBuffers,
     exit(-1);
   }
 
-#else
-#ifndef USE_SISW
-  serial_port = new cl_com_port(getStringParam(com_port_name));
-#else
-  serial_port = new siswSerialPort(0);
-#endif
-#endif
   setIntegerParam(ADStatus, ADStatusWaiting);
 
   setIntegerParam(ADStatus, ADStatusIdle);

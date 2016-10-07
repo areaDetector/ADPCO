@@ -14,10 +14,10 @@
 #include <stdio.h>
 
 // define if building for silicon softwarwe grabber.
-#ifdef USE_SISW
-#include "siswSerialPort.h"
+//#ifdef USE_SISW
+//#include "siswSerialPort.h"
 
-#endif
+//#endif
 
 // define dimax image size to 1800 for certain modes
 #define _LIMITIMGSIZE
