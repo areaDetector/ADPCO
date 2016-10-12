@@ -14,7 +14,8 @@ Because ADCameralink can support multiple commercial grabbers, and depends on co
 libraries, there are several steps to building ADCameralink. ADCameralink hides most grabber-specific
 issues from the ADPCO driver.
 
-To build ADPCO
+###To build ADPCO
+
 1. Configure and build ADCameralink.
 2. Build ADPCO.
 
@@ -25,7 +26,7 @@ See the Makefile in iocs/pcoIOC/pcoApp/src.
 
 Though ADCameralink supports multiple frame grabbers, PCO requires silocon Software because there
 are special firmwares in the grabber the PCO Edge needs. Dimax can run with either
-Silocon software or Dalsa. 
+Silicon software or Dalsa. 
 
 
 
