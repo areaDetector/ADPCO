@@ -138,10 +138,10 @@ epicsThreadSleep 5
 
 dbpf "$(PREFIX)cam1:pco_reset_default_settings","1"
 #dbpf "$(PREFIX)cam1:cor_ccf_filename","pcoEdge.ccf"
-dbpf "$(PREFIX)cam1:cor_ccf_filename","timmaddenedge.mcf"
+dbpf "$(PREFIX)cam1:cor_ccf_filename","edgeRollShutter.mcf"
 
 #needed for edge- for rolling / global shutter mode
-dbpf "$(PREFIX)cam1:pco_rollshut_mcfname","timmaddenedge.mcf"
+dbpf "$(PREFIX)cam1:pco_rollshut_mcfname","edgeRollShutter.mcf"
 dbpf "$(PREFIX)cam1:pco_globshut_mcfname","edgeGlobShutter.mcf"
 
 
