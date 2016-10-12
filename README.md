@@ -49,10 +49,12 @@ To configure the driver for your system:
 1. In the iocBoot/iocPCO directory, find envPaths64.
 2. Edit these lines at the top of the file.
 
+```C
 epicsEnvSet("AREA_DETECTOR","C:/EPICS/GitHub/areaDetector-R2-4")
 epicsEnvSet("EPICS_BASE","C:/EPICS/ADepics/baseR12.1")
 epicsEnvSet("SUPPORT","C:/EPICS/ADepics/SynApps_5_5/support")
 epicsEnvSet("REQPATH","C:/EPICS/ADEpics/iocs")
+```
 
 3. In the iocBoot/iocPCO directory, edit edgeGlobShutter.mcf. There is a line that has path to
    PCO_scmos_gl_x64.hap. Edit that line so the FULL path is there, starting from the drive name.
