@@ -13,8 +13,9 @@ include $(TOP)/configure/CONFIG
 INC += pco.h
 
 
-LIBRARY_IOC = pco
-
+ifeq (windows-x64, $(findstring windows-x64, $(T_A)))
+  LIBRARY_IOC = pco
+endif
 
 LIB_SRCS    += PCOSerial.cpp
 LIB_SRCS    += pco.cpp
