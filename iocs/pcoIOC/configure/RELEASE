@@ -9,3 +9,5 @@ ADPCO=$(TOP)/../..
 -include $(TOP)/../../../configure/RELEASE_PRODS.local
 -include $(TOP)/RELEASE.local
 -include $(TOP)/configure/RELEASE.local
+ADCAMERALINK=$(AREA_DETECTOR)/ADCameraLink
+
