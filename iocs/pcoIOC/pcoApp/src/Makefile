@@ -3,11 +3,6 @@ include $(TOP)/configure/CONFIG
 #----------------------------------------
 #  ADD MACRO DEFINITIONS AFTER THIS LINE
 
-
-
-
-
-
 PROD_NAME = pcoApp
 ifeq (windows-x64, $(findstring windows-x64, $(T_A)))
   PROD_IOC_WIN32 += $(PROD_NAME)
@@ -27,11 +22,7 @@ PROD_SRCS_DEFAULT += $(PROD_NAME)_registerRecordDeviceDriver.cpp $(PROD_NAME)Mai
 # Add locally compiled object code
 PROD_LIBS += pco clsersis display_lib fglib5 gbelib iolibrt 
 
-PROD_LIBS += cameralink caputRecorder
-
-#!!$(foreach v, $(.VARIABLES), $(info $(v) = $($(v))))
-
-
+PROD_LIBS += cameralink
 
 include $(ADCORE)/ADApp/commonDriverMakefile
 
