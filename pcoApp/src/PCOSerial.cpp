@@ -10,8 +10,16 @@
  
 //#include "stdafx.h"
 
-#include "pco.h"
 #include <stdio.h>
+#include <math.h>
+
+#include <asynOctetSyncIO.h>
+#include <asynShellCommands.h>
+
+#include "ccd_exception.h"
+
+#include <epicsExport.h>
+#include "pco.h"
 
 // define if building for silicon softwarwe grabber.
 //#ifdef USE_SISW

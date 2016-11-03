@@ -5,7 +5,13 @@
  *@author Timothy Madden
  *@date 2010
  */
- 
+
+#ifndef PCO_STRUCTURES_H_
+#define PCO_STRUCTURES_H_
+
+#ifdef _WIN32
+  #include <windows.h>
+#endif
 
 // ------------------------------------------------------------------------ //
 // -- Defines for Get Camera Type Command: -------------------------------- //
@@ -507,3 +513,5 @@ struct xPCO_Description {
 
   DWORD reserved[9];
 };
+
+#endif
