@@ -42,12 +42,6 @@ static const char *driverName = "pcoEdgePlugin";
     return (asynError);                                                  \
   }
 
-/* NDArray string attributes can be of any length, but netCDF requires a fixed
- * maximum length
- * which we define here. */
-#define MAX_ATTRIBUTE_STRING_SIZE 256
-
-
  /*
   * Does nothing. 
   */
