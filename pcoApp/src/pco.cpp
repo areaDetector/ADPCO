@@ -8,6 +8,61 @@
  *@date 2014
  */
 
+#include <stddef.h>
+#include <stdlib.h>
+#include <math.h>
+#include <stdio.h>
+#include <errno.h>
+#include <string.h>
+#include <ctype.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+
+#include <epicsTime.h>
+#include <epicsThread.h>
+#include <epicsEvent.h>
+#include <epicsTimer.h>
+#include <epicsMutex.h>
+#include <epicsStdlib.h>
+#include <epicsString.h>
+#include <epicsStdio.h>
+#include <epicsMutex.h>
+#include <cantProceed.h>
+#include <iocsh.h>
+
+#include <asynOctetSyncIO.h>
+
+#ifdef USEASYNSERIAL
+#include <asynShellCommands.h>
+#endif
+
+#include "ADDriver.h"
+#define _ADIOC_
+#include "grabberInterface.h"
+
+#include "comportInterface.h"
+#include "logfile.h"
+#include "ccd_exception.h"
+#include "coreco.h"
+#include "stopWatch.h"
+#include "pco_structures.h"
+
+#ifdef USE_SISW
+#include "siswSerialPort.h"
+#endif
+
+#ifdef USE_SAP
+#include "cl_com_port2.h"
+#endif
+
+#include "ADCameralink.h"
+
+#ifndef _WIN32
+#define FALSE false
+#define TRUE true
+#endif
+
+#include <epicsExport.h>
 #include "pco.h"
 
 static const char *driverName = "pco";

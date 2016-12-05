@@ -6,24 +6,13 @@
 #ifndef pcoEdgePlugin_H
 #define pcoEdgePlugin_H
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#include <string>
-using std::string;
-//#include <direct.h>
-
-#include "NDPluginFile.h"
-
 /** Enums for plugin-specific parameters. There are currently no specific
  * parameters for this driver yet.
   * It uses the ADStdDriverParams and NDPluginDriver params. */
 
-class pcoEdgePlugin : public NDPluginFile {
+#include "NDPluginFile.h"
+
+class epicsShareClass pcoEdgePlugin : public NDPluginFile {
  public:
   pcoEdgePlugin(const char *portName, int queueSize, int blockingCallbacks,
                 const char *NDArrayPort, int NDArrayAddr, int priority,

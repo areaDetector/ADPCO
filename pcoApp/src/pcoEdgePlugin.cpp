@@ -7,19 +7,22 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#include <netcdf.h>
+
+#include <string>
+using std::string;
+//#include <direct.h>
 
 #include <epicsStdio.h>
-#include <epicsExport.h>
 #include <iocsh.h>
 
 #include <epicsTime.h>
 #include <epicsThread.h>
 
 #include "NDPluginFile.h"
+
+#include <epicsExport.h>
 #include "pcoEdgePlugin.h"
 #include "drvpcoEdgePlugin.h"
-#include "asynNDArrayDriver.h"
 
 static const char *driverName = "pcoEdgePlugin";
 

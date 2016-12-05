@@ -1,7 +1,6 @@
 TOP=../..
 include $(TOP)/configure/CONFIG
 
-
 #----------------------------------------
 #  
 #
@@ -12,20 +11,16 @@ include $(TOP)/configure/CONFIG
 
 INC += pco.h
 
-
 ifeq (windows-x64, $(findstring windows-x64, $(T_A)))
   LIBRARY_IOC = pco
 endif
 
 LIB_SRCS    += PCOSerial.cpp
 LIB_SRCS    += pco.cpp
-LIB_SRCS    +=  drvPcoEpics.c
+LIB_SRCS    += drvPcoEpics.c
 
-
-LIB_SRCS +=drvpcoEdgePluginEpics.c
-LIB_SRCS +=pcoEdgePlugin.cpp
-
-
+LIB_SRCS += drvpcoEdgePluginEpics.c
+LIB_SRCS += pcoEdgePlugin.cpp
 
 #one or the other
 #USR_CXXFLAGS += /D USE_SAP
@@ -39,44 +34,20 @@ LIB_SRCS +=pcoEdgePlugin.cpp
 USR_CXXFLAGS_Linux += -D USEASYNSERIAL
 USR_CXXFLAGS_WIN32 += /D USEASYNSERIAL
 
-
-
 #define to use the log_file class in camLinkSrc2, else it uses a null sort of class that does notbhgin
 USR_CXXFLAGS_WIN32 += /D USELOGFILE
 USR_CXXFLAGS_Linux += -D USELOGFILE
 
-
-
-
-
-#when we build debug.. we need this line?
-#!! for debvug only
-PROD_LDFLAGS_WIN32 = /NODEFAULTLIB:LIBCMT.lib
-
-
-
-
-PROD_LDFLAGS_WIN32 += /NODEFAULTLIB:msvcrt.lib
-
-
-PROD_LDFLAGS_WIN32 += /VERBOSE:LIB
-
 # Note that the order in which .dbd files are added to a list variable
 # doesn't matter, but the order of libraries does.
-
-
-#DBD += caputRecorder.dbd
-
-#!!DBD += PCOApp.dbd
-#DBD += PCOAppInclude.dbd
 
 DBD += PCOSupport.dbd
 DBD += pcoEdgePluginSupport.dbd
 
-LIB_LIBS += cameralink caputRecorder
+LIB_LIBS += cameralink
+LIB_LIBS += NDPlugin
 
 include $(ADCORE)/ADApp/commonLibraryMakefile
-
 
 include $(TOP)/configure/RULES
 

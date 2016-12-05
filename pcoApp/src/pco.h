@@ -25,63 +25,11 @@
 #ifndef PCO_H_
 #define PCO_H_
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <math.h>
-#include <stdio.h>
-#include <errno.h>
-#include <string.h>
-#include <ctype.h>
-#include <fcntl.h>
-#include <sys/stat.h>
-
-#include <epicsTime.h>
-#include <epicsThread.h>
 #include <epicsEvent.h>
-#include <epicsTimer.h>
-#include <epicsMutex.h>
-#include <epicsStdlib.h>
-#include <epicsString.h>
-#include <epicsStdio.h>
-#include <epicsMutex.h>
-#include <cantProceed.h>
-#include <iocsh.h>
-#include <epicsExport.h>
-
-#include <asynOctetSyncIO.h>
-
-#ifdef USEASYNSERIAL
-#include <asynShellCommands.h>
-#endif
-
-#include "ADDriver.h"
-#define _ADIOC_
-#include "grabberInterface.h"
-
-#include "comportInterface.h"
-#include "logfile.h"
-#include "ccd_exception.h"
-#include "coreco.h"
-#include "stopWatch.h"
-#include "pco_structures.h"
-
-#ifdef USE_SISW
-#include "siswSerialPort.h"
-#endif
-
-#ifdef USE_SAP
-#include "cl_com_port2.h"
-#endif
-
+#include <epicsTypes.h>
 #include "ADCameralink.h"
-#include <math.h>
-#include "time.h"
-
-
-#ifndef _WIN32
-#define FALSE false
-#define TRUE true
-#endif
+#include "pco_structures.h"
+#include "stopWatch.h"
 
 /** 
  *PCO Driver. Serial port functions. 
@@ -90,7 +38,7 @@
 //   putIntParam\((?<param>[a-z_]*).*
 // createParam\("$+{param}",asynInt32,$+{param}\)
 
-class pco : public ADCameralink {
+class epicsShareClass pco : public ADCameralink {
  public:
   pco(const char *portName, const char *pcoPort, int maxBuffers,
       size_t maxMemory, int priority, int stackSize);
