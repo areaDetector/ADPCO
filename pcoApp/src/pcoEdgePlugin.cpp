@@ -546,9 +546,9 @@ pcoEdgePlugin::pcoEdgePlugin(const char *portName, int queueSize,
                              int blockingCallbacks, const char *NDArrayPort,
                              int NDArrayAddr, int priority, int stackSize)
     : NDPluginFile(portName, queueSize, blockingCallbacks, NDArrayPort,
-                   NDArrayAddr, 1, NUM_pcoEdgePlugin_PARAMS, 200000, -1,
+                   NDArrayAddr, 1, 200000, -1,
                    asynGenericPointerMask, asynGenericPointerMask,
-                   ASYN_CANBLOCK, 1, priority, stackSize) {
+                   ASYN_CANBLOCK, 1, priority, stackSize, 1) {
   int i;
 
   // wait in sec

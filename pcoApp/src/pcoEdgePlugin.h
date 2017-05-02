@@ -77,14 +77,11 @@ class epicsShareClass pcoEdgePlugin : public NDPluginFile {
   int edge_est_buffers_left;
 
   int sim_last;
-#define LAST_pcoEdgePlugin_PARAM sim_last
 
   //
   //////////////// END PARAMETERS ///////////////////
   //
 };
 
-#define NUM_pcoEdgePlugin_PARAMS \
-  (&LAST_pcoEdgePlugin_PARAM - &FIRST_pcoEdgePlugin_PARAM + 1)
 
 #endif
