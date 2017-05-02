@@ -511,7 +511,7 @@ multi-device.
 defaults.
     : NDPluginDriver(portName, queueSize, blockingCallbacks,
                      NDArrayPort, NDArrayAddr, maxAddr,
-numParams+NUM_NDPLUGIN_FILE_PARAMS, maxBuffers, maxMemory,
+                     maxBuffers, maxMemory,
                      asynGenericPointerMask, asynGenericPointerMask,
                      asynFlags, autoConnect, priority, stackSize)
 {
