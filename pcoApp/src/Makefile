@@ -14,6 +14,7 @@ INC += pco.h
 ifeq (windows-x64, $(findstring windows-x64, $(T_A)))
   LIBRARY_IOC = pco
 endif
+LIBRARY_IOC_Linux += pco
 
 LIB_SRCS    += PCOSerial.cpp
 LIB_SRCS    += pco.cpp
