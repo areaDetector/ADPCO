@@ -21,6 +21,11 @@
 #include <epicsExport.h>
 #include "pco.h"
 
+#ifndef _WIN32
+#define FALSE false
+#define TRUE true
+#endif
+
 // define if building for silicon softwarwe grabber.
 //#ifdef USE_SISW
 //#include "siswSerialPort.h"
