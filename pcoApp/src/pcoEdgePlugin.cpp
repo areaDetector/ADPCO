@@ -235,11 +235,10 @@ void pcoEdgePlugin::processCallbacks(NDArray *pArray) {
       //!! where is array_pool set up? need to look at all constructors and
       //! mains in older code.
       setIntegerParam(edge_nd_datasize, 2 * xs * ys);
-      setIntegerParam(edge_max_ndbuffers, mypool->maxBuffers());
-      setIntegerParam(edge_num_ndbuffers, mypool->numBuffers());
-      setIntegerParam(edge_max_ndmemory, mypool->maxMemory());
-      setIntegerParam(edge_alloc_ndmemory, mypool->memorySize());
-      setIntegerParam(edge_free_ndbuffers, mypool->numFree());
+      setIntegerParam(edge_num_ndbuffers, mypool->getNumBuffers());
+      setIntegerParam(edge_max_ndmemory, mypool->getMaxMemory());
+      setIntegerParam(edge_alloc_ndmemory, mypool->getMemorySize());
+      setIntegerParam(edge_free_ndbuffers, mypool->getNumFree());
 
       if (getIntParam(edge_nd_datasize) > 0) {
         setIntegerParam(edge_est_buffers_left,
@@ -526,10 +525,13 @@ extern "C" int drvpcoEdgePluginConfigure(const char *portName, int queueSize,
                                          const char *NDArrayPort,
                                          int NDArrayAddr, int priority,
                                          int stackSize) {
-  new pcoEdgePlugin(portName, queueSize, blockingCallbacks, NDArrayPort,
-                    NDArrayAddr, priority, stackSize);
-  return (asynSuccess);
+
+
+  pcoEdgePlugin *pPlugin = new pcoEdgePlugin(portName, queueSize, blockingCallbacks, NDArrayPort, 
+                                             NDArrayAddr, priority, stackSize);
+  return pPlugin->start();
 }
+
 
 /**
  *  The constructor for pco Edge plugin 
