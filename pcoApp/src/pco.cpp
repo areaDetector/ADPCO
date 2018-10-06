@@ -658,7 +658,7 @@ pco::pco(const char *portName, const char *serverPort, int maxBuffers,
   is_reset_dump_counters = false;
   is_reset_memory = true;
 
-  lastxsize == 0;
+  lastxsize = 0;
   lastysize = 0;
 
   status = (epicsThreadCreate("CameraLinkSerial", epicsThreadPriorityMedium,
