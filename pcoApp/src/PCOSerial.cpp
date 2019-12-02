@@ -35,7 +35,7 @@
 // define dimax image size to 1800 for certain modes
 #define _LIMITIMGSIZE
 // limit image size no less than 600 for edge, y size.
-//!!#define _LIMITIMGSIZE600
+//#define _LIMITIMGSIZE600
 
 /** 
  * Run on thread, monitor camera status over serial port. 
