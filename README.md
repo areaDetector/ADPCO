@@ -1,6 +1,6 @@
 # AreaDetector Driver for Cameralink PCO Cameras
 
-
+**This repository is no longer active and was archived on June 13, 2025.**
 
 ##PCO Driver
 
