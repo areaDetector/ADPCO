@@ -1,4 +1,3 @@
-# Must have loaded envPaths via st.cmd.linux or st.cmd.win32
 < envPaths64
 
 epicsEnvSet("PREFIX",  "PCOIOC2:")
